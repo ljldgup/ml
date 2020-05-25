@@ -117,6 +117,14 @@ t = df.groupby(['A', 'B']).count()
 # 多级索引访问
 t.loc['0.00'].loc['0.00']
 
+# 这里绘制出来的是按照索引作为x，列作为分类的效果
+t.index
+t['C'].plot.bar()
+
+# unstack 后部分索引放到列上面,重新绘制，可以通过这种方式绘制和两个列有关的柱状图
+t.unstack().index
+t.unstack()['C'].plot.bar()
+
 # 不使用聚合函数, 不会改变结构， 内部使用pd.contact合并 可以用于一些分块操作
 df.groupby(['A', 'B']).apply(lambda x: x.applymap(float))
 
