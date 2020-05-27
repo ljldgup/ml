@@ -87,7 +87,7 @@ recall_score(y_train_5, y_train_pred)
 # f1 = 2 / (1/precision + 1/recall)
 f1_score(y_train_5, y_train_pred)
 
-# 随着阀值thresholds的变动，precisions，recalls发生相应的变化
+# 判别器根据score是否超过阀值标正负，随着阀值thresholds的变动，precisions，recalls发生相应的变化
 y_scores = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3, method="decision_function")
 precisions, recalls, thresholds = precision_recall_curve(y_train_5, y_scores)
 
@@ -134,6 +134,7 @@ print(len(ovr_clf.estimators_))
 
 sgd_clf.fit(X_train, y_train)
 sgd_clf.predict([some_digit])
+# decision_function返回的是score，而不是直接预测结果
 sgd_clf.decision_function([some_digit])
 
 cross_val_score(sgd_clf, X_train, y_train, cv=3, scoring="accuracy")
