@@ -21,6 +21,9 @@ np.ones(arr.shape)
 
 # 重塑
 arr.reshape(3, 4)
+
+#增加一维
+arr.reshape(-1, 1)
 # 索引
 arr[2, 1]
 # 切片
