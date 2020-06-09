@@ -48,6 +48,11 @@ plt.hist(a, 20, density=True, cumulative=True)
 plt.title("histogram")
 plt.show()
 
+# 第二维度会被分开统计
+b = np.random.random(size=(100, 8))
+plt.hist(b, 4, density=True, cumulative=True)
+plt.show()
+
 # 3d
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -76,14 +81,13 @@ ax3.plot(x, np.log(x))
 plt.show()
 
 # 跳出两张图
-fig1=plt.figure()
-ax1=fig1.add_subplot(111)
-ax1.plot([1,2,3],[3,2,1])
-fig2=plt.figure()
-ax2=fig2.add_subplot(111)
-ax2.plot([1,2,3],[1,2,3])
+fig1 = plt.figure()
+ax1 = fig1.add_subplot(111)
+ax1.plot([1, 2, 3], [3, 2, 1])
+fig2 = plt.figure()
+ax2 = fig2.add_subplot(111)
+ax2.plot([1, 2, 3], [1, 2, 3])
 plt.show()
-
 
 # 解决中文显示问题
 plt.rcParams['font.sans-serif'] = ['KaiTi']

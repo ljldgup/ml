@@ -76,6 +76,9 @@ data['ewm_mean'] = data['test'].ewm(span=30).mean()
 # 注意这里shift 只需要3-1=2位
 data['max_id'] = data['test'].rolling(3).apply(lambda x: x.argmax()).shift(-2)
 
+# 正向rolling， 将series逆向，然后rolling，再将结果逆向
+data['test'][::-1].rolling(window=3, min_periods=0).sum()[::-1]
+
 # 排名，默认相等排名相同，
 data.rank()
 data.rank(method='first')
