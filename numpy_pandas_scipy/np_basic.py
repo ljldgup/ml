@@ -6,6 +6,11 @@ import numpy as np
 arr = np.arange(12)
 arr = np.arange(1, 12, 2)
 
+# 使用like直接创建形状相等的矩阵
+np.ones(shape=(1, 2))
+np.ones_like(arr)
+np.zeros_like(arr)
+
 # 使用函数生成矩阵，参数是索引
 arr = np.fromfunction(lambda x, y: 10 * x + y, (4, 3), dtype=int)
 
@@ -22,13 +27,20 @@ np.ones(arr.shape)
 # 重塑
 arr.reshape(3, 4)
 
-#增加一维
+# 增加一维
 arr.reshape(-1, 1)
 # 索引
 arr[2, 1]
 # 切片
 arr[0:2, :]
 arr[:, 1]
+
+arr[:, [1, 2]]
+arr[range(3), :]
+
+# 这里的2是切片间隔
+arr[1::2, :]
+arr[1:3:2, :]
 
 # 转型
 arr.astype(np.float64)
