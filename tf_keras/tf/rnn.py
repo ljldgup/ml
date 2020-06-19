@@ -30,8 +30,7 @@ model = keras.models.Sequential([
 
 # deep rnn 结构，每层都return_sequences
 model = keras.models.Sequential([
-    keras.layers.SimpleRNN(20, return_sequences=True, input_shape=[None,
-                                                                   1]),
+    keras.layers.SimpleRNN(20, return_sequences=True, input_shape=[None, 1]),
     keras.layers.SimpleRNN(20, return_sequences=True),
     keras.layers.SimpleRNN(1)
 ])
@@ -40,9 +39,9 @@ model = keras.models.Sequential([
 # 其实就是一个各个time step输入共享权重的dense layer,这里只有20*10 + 10=20个参数量
 
 # 这里的rnn没有规定输入长度 ，20*20+20 + 20 =440 貌似 没有输入-20的权重w参数量，
+# 这里的理解有误，rnn所有时间步之间的传播都是用同一组变换矩阵，所以可以是任意步数，参数不会变
 model = keras.models.Sequential([
-    keras.layers.SimpleRNN(20, return_sequences=True, input_shape=[None,
-                                                                   1]),
+    keras.layers.SimpleRNN(20, return_sequences=True, input_shape=[None, 1]),
     keras.layers.SimpleRNN(20, return_sequences=True),
     keras.layers.TimeDistributed(keras.layers.Dense(10))
 ])
