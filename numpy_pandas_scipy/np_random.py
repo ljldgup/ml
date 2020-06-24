@@ -23,6 +23,9 @@ np.random_sample((2, 3))
 # np.random.choice(5, 3)
 np.random.choice(5, 3, p=[0.1, 0, 0.3, 0.6, 0])
 
+# 均匀分布采样，可以实现类似random.choice的功能
+np.random.uniform(1, 9, (10, 4))
+
 # shuffle打乱顺序
 arr = np.arange(10)
 np.random.shuffle(arr)

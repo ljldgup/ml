@@ -16,6 +16,9 @@ print(tf.square(6))
 print(tf.reduce_sum([7, 8, 9]))
 print(tf.square(3) + tf.square(4))
 
+# numpy()转为numpy数组
+tf.constant([1, 2, 3, 4]).numpy()
+
 # 形状和类型
 x = tf.matmul([[3], [6]], [[2]])
 print(x)
@@ -40,6 +43,7 @@ t + 10
 tf.square(t)
 
 t @ tf.transpose(t)
+
 
 def unary_gradient():
     # -------------------一元梯度案例---------------------------

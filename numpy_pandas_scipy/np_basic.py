@@ -138,3 +138,9 @@ np.save('path.npy', arr)
 np.savetxt('path.txt', arr, delimiter=' ')
 np.load('path.npy')
 np.loadtxt("path.txt", delimiter=' ')
+
+z = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]])
+# reshape 中-1放到长度可调整一个维度
+print(z.reshape(-1))  # 16
+print(z.reshape(2, -1))  # 2,8
+print(z.reshape(-1, 4))  # 4,4, 第一个4是自动调整来的
