@@ -15,8 +15,7 @@ test_data /= std
 
 def build_model():
     model = models.Sequential()
-    model.add(layers.Dense(64, activation='relu',
-                           input_shape=(train_data.shape[1],)))
+    model.add(layers.Dense(64, activation='relu', input_shape=(train_data.shape[1],)))
     model.add(layers.Dense(64, activation='relu'))
     model.add(layers.Dense(1))
     model.compile(optimizer='rmsprop', loss='mse', metrics=['mae'])
@@ -29,8 +28,10 @@ def k_fold_crossValidation(build_model_func, k, train_data, train_targets, num_e
 
     for i in range(k):
         print('processing fold #', i)
+        # 第i折数据用于验证
         val_data = train_data[i * num_val_samples: (i + 1) * num_val_samples]
         val_targets = train_targets[i * num_val_samples: (i + 1) * num_val_samples]
+        # 其余数据拼接用于训练
         partial_train_data = np.concatenate(
             [train_data[:i * num_val_samples],
              train_data[(i + 1) * num_val_samples:]],

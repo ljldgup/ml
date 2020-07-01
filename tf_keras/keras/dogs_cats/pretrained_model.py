@@ -9,7 +9,7 @@ from tensorflow.keras import models, layers, optimizers
 from tf_keras.keras import tools
 
 
-# 调用conv_base 模型的predict 方法来从这些图像中提取特征
+# 调用conv_base 模型的predict 方法来从这些图像中提取特征，作为自定义模型的训练输入
 # 提取的特征形状为(samples, 4, 4, 512)
 def extract_features(directory, sample_count):
     features = np.zeros(shape=(sample_count, 4, 4, 512))
@@ -33,7 +33,7 @@ def extract_features(directory, sample_count):
 def build_model(conv_base=None):
     model = models.Sequential()
     if conv_base:
-        # 在顶部添加 Dense 层来扩展已有模型（即 conv_base），并在输入数据上端到端地运行整个模型
+        # 在底部添加 Dense 层来扩展已有模型（即 conv_base），并在输入数据上端到端地运行整个模型
         # 可以使用数据增强
         model.add(conv_base)
         model.add(layers.Dense(256, activation='relu'))
@@ -64,6 +64,8 @@ if __name__ == '__main__':
                       input_shape=(150, 150, 3))
     conv_base.summary()
 
+    # 这里输出的train future是已经通过VGG16计算输出的结果，所以后面build model没有传入VGG16模型
+    # 这种模型训练快，但是不能使用数据增强，因为VGG16部分模型是冻结的
     train_features, train_labels = extract_features(train_dir, 2000)
     validation_features, validation_labels = extract_features(validation_dir, 1000)
     test_features, test_labels = extract_features(test_dir, 1000)

@@ -39,7 +39,7 @@ def create_img_tensor(test_dir):
 
 
 def show_channel_image(model, img_tensor):
-
+    # 生成一个输出前八层卷积层的模型
     layer_outputs = [layer.output for layer in model.layers[:8]]
     activation_model = models.Model(inputs=model.input, outputs=layer_outputs)
     activations = activation_model.predict(img_tensor)
@@ -54,19 +54,16 @@ def show_channel_image(model, img_tensor):
         display_grid = np.zeros((size * n_cols, images_per_row * size))
         for col in range(n_cols):
             for row in range(images_per_row):
-                channel_image = layer_activation[0,
-                                :, :,
-                                col * images_per_row + row]
+                # 获取col * images_per_row + row的通道输出
+                channel_image = layer_activation[0, :, :, col * images_per_row + row]
                 channel_image -= channel_image.mean()
                 channel_image /= channel_image.std()
                 channel_image *= 64
                 channel_image += 128
                 channel_image = np.clip(channel_image, 0, 255).astype('uint8')
-                display_grid[col * size: (col + 1) * size,
-                row * size: (row + 1) * size] = channel_image
+                display_grid[col * size: (col + 1) * size, row * size: (row + 1) * size] = channel_image
         scale = 1. / size
-        plt.figure(figsize=(scale * display_grid.shape[1],
-                            scale * display_grid.shape[0]))
+        plt.figure(figsize=(scale * display_grid.shape[1], scale * display_grid.shape[0]))
         plt.title(layer_name)
         plt.grid(False)
         plt.imshow(display_grid, aspect='auto', cmap='viridis')

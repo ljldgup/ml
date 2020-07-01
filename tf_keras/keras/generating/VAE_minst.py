@@ -14,10 +14,11 @@ VAE 不是将输入图像压缩成潜在空间中的固定编码，而是将图�
 '''
 
 
+# 该层是一个自定义的损失
+# 该层后续创建的时候输入 编码器输出的均值方差
+# CustomVariationalLayer()([input_img, z_decoded])
 class CustomVariationalLayer(keras.layers.Layer):
-    # 该层应该是一个自定义的过滤器
-    # 该层后续创建的时候输入 input_img, z_decoded
-    # CustomVariationalLayer()([input_img, z_decoded])
+
     # 损失在vae_loss定义，并在call中调用
     def vae_loss(self, x, z_decoded):
         x = K.flatten(x)
@@ -28,6 +29,7 @@ class CustomVariationalLayer(keras.layers.Layer):
 
         # KL损失是X中个体X〜N（μ，σ²）与标准正态分布之间所有KL分支的总和
         # 这种损失鼓励编码器将所有编码（对于所有类型的输入，例如所有MNIST数字号）均匀地分布在潜在空间的中心周围。 如果它试图通过把它们聚集到特定的地区而远离原样本来“作弊”，将会受到惩罚
+        # 这里损失函数中直接用了z_log_var，z_mean这两个全局变量，这种写法也能生效
         kl_loss = -5e-4 * K.mean(
             1 + z_log_var - K.square(z_mean) - K.exp(z_log_var), axis=-1)
         return K.mean(xent_loss + kl_loss)
@@ -40,6 +42,7 @@ class CustomVariationalLayer(keras.layers.Layer):
         return x
 
 
+# 采样
 def sampling(args):
     z_mean, z_log_var = args
     epsilon = K.random_normal(shape=(K.shape(z_mean)[0], latent_dim),
@@ -73,6 +76,7 @@ if __name__ == '__main__':
 
     z = layers.Lambda(sampling)([z_mean, z_log_var])
 
+    # 这里使用K.int_shape(z)动态获取形状，[1:]获取batch_size后的尺寸作为输入
     decoder_input = layers.Input(K.int_shape(z)[1:])
     x = layers.Dense(np.prod(shape_before_flattening[1:]),
                      activation='relu')(decoder_input)
@@ -134,8 +138,7 @@ if __name__ == '__main__':
 
             # 这里用0还是别的一样，因为batch内输入都是一样
             digit = x_decoded[0].reshape(digit_size, digit_size)
-            figure[i * digit_size: (i + 1) * digit_size,
-            j * digit_size: (j + 1) * digit_size] = digit
+            figure[i * digit_size: (i + 1) * digit_size, j * digit_size: (j + 1) * digit_size] = digit
     plt.figure(figsize=(10, 10))
     plt.imshow(figure, cmap='Greys_r')
     plt.show()

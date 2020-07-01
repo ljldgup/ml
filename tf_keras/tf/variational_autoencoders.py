@@ -6,7 +6,7 @@ import tensorflow.keras.backend as K
 
 (X_train, y_train), (X_valid, y_valid) = tf.keras.datasets.fashion_mnist.load_data()
 
-
+# 采样层将输入的均值，方差转化成一个采样
 class Sampling(keras.layers.Layer):
     def call(self, inputs):
         mean, log_var = inputs

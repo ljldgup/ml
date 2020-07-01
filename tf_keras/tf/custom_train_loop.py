@@ -44,17 +44,19 @@ for epoch in range(1, n_epochs + 1):
     print("Epoch {}/{}".format(epoch, n_epochs))
     for step in range(1, n_steps + 1):
         X_batch, y_batch = random_batch(X_train_scaled, y_train)
-    with tf.GradientTape() as tape:
-        y_pred = model(X_batch, training=True)
-        main_loss = tf.reduce_mean(loss_fn(y_batch, y_pred))
-        loss = tf.add_n([main_loss] + model.losses)
-    gradients = tape.gradient(loss, model.trainable_variables)
-    optimizer.apply_gradients(zip(gradients,
-                                  model.trainable_variables))
-    mean_loss(loss)
-    for metric in metrics:
-        metric(y_batch, y_pred)
+        with tf.GradientTape() as tape:
+            # 注意这里这接调用了model
+            y_pred = model(X_batch, training=True)
+            main_loss = tf.reduce_mean(loss_fn(y_batch, y_pred))
+            loss = tf.add_n([main_loss] + model.losses)
+        gradients = tape.gradient(loss, model.trainable_variables)
+        optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+        # reduce_mean，是沿着batch_size各个维度的均值，这里mean择是整个batch的均值
+        mean_loss(loss)
+        for metric in metrics:
+            metric(y_batch, y_pred)
         print_status_bar(step * batch_size, len(y_train), mean_loss, metrics)
+
     print_status_bar(len(y_train), len(y_train), mean_loss, metrics)
     for metric in [mean_loss] + metrics:
         metric.reset_states()

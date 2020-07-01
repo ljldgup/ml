@@ -141,7 +141,8 @@ if __name__ == '__main__':
 
     grads = K.gradients(loss, combination_image)[0]
     fetch_loss_and_grads = K.function([combination_image], [loss, grads])
-
+    
+    # 这个evaluator调用了前面的fetch_loss_and_grads，后面的x得到loss，grad,写的比较坑
     evaluator = Evaluator()
     result_prefix = 'my_result'
     iterations = 4

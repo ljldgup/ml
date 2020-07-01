@@ -6,11 +6,13 @@ import tensorflow as tf
 
 def get_angles(pos, i, d_model):
     # 嵌入维度越大，角度随位置变化率就越小
+    # 这里 pos的形状是p,1 ,i的形状是1,d_model,两者相乘 形状 p,d_model
     angle_rates = 1 / np.power(10000, (2 * (i // 2)) / np.float32(d_model))
     return pos * angle_rates
 
 
 def positional_encoding(position, d_model):
+    # [:, np.newaxis]，[np.newaxis, :]分别在结尾开始追加了一个维度
     angle_rads = get_angles(np.arange(position)[:, np.newaxis],
                             np.arange(d_model)[np.newaxis, :],
                             d_model)
@@ -22,6 +24,7 @@ def positional_encoding(position, d_model):
     # 将 cos 应用于数组中的奇数索引；2i+1
     angle_rads[:, 1::2] = np.cos(angle_rads[:, 1::2])
 
+    #
     pos_encoding = angle_rads[np.newaxis, ...]
 
     return tf.cast(pos_encoding, dtype=tf.float32)
@@ -301,7 +304,7 @@ class Transformer(tf.keras.Model):
 
         self.final_layer = tf.keras.layers.Dense(target_vocab_size)
 
-    # 这里继承的model模型，实际上没有call函数，这里为了调用增加了call函数
+    # 这里继承的model模型，但输入参数进行了扩充
     def call(self, inp, tar, training, enc_padding_mask, look_ahead_mask, dec_padding_mask):
         enc_output = self.encoder(inp, training, enc_padding_mask)  # (batch_size, inp_seq_len, d_model)
 

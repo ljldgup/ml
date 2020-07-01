@@ -1,7 +1,6 @@
 from datetime import datetime
 
 import numpy as np
-import matplotlib
 import pandas as pd
 from pandas.tseries.offsets import Hour, Minute, Day, MonthEnd
 
@@ -158,4 +157,6 @@ ts.asfreq('W', how='start')
 ts.asfreq('W', how='end')
 
 # 重采样，提取平均
+ts.resample('M')
 ts.resample('M').mean()
+ts.sample(5)

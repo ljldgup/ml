@@ -18,7 +18,7 @@ def eval_loss_and_grads(x):
     grad_values = outs[1]
     return loss_value, grad_values
 
-# 梯度上升过程
+# 梯度上升过程，用于求最大值，希望图片和原始图片有一定差距
 def gradient_ascent(x, iterations, step, max_loss=None):
     for i in range(iterations):
         loss_value, grad_values = eval_loss_and_grads(x)
@@ -97,6 +97,7 @@ if __name__ == '__main__':
         # loss += (coeff * K.sum(K.square(activation[:, 2: -2, 2: -2, :])) / scaling)
 
     dream = model.input
+    # 求得是输入梯度
     grads = tf.gradients(loss, dream)[0]
     grads /= tf.maximum(tf.reduce_mean(tf.abs(grads)), 1e-7)
     outputs = [loss, grads]

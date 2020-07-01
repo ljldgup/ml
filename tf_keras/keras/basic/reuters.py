@@ -20,6 +20,7 @@ def decode_newswire(data):
 
 def vectorize_sequences(sequences, dimension=10000):
     results = np.zeros((len(sequences), dimension))
+    # 这里应该可改成results[range(len(sequences)),sequences]=1
     for i, sequence in enumerate(sequences):
         results[i, sequence] = 1.
     return results

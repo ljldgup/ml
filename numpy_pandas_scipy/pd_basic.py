@@ -121,6 +121,7 @@ df1.stack().stack()
 
 df1.unstack()
 
+# 这里的形状6=3*2,4=2*2
 df2 = pd.DataFrame(np.random.randint(80, 120, size=(6, 4)),
                    index=pd.MultiIndex.from_product([[1, 2, 3], ['girl', 'boy']]),
                    columns=pd.MultiIndex.from_product([['English', 'Chinese'],
