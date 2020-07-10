@@ -1,5 +1,5 @@
-from sklearn.cluster import KMeans, DBSCAN
-from sklearn.datasets import make_classification, fetch_openml, make_moons
+from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
+from sklearn.datasets import make_classification, fetch_openml, make_moons, make_blobs
 from matplotlib.image import imread  # or `from imageio import imread`
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
@@ -83,3 +83,22 @@ knn.fit(dbscan.components_, dbscan.labels_[dbscan.core_sample_indices_])
 X_new = np.array([[-0.5, 0], [0, 0.5], [1, -0.1], [2, 1]])
 knn.predict(X_new)
 knn.predict_proba(X_new)
+
+# 读取数据，绘制图像
+x, y = make_blobs(n_samples=100, n_features=2, centers=6)
+print(x.shape)
+
+# 基于Agglomerativeclustering完成聚类
+model = AgglomerativeClustering(n_clusters=4)
+pred_y = model.fit_predict(x)
+print(pred_y)
+
+# 画图显示样本数据
+plt.figure('Agglomerativeclustering', facecolor='lightgray')
+plt.title('Agglomerativeclustering', fontsize=16)
+plt.xlabel('X', fontsize=14)
+plt.ylabel('Y', fontsize=14)
+plt.tick_params(labelsize=10)
+plt.scatter(x[:, 0], x[:, 1], s=80, c=pred_y, cmap='brg', label='Samples')
+plt.legend()
+plt.show()

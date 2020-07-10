@@ -22,6 +22,8 @@ df.values
 df.index
 df['A'].values
 df['A'].index
+# df['A'] 会发生变化
+df['A'].values[0] = 1
 
 # 基本信息
 df.info()
@@ -137,7 +139,13 @@ df2.swaplevel('Sex', 'Class')
 df2.sort_index(level=1)
 df2.sum(level='Language', axis=1)
 
-df = pd.DataFrame(np.random.randint(4, size=(6, 3)), columns=['A', 'B', 'C'])
+df = pd.DataFrame(np.random.randint(20, size=(6, 3)), columns=['A', 'B', 'C'])
 df.pivot('A', 'B')
 df.set_index('A').unstack('A')
 pd.melt(df.set_index('A').unstack('A'), ['A'])
+
+t = df[df['A'] > 10]
+t['A'].sort_values()
+t['A'].sort_index()
+# 注意修改了t['A'].values, 整个t中的A列都会变，而df不会变
+t['A'].values.sort()

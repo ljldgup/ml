@@ -194,6 +194,25 @@ np.prod(np.arange(1, 7).reshape(3, 2))
 np.prod(np.arange(1, 7).reshape(3, 2), axis=0)
 np.prod(np.arange(1, 7).reshape(3, 2), axis=1)
 
+# 沿不同的方向累加，累积
+np.cumsum(np.arange(12).reshape(3,4), axis=0)
+np.cumsum(np.arange(12).reshape(3,4), axis=1)
+np.cumprod(np.arange(12).reshape(3,4), axis=0)
+np.cumprod(np.arange(12).reshape(3,4), axis=1)
+
+# 去重并排序
+np.unique(np.arange(12).reshape(3,4))
+
+# 交集
+np.intersect1d(np.arange(12).reshape(3,4),np.arange(8,16).reshape(2,4))
+
+# 并集
+np.union1d(np.arange(12).reshape(3,4),np.arange(8,16).reshape(2,4))
+
+# x是否存在于y
+np.in1d(np.arange(12).reshape(3,4),np.arange(8,16).reshape(2,4))
+
+
 # 重复元素
 np.tile([1, 2], 14)
 # 只扩充到最后一个维度
