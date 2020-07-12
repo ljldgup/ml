@@ -2,20 +2,37 @@ import numpy as np
 import matplotlib
 import pandas as pd
 
+# 最大显示行数
+# pd.options.display.max_rows	= 10
+
 # 读写
 df = pd.read_csv(r"../data/000513_d_bas.csv")
+# 读取5行
+pd.read_csv(r"../data/000513_d_bas.csv", nrows=5)
+# 逐块迭代读取，返回生成器
+pd.read_csv(r"../data/000513_d_bas.csv", chunksize=10)
+
 df.to_csv("1.csv")
 
 # 使用np生成,注意columns=，pandas很多函数参数很多，需要指定参数名
 df = pd.DataFrame(np.arange(30).reshape(6, 5), columns=['A', 'B', 'C', 'D', 'E'])
-# 生成Series
+# 生成Series，注意series是一列,不是一行，这里的ABC65是index
 sdata = pd.Series({'A': 11, 'B': 22, 'C': 33, 6: 44, 5: 55})
+# 也可以这样
+pd.Series([11, 22, 33, 44, 55], ['A', 'B', 'C', 6, 5])
+
+# D项为NaN
+pd.DataFrame(sdata, index=['A', 'B', 'C', 'D'])
 
 # 两种基本类型，DataFrame，Series
 type(df)
 type(df['A'])
 df['A'].dtype
 type(sdata)
+
+# series可以看做是一个字典， index是key
+5 in sdata
+1 in df['E']
 
 # 基本组成:索引,值
 df.values
@@ -30,6 +47,13 @@ df.info()
 # 数据信息
 df.describe()
 
+# 默认按索引删除
+df.drop(1)
+# 按列删除axis=1，pandas中axis=1对应列
+df.drop('A', axis=1)
+# inplace 为真改变原来的数组
+df.drop('A', axis=1, inplace=True)
+
 # 转字典 可已选择'list', 'split', 'records', 'index'等
 src = df.to_dict('dict')
 
@@ -40,7 +64,10 @@ pd.DataFrame(src)[order]
 # 设置索引
 df.index
 df = df.set_index('A')
-df.reindex(index=['A', 'B'])
+df.reindex(index=['B', 'A'])
+
+# 根据index获取
+df.take([5, 3, 4, 2])
 
 sdata.index
 sdata[['C', 'A']]
@@ -98,6 +125,9 @@ df[(df['A'] > 2) | (df['B'] < 10)]
 # 范围帅选
 df.isin([1, 2, 3])
 
+# unique类似python set
+df['A'].unique()
+
 # 排序
 df.sort_values(by='A', ascending=False)
 df.sort_index(ascending=False)
@@ -110,6 +140,9 @@ df.idxmin()
 df + sdata
 df + df
 df + (df + sdata)
+
+# 采样
+df.sample()
 
 # 层次化索引
 df1 = pd.DataFrame(np.random.randint(80, 120, size=(2, 4)),

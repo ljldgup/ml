@@ -34,8 +34,18 @@ plt.title('Sine')
 plt.subplot(2, 1, 2)
 plt.plot(x, y_cos)
 plt.title('Cosine')
+# x轴范围
+plt.xlim(0, 20)
 # 展示图像
 plt.show()
+
+x = np.random.randint(0, 10, (4, 10))
+plt.bar(np.arange(len(x)), x)
+plt.show()
+
+plt.barh(np.arange(len(x)), x)
+plt.show()
+
 
 # numpy.histogram()
 # numpy.histogram() 函数是数据的频率分布的图形表示。 水平尺寸相等的矩形对应于类间隔，称为 bin，变量 height 对应于频率。
@@ -68,26 +78,39 @@ ax.scatter(X, Y, Z)
 plt.show()
 
 # 多图
-x = np.arange(1, 100)
+x = np.random.randint(-100, 100, 100)
 fig = plt.figure()
-ax1 = fig.add_subplot(211)  # 2*2的图形 在第一个位置
-ax1.plot(x, x)
-ax2 = fig.add_subplot(212)
-ax2.plot(x, -x)
+ax1 = fig.add_subplot(221)  # 2*2的图形 在第一个位置
+ax1.plot(x.cumsum())
+ax2 = fig.add_subplot(222)
+ax2.hist(np.random.randint(1, 100, 100), bins=20)
 ax3 = fig.add_subplot(223)
-ax3.plot(x, x ** 2)
+ax3.scatter(np.random.randint(1, 100, 100), np.random.randint(1, 100, 100), s=75, alpha=.5)
 ax3 = fig.add_subplot(224)
-ax3.plot(x, np.log(x))
+ax3.barh(np.log(abs(x.cumsum())))
 plt.show()
 
-# 跳出两张图
-fig1 = plt.figure()
-ax1 = fig1.add_subplot(111)
-ax1.plot([1, 2, 3], [3, 2, 1])
-fig2 = plt.figure()
-ax2 = fig2.add_subplot(111)
-ax2.plot([1, 2, 3], [1, 2, 3])
-plt.show()
+# linspace的间隔数量是101-1
+x = np.linspace(0, 10, 101)
+# 直接使用plt.subplots, axes是个numpy数组，形状相同与subplots输入形状相同
+fig, axes = plt.subplots(2, 2)
+axes[0][0].plot(x, x * x)
+axes[0][1].plot(x, (10 - x) * (10 - x))
+axes[1][0].plot(x, 100 - x * x)
+axes[1][1].plot(x, 100 - (10 - x) * (10 - x))
+# 调整图像之间的间距
+# plt.subplots_adjust(right=0, left=0, top=0, bottom=0)
+plt.subplots_adjust(wspace=0, hspace=0)
+# x轴刻度范围
+axes[0][0].get_xlim()
+axes[0][0].set_xlim((-0.5, 20.5))
+
+# 设置刻度
+axes[1][0].set_xticks([5, 10])
+# 图例
+axes[1][1].legend(loc='best')
+# 文字
+axes[0][1].text(5, 50, 'Hello world!', family='monospace', fontsize=10)
 
 # 解决中文显示问题
 plt.rcParams['font.sans-serif'] = ['KaiTi']

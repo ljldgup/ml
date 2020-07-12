@@ -19,10 +19,13 @@ arr.size
 arr.ndim
 arr.shape
 
-# 创建相同形状举证
-# 创建相同形状举证
+# 创建相同形状矩阵
+# 创建相同形状矩阵
 np.zeros(arr.shape)
 np.ones(arr.shape)
+# 效果相同
+np.zeros_like(arr)
+np.ones_like(arr)
 
 # 重塑
 arr.reshape(3, 4)
@@ -55,32 +58,35 @@ arr * arr
 # 矩阵乘法， 转置arr.T
 np.dot(arr, arr.T)
 
-# 指数，三角函数（弧度制），开方
+# 指数，三角函数（弧度制），开方, sign
 np.exp(arr)
 np.sin(arr)
 np.sqrt(arr)
-# 按行累计总和
-arr.cumsum(1)
-
-# 纵向，横向分割,2,3代表分成几块
-np.vsplit(arr, 2)
-np.hsplit(arr, 3)
+np.sign(arr - arr.mean())
 
 # ------------------------------------------
 # 统计
-nums = np.random.randint(1, 6, (15, 5))
+nums = np.random.randint(1, 60, (15, 5))
 
 # 最大值，最大值位置索引，排序索引，排序（会改变本身的值）
 nums.max()
 nums.argmax()
 nums.argsort()
+
+# sort会改变自身的值
 nums.sort()
+# 可以只排序一部分，同样会改变自身
+nums[:, 0].sort()
+
+# numpy.sort会创建副本
+np.sort(nums)
+np.sort(nums[:, 0])
+# 在有序数组中查找
+np.searchsorted(np.sort(nums[:, 0]), 12)
 
 # 参数维度相同，同一位置保留最大
 np.maximum(nums, np.random.randint(2, 5, (15, 5)))
-
-# 根据条件生成
-np.where(nums % 2, 1, 0)
+np.minimum(nums, np.random.randint(2, 5, (15, 5)))
 
 # 均值
 # 矩阵只有两维，这两个等价
@@ -119,6 +125,7 @@ print(a > 6)
 
 # 一次性赋予 多个值
 a[range(2), [1, 3]] = [100, 100]
+a[range(2), [1, 3]] = 200
 
 '''
 array([[  1, 100,   3,   4,   5],
@@ -168,53 +175,3 @@ np.arange(5) * np.arange(9)
 
 t = np.array([[1, 2], [1, 2]])
 print(t * t == t.dot(t))
-
-'''
-广播的原则
-    数组维度不同，后缘维度的轴长相符
-    数组维度相同，其中有个轴为1
-'''
-
-# 后缘维度的轴长相符
-np.arange(6).reshape(3, 2) + np.arange(2).reshape(2)
-np.arange(18).reshape(3, 2, 3) + np.arange(6).reshape(2, 3)
-
-# 数组维度相同，其中有个轴长度为1，操作后改轴长度将会被另一个矩阵对应轴长度取代
-np.arange(6).reshape(3, 1, 2) + np.arange(24).reshape(3, 4, 2)
-
-# 注意这里连个矩阵分别在1,0维度上长度为1，所以可以相加 (6, 1)+(1, 5)->(6,5)
-np.arange(6).reshape(6, 1) + np.arange(5).reshape(1, 5)
-
-# 同上但中间维度2 不变  (3, 2, 1)+(1, 2, 3) -> (3, 2, 3)
-np.arange(6).reshape(3, 2, 1) + np.arange(6).reshape(1, 2, 3)
-
-# 计算元素累积乘积
-np.prod(np.arange(1, 7))
-np.prod(np.arange(1, 7).reshape(3, 2))
-np.prod(np.arange(1, 7).reshape(3, 2), axis=0)
-np.prod(np.arange(1, 7).reshape(3, 2), axis=1)
-
-# 沿不同的方向累加，累积
-np.cumsum(np.arange(12).reshape(3,4), axis=0)
-np.cumsum(np.arange(12).reshape(3,4), axis=1)
-np.cumprod(np.arange(12).reshape(3,4), axis=0)
-np.cumprod(np.arange(12).reshape(3,4), axis=1)
-
-# 去重并排序
-np.unique(np.arange(12).reshape(3,4))
-
-# 交集
-np.intersect1d(np.arange(12).reshape(3,4),np.arange(8,16).reshape(2,4))
-
-# 并集
-np.union1d(np.arange(12).reshape(3,4),np.arange(8,16).reshape(2,4))
-
-# x是否存在于y
-np.in1d(np.arange(12).reshape(3,4),np.arange(8,16).reshape(2,4))
-
-
-# 重复元素
-np.tile([1, 2], 14)
-# 只扩充到最后一个维度
-np.tile([[1, 2], [3, 4]], 14)
-np.tile([1, 2], 14).reshape(2, 14)

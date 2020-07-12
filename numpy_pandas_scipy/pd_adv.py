@@ -4,7 +4,29 @@ import numpy as np
 import pandas as pd
 from pandas.tseries.offsets import Hour, Minute, Day, MonthEnd
 
-df = pd.DataFrame(np.random.randint(6, size=(8, 5)), columns=['A', 'B', 'C', 'D', 'E'])
+df = pd.DataFrame(np.random.randint(100, size=(8, 5)), columns=['A', 'B', 'C', 'D', 'E'])
+sdata = pd.Series(['AA', 'BB', 'CC', 'DD', 'EE'], [22, 44, 66, 88, 1010])
+df_str = pd.DataFrame(
+    [['USA', 'Right-handed'],
+     ['Japan', 'Left-handed'],
+     ['USA', 'Right-handed'],
+     ['Japan', 'Right-handed'],
+     ['Japan', 'Left-handed'],
+     ['Japan', 'Right-handed'],
+     ['USA', 'Right-handed'],
+     ['USA', 'Left-handed'],
+     ['Japan', 'Right-handed'],
+     ['USA', 'Right-handed'], ], columns=['Nationality', 'Handedness'])
+
+# 可以使用大部分python string内置的函数和正则表达式
+sdata.str.lower()
+sdata.str.contain('A')
+sdata.str.findall('A')
+sdata.str.count('A')
+
+# 保留两位小数
+t = (df / 7)
+t.round(decimals=2)
 
 # 和sum，同样的有mean, std, var, median, max, min, nunique, count, mode, prod
 # mode返回中众数，可能有多个
@@ -35,9 +57,22 @@ df.shift(1)
 
 # 上述不加参数默认为1
 
+# 排序
+df.sort_values(by=['A', 'B'])
+
+# series值统计
+df['A'].value_counts()
+
+# 这里1位行，0为列
+(df > 3).any(1)
+(df > 3).any(0)
+(df > 1).all(1)
+(df > 1).all(0)
 
 # 聚合
 df.groupby('A').sum()
+# 分位数
+df.quantile(0.9)
 
 # 数据转换map 对一列，applymap对所有
 df['A'] = df['A'].map(lambda x: x % 2)
@@ -66,6 +101,8 @@ data = data.take(np.random.permutation(20))
 data['sum'] = data['test'].rolling(3).sum()
 # 移动3个值，进行求平均数
 data['mean'] = data['test'].rolling(3).mean()
+# 指数加权平均
+data['ewm_mean'] = data['test'].ewm(3).mean()
 # 移动3个值，最小计数为2
 data['mean_min_periods_2'] = data['test'].rolling(3, min_periods=2).mean()
 # 加权均值
@@ -94,24 +131,23 @@ human.codes
 pd.value_counts(human)
 human.value_counts
 
+# 根据样本分位数划分，数字是比列累加
+cuts = pd.qcut(df['A'], [0, 0.1, 0.5, 0.9, 1.])
+# 通过cut groupby分组
+groups = df.groupby(cuts)
+groups.count()
+
+
+
 # 修改闭区间
 human = pd.cut(ages, [0, 5, 20, 30, 50, 100], labels=["婴儿", "青年", "中年", "壮年", "老年"], right=False)
 
-# 根据样本分位数划分，数字是比列累加
-human = pd.qcut(ages, [0, 0.1, 0.5, 0.9, 1.])
-
 # 虚拟变量 ( Dummy Variables) 又称虚设变量、名义变量或哑变量
-# 用以反映质的属性的一个人工变量，是量化了的自变量，通常取值为0或1。
+# 将列中值变为为独立列，对应列名值的位置取1，其余取0。
 pd.get_dummies(df['A'])
 pd.get_dummies(pd.cut(ages, 5))
 pd.get_dummies(pd.qcut(ages, [0, 0.1, 0.5, 0.9, 1.]))
 
-# 聚合
-# 传入函数对index聚合
-df.groupby(lambda x: x % 2).count()
-
-# 传入处理过的列，只要index来源一样就行
-df.groupby(df['C'].map(float) % 2).count()
 
 # 采用多个列会出现多层次索引
 t = df.groupby(['A', 'B']).count()
@@ -123,15 +159,55 @@ t.loc['0.00'].loc['0.00']
 t.index
 t['C'].plot.bar()
 
-# unstack 后部分索引放到列上面,重新绘制，可以通过这种方式绘制和两个列有关的柱状图
+# unstack索引放到列上面, stack是逆操作
+t.unstack()
+t.stack()
 t.unstack().index
+# 可以通过这种方式绘制和两个列有关的柱状图
+t['C'].plot.bar()
 t.unstack()['C'].plot.bar()
+
+# 使用Handedness做索引
+t = df_str.set_index(['Handedness'])
+t.unstack()
+t.stack()
+
+# crosstab
+pd.crosstab(df_str.Nationality, df_str.Handedness)
+
+# 使用groupby实现crosstab，如果不加一列，这两列groupby就没有可统计内容了，返回空
+df_str['sample'] = 1
+df_str.groupby(['Handedness', 'Handedness']).sum().unstack()
+
+# 这里只是将A,B作为index，没有进行聚合
+df.pivot_table(index=['A', 'B'])
+df.pivot_table(index=['A', 'B']).unstack()
+df.pivot_table(index=['A', 'B']).stack()
+
+# groupby的结构
+for (k1, k2), group in df.groupby(['A', 'B']):
+    print((k1, k2))
+print(group)
+
+# 字典化
+dict(list(df.groupby(['A', 'B'])))
+
+# 传入函数对index聚合
+df.groupby(lambda x: x % 2).count()
+
+# 传入处理过的列，只要index来源一样就行
+df.groupby(df['C'].map(float) % 2).count()
 
 # 不使用聚合函数, 不会改变结构， 内部使用pd.contact合并 可以用于一些分块操作
 df.groupby(['A', 'B']).apply(lambda x: x.applymap(float))
 
 # 这样使用了会保留A, B
 df.groupby(['A', 'B']).apply(lambda x: x.applymap(float).sum())
+
+# 与apply类似， transform的函数会返回Series，但是结果必须与输⼊⼤⼩相同
+groups.transform(lambda x: x.mean())
+
+df.groupby(['A', 'B'])['C'].quantile(0.9)
 
 # 时间偏移
 pd.date_range('2000-01-01', '2000-01-03', freq=Hour(12))
@@ -156,7 +232,7 @@ ts.groupby(offset.rollback).count()
 ts.asfreq('W', how='start')
 ts.asfreq('W', how='end')
 
-# 重采样，提取平均
+# 根据时间区间进行重采样，提取平均
 ts.resample('M')
 ts.resample('M').mean()
 ts.sample(5)
