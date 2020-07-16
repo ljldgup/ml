@@ -60,3 +60,19 @@ for epoch in range(1, n_epochs + 1):
     print_status_bar(len(y_train), len(y_train), mean_loss, metrics)
     for metric in [mean_loss] + metrics:
         metric.reset_states()
+
+
+# 对输入而不是w，b求导,可用于图片生成
+def loss_object(y_ture, y_pred):
+    return keras.losses.mean_squared_error(y_ture, y_pred)
+
+#
+X = tf.constant(X_batch)
+with tf.GradientTape() as tape:
+    # 注意这里X不是模型中的参数，而是外来输入，所以需要watch
+    tape.watch([X])
+    predictions = model(X)
+    loss = loss_object(y_batch, predictions)
+
+gradients = tape.gradient(loss, [X])[0]
+X += 0.01 * gradients
