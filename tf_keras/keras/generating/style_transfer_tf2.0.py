@@ -47,6 +47,7 @@ def imshow(image, title=None):
         image = tf.squeeze(image, axis=0)
 
     plt.imshow(image)
+    plt.imsave(title + '.jpg', image.numpy())
     if title:
         plt.title(title)
 
@@ -250,15 +251,16 @@ if __name__ == '__main__':
 
     plt.figure(figsize=(14, 10))
     plt.subplot(2, 2, 1)
-    imshow(clip_0_1(2 * y_deltas + 0.5), "Horizontal Deltas: Original")
+    # 图片保存在imshow里完成
+    imshow(clip_0_1(2 * y_deltas + 0.5), "Horizontal_Deltas_Original")
 
     plt.subplot(2, 2, 2)
-    imshow(clip_0_1(2 * x_deltas + 0.5), "Vertical Deltas: Original")
+    imshow(clip_0_1(2 * x_deltas + 0.5), "Vertical_Deltas_Original")
 
     x_deltas, y_deltas = high_pass_x_y(image)
 
     plt.subplot(2, 2, 3)
-    imshow(clip_0_1(2 * y_deltas + 0.5), "Horizontal Deltas: Styled")
+    imshow(clip_0_1(2 * y_deltas + 0.5), "Horizontal_Deltas_Styled")
 
     plt.subplot(2, 2, 4)
-    imshow(clip_0_1(2 * x_deltas + 0.5), "Vertical Deltas: Styled")
+    imshow(clip_0_1(2 * x_deltas + 0.5), "Vertical_Deltas_Styled")
