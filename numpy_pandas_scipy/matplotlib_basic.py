@@ -6,10 +6,12 @@ x = np.arange(1, 11)
 y1 = 2 * x + 5
 # numpy x*x只是矩阵中的对应元素相乘，等同于np.multiply()，不是矩阵相乘, 不是矩阵相乘是np.dot
 y2 = 2 * x * x - 4
-plt.title("菜鸟教程 - 测试")
+plt.title("测试")
 plt.plot(x, y1)
 plt.plot(x, y2)
 plt.show()
+# 清空图像
+plt.clf()
 
 # 正弦曲线
 # 计算正弦曲线上点的 x 和 y 坐标
@@ -45,7 +47,6 @@ plt.show()
 
 plt.barh(np.arange(len(x)), x)
 plt.show()
-
 
 # numpy.histogram()
 # numpy.histogram() 函数是数据的频率分布的图形表示。 水平尺寸相等的矩形对应于类间隔，称为 bin，变量 height 对应于频率。

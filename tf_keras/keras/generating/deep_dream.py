@@ -139,6 +139,7 @@ if __name__ == '__main__':
                               step=step,
                               max_loss=max_loss)
         upscaled_shrunk_original_img = resize_img(shrunk_original_img, shape)
+        # 由于缩放，在放大造成了图像内容损失，这里进行弥补
         same_size_original = resize_img(original_img, shape)
         lost_detail = same_size_original - upscaled_shrunk_original_img
         img += lost_detail

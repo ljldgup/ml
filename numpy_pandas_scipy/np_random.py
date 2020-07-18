@@ -23,6 +23,13 @@ np.random_sample((2, 3))
 # np.random.choice(5, 3)
 np.random.choice(5, 3, p=[0.1, 0, 0.3, 0.6, 0])
 
+# 多项式采样，返回 n次采样中各取值的数量，size规模
+np.random.multinomial(n=1, pvals=[0.2, 0.2, 0.3, 0.3], size=4)
+# 每行总和为100
+np.random.multinomial(n=100, pvals=[0.2, 0.2, 0.3, 0.3], size=4).sum(axis=1)
+
+# 这个效果就和np.random.choice(4, 3, p=[0.2, 0.2, 0.3, 0.3])
+np.random.multinomial(1, [0.2, 0.2, 0.3, 0.3], 4).argmax(axis=0)
 # 均匀分布采样，可以实现类似random.choice的功能
 np.random.uniform(1, 9, (10, 4))
 
