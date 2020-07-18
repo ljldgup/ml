@@ -13,6 +13,12 @@ plt.show()
 # 清空图像
 plt.clf()
 
+# 注意这里会按照第一个维度10分开统计
+fig1 = plt.figure()
+data = np.random.randint(0, 100, size=(10, 100))
+ax1 = fig1.add_subplot(111)
+ax1.hist(data, bins=10)
+
 # 正弦曲线
 # 计算正弦曲线上点的 x 和 y 坐标
 x = np.arange(0, 3 * np.pi, 0.1)
