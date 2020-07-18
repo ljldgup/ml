@@ -7,7 +7,7 @@ from tensorflow.keras import models, layers, optimizers
 
 
 from tf_keras.keras import tools
-from tf_keras.keras.dogs_cats import preprocess, plot_image
+from tf_keras.keras.dogs_cats import preprocess
 
 
 def build_model(conv_base):

@@ -1,5 +1,13 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+
+
+def use_proxy():
+    HTTP_PROXY = "http_proxy"
+    HTTPS_PROXY = "https_proxy"
+    os.environ[HTTP_PROXY] = "cn-proxy.jp.oracle.com:80"
+    os.environ[HTTPS_PROXY] = "cn-proxy.jp.oracle.com:80"
 
 
 def create_data(x_train, y_train, size=10000):
@@ -44,6 +52,7 @@ def plot_accuracy(history_dict):
     plt.legend()
     plt.show()
 
+
 def smooth_curve(points, factor=0.9):
     smoothed_points = []
     for point in points:
@@ -53,6 +62,7 @@ def smooth_curve(points, factor=0.9):
         else:
             smoothed_points.append(point)
     return smoothed_points
+
 
 def k_fold_crossValidation(build_model_func, k, train_data, train_targets, num_epochs=30):
     all_mae_histories = []
@@ -80,7 +90,7 @@ def k_fold_crossValidation(build_model_func, k, train_data, train_targets, num_e
 
     average_mae_history = [
         np.mean([x[i] for x in all_mae_histories]) for i in range(num_epochs)]
-    #smooth_mae_history = smooth_curve(average_mae_history[10:])
+    # smooth_mae_history = smooth_curve(average_mae_history[10:])
     plt.clf()
     plt.plot(range(1, len(average_mae_history) + 1), average_mae_history)
     plt.xlabel('Epochs')
