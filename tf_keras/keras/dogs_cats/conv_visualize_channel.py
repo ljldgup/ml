@@ -6,7 +6,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.python.keras.preprocessing import image
 import os
-use_proxy()
 
 def plot_augment_image(train_dir):
     train_cats_dir = os.path.join(train_dir, 'cats')
