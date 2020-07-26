@@ -1,27 +1,43 @@
-from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
+from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering, MiniBatchKMeans
 from sklearn.datasets import make_classification, fetch_openml, make_moons, make_blobs
 from matplotlib.image import imread  # or `from imageio import imread`
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
+from sklearn.manifold import TSNE
+from sklearn.metrics import silhouette_score
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.datasets import load_digits
 
 import numpy as np
+from sklearn.preprocessing import OrdinalEncoder, LabelEncoder
 
-X, y = make_classification(
+X, y = make_classification(n_classes=4,
     n_samples=300, n_features=2,
     n_redundant=0, n_informative=2,
     random_state=22, n_clusters_per_class=1,
     scale=100)
-k = 5
-kmeans = KMeans(n_clusters=k)
-y_pred = kmeans.fit_predict(X)
+silhouette_scores = []
+inertias = []
+for i in range(2, 15):
+    kmeans = KMeans(n_clusters=i)
+    y_pred = kmeans.fit_predict(X)
+    silhouette_scores.append(silhouette_score(X, kmeans.labels_))
+    inertias.append(kmeans.inertia_)
+# inertial趋于平缓的拐点最好
+plt.plot(inertias, c='red')
+
+
+plt.clf()
+#silhouette_scores大效果好
+plt.plot(silhouette_scores, c='purple')
 
 # 图片像素分割
 image = imread('timg.jpg')
 X = image.reshape(-1, 3)
+
+'''
 fig, ax = plt.subplots(
     nrows=2,
     ncols=2,
@@ -32,6 +48,25 @@ for i in range(4):
     kmeans = KMeans(n_clusters=i * 3 + 2).fit(X)
     # 这里几个质心代替了所有像素
     segmented_img = kmeans.cluster_centers_[kmeans.labels_]
+    segmented_img = segmented_img.reshape(image.shape)
+    ax[i // 2][i % 2].imshow(segmented_img / 255)
+    ax[i // 2][i % 2].set_title('{} color'.format(i * 3 + 2))
+plt.tight_layout()
+plt.show()
+'''
+
+# MiniBatchKMeans 明显要比KMeans快的多
+fig, ax = plt.subplots(
+    nrows=2,
+    ncols=2,
+    sharex=True,
+    sharey=True, )
+
+for i in range(4):
+    minibatch_kmeans = MiniBatchKMeans(n_clusters=i * 3 + 2)
+    minibatch_kmeans.fit(X)
+    # 这里几个质心代替了所有像素
+    segmented_img = minibatch_kmeans.cluster_centers_[minibatch_kmeans.labels_]
     segmented_img = segmented_img.reshape(image.shape)
     ax[i // 2][i % 2].imshow(segmented_img / 255)
     ax[i // 2][i % 2].set_title('{} color'.format(i * 3 + 2))
@@ -66,6 +101,7 @@ representative_digit_idx = np.argmin(X_digits_dist, axis=0)
 X_representative_digits = X_train[representative_digit_idx]
 log_reg = LogisticRegression()
 # y_representative_digits 是手工编辑的
+# 先进性kmeans聚类，再将聚类结果预测为所需分类
 log_reg.fit(X_representative_digits, y_representative_digits)
 log_reg.score(X_test, y_test)
 '''
@@ -102,3 +138,5 @@ plt.tick_params(labelsize=10)
 plt.scatter(x[:, 0], x[:, 1], s=80, c=pred_y, cmap='brg', label='Samples')
 plt.legend()
 plt.show()
+
+kneighbors_graph()

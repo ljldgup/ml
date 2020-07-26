@@ -25,6 +25,13 @@ np.arange(6).reshape(6, 1) + np.arange(5).reshape(1, 5)
 # 同上但中间维度2 不变  (3, 2, 1)+(1, 2, 3) -> (3, 2, 3)
 np.arange(6).reshape(3, 2, 1) + np.arange(6).reshape(1, 2, 3)
 
+# 开始出头部形状相同无法广播，需要添加1的轴至形状相同
+np.arange(24).reshape(4, 3, 2) + np.arange(12).reshape(4, 3)
+np.arange(12).reshape(4, 3) + np.arange(4).reshape(4)
+
+np.arange(24).reshape(4, 3, 2) + np.arange(12).reshape(4, 3, 1)
+np.arange(12).reshape(4, 3) + np.arange(4).reshape(4, 1)
+
 # 计算元素累积乘积
 np.prod(np.arange(1, 7))
 np.prod(np.arange(1, 7).reshape(3, 2))
@@ -36,6 +43,11 @@ np.cumsum(np.arange(12).reshape(3, 4), axis=0)
 np.cumsum(np.arange(12).reshape(3, 4), axis=1)
 np.cumprod(np.arange(12).reshape(3, 4), axis=0)
 np.cumprod(np.arange(12).reshape(3, 4), axis=1)
+
+t = abs(np.random.randn(10))
+percent = t.cumsum() / t.sum()
+# 借助cumsum截取百分比
+t[percent > .80]
 
 # 去重并排序
 np.unique(np.arange(12).reshape(3, 4))

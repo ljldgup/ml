@@ -67,6 +67,12 @@ class LNSimpleRNNCell(keras.layers.Layer):
         self.activation = keras.activations.get(activation)
 
     def call(self, inputs, states):
+        # 这里new_states是最后一个状态
         outputs, new_states = self.simple_rnn_cell(inputs, states)
         norm_outputs = self.activation(self.layer_norm(outputs))
         return norm_outputs, [norm_outputs]
+
+if __name__ == '__main__':
+    y,h = keras.layers.GRU(20,return_sequences=True, return_state=True)
+    # 双向rnn，init参数是rnn层，可以使用cuda支持的rnn
+    keras.layers.Bidirectional(keras.layers.GRU(20))

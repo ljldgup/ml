@@ -1,15 +1,19 @@
-from sklearn.datasets import make_moons, fetch_openml
+from sklearn.datasets import make_moons, fetch_openml, make_classification
 import numpy as np
 from sklearn.decomposition import PCA, IncrementalPCA, KernelPCA
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import LabelEncoder
+import matplotlib.pyplot as plt
+from sklearn.manifold import TSNE, LocallyLinearEmbedding
 
 X, y = make_moons(n_samples=1000, noise=0.15)
 X_centered = X - X.mean(axis=0)
 U, s, Vt = np.linalg.svd(X_centered)
 c1 = Vt.T[:, 0]
 c2 = Vt.T[:, 1]
+# W2 就是两个主成分系数
 W2 = Vt.T[:, :2]
 X2D = X_centered.dot(W2)
 
@@ -68,3 +72,42 @@ param_grid = [{
 }]
 grid_search = GridSearchCV(clf, param_grid, cv=3)
 grid_search.fit(X, y)
+
+
+# 降维可视化
+X, y = make_classification(
+    n_samples=500, n_features=6, n_classes=4,
+    n_redundant=0, n_informative=4,
+    random_state=22, n_clusters_per_class=1,
+    scale=100)
+
+# n_components将为到2
+tsne = TSNE(n_components=2, init='pca', random_state=0)
+# 降维后的数据
+X2D = tsne.fit_transform(X)
+
+#数据标签
+markers = ['v', 's', 'o', 'x']
+encoder = LabelEncoder()
+encoder.fit(markers)
+y_markers = encoder.inverse_transform(y)
+# plt.scatter(X2D[:, 0], X2D[:, 1], c=y, s=10,cmap="tab10")
+
+for label in set(y):
+    # s形状可输入与x,y同形状的矩阵，alpha透明度，marker形状
+    plt.scatter(X2D[:, 0][y == label], X2D[:, 1][y == label], s=80, alpha=0.6, marker=markers[label])
+
+#使用主成分进行降维度
+rbf_pca = KernelPCA(n_components = 2, kernel="rbf", gamma=0.04)
+X2D = rbf_pca.fit_transform(X)
+for label in set(y):
+    plt.scatter(X2D[:, 0][y == label], X2D[:, 1][y == label], s=80, alpha=0.6, marker=markers[label])
+
+lle = LocallyLinearEmbedding(n_components=2, n_neighbors=10)
+X_reduced = lle.fit_transform(X)
+X2D = lle.fit_transform(X)
+plt.scatter(X2D[:, 0], X2D[:, 1], c=y, s=10,cmap="tab10")
+'''
+for label in set(y):
+    plt.scatter(X2D[:, 0][y == label], X2D[:, 1][y == label], s=80, alpha=0.6, marker=markers[label])
+'''

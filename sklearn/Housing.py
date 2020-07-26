@@ -19,6 +19,7 @@ from sklearn.tree import DecisionTreeRegressor
 rooms_ix, bedrooms_ix, population_ix, households_ix = 3, 4, 5, 6
 
 
+# 自定义转换器Transformer
 class CombinedAttributesAdder(BaseEstimator, TransformerMixin):
 
     def __init__(self, add_bedrooms_per_room=True):  # no *args or**kargs
@@ -189,8 +190,7 @@ def test(housing):
     # 超参数的自动搜索
     param_grid = [
         {'n_estimators': [3, 10, 30], 'max_features': [2, 4, 6, 8]},
-        {'bootstrap': [False], 'n_estimators': [3, 10], 'max_features': [2, 3,
-                                                                         4]},
+        {'bootstrap': [False], 'n_estimators': [3, 10], 'max_features': [2, 3, 4]},
     ]
     forest_reg = RandomForestRegressor()
     grid_search = GridSearchCV(forest_reg, param_grid, cv=5,

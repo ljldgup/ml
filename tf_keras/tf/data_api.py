@@ -1,4 +1,5 @@
 import tensorflow as tf
+import numpy as np
 
 X = tf.range(10)  # any data tensor
 dataset = tf.data.Dataset.from_tensor_slices(X)
@@ -71,3 +72,16 @@ embedding_matrix = tf.Variable(embed_init)
 categories = tf.constant(["NEAR BAY", "DESERT", "INLAND", "INLAND"])
 cat_indices = table.lookup(categories)
 tf.nn.embedding_lookup(embedding_matrix, cat_indices)
+
+# 时间序列的数据生成
+dataset = tf.data.Dataset.from_tensor_slices(np.random.randn(100, 4))
+
+# 这里的window返回的是dataset，所有后面调用batch生成一组数据，并压平
+dataset = dataset.window(21, shift=1, drop_remainder=True)
+dataset = dataset.flat_map(lambda w: w.batch(21))
+# 将数据分别映射为两组
+dataset = dataset.map(lambda x: (x[:-1], x[-1]))
+# dataset = dataset.shuffle(buffer_size=5, seed=42).batch(7)
+dataset = dataset.batch(16)
+for x, y in dataset:
+    print(x.shape, y.shape)

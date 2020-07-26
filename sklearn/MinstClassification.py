@@ -166,3 +166,13 @@ knn_clf = KNeighborsClassifier()
 knn_clf.fit(X_train, y_multilabel)
 y_train_knn_pred = cross_val_predict(knn_clf, X_train, y_multilabel, cv=3)
 f1_score(y_multilabel, y_train_knn_pred, average="macro")
+
+noise = np.random.randint(0, 100, (len(X_train), 784))
+X_train_mod = X_train + noise
+noise = np.random.randint(0, 100, (len(X_test), 784))
+X_test_mod = X_test + noise
+y_train_mod = X_train
+y_test_mod = X_test
+knn_clf.fit(X_train_mod, X_train_mod)
+clean_digit = knn_clf.predict([X_test_mod[1]])
+plt.imshow(clean_digit)
