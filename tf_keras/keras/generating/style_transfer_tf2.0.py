@@ -1,5 +1,4 @@
 import tensorflow as tf
-
 import IPython.display as display
 from matplotlib import pyplot as plt
 import matplotlib.pyplot as plt
@@ -50,6 +49,12 @@ def imshow(image, title=None):
     plt.imsave(title + '.jpg', image.numpy())
     if title:
         plt.title(title)
+
+
+def imsave(image, title=None):
+    if len(image.shape) > 3:
+        image = tf.squeeze(image, axis=0)
+    plt.imsave(title + '.jpg', image.numpy())
 
 
 def vgg_layers(layer_names):
@@ -145,9 +150,10 @@ def high_pass_x_y(image):
 
 
 if __name__ == '__main__':
-
-    content_image = load_img('origin9.jpg')
-    style_image = load_img('style8.jpg')
+    style_file = 'style0.jpg'
+    content_file = 'origin5.jpg'
+    content_image = load_img(content_file)
+    style_image = load_img(style_file)
     '''
     plt.subplot(1, 2, 1)
     imshow(content_image, 'Content Image')
@@ -246,12 +252,12 @@ if __name__ == '__main__':
 
     end = time.time()
     print("Total time: {:.1f}".format(end - start))
-
+    imsave(image, style_file + content_file + '.jpg')
+    '''
+    各个方向上
     x_deltas, y_deltas = high_pass_x_y(content_image)
-
     plt.figure(figsize=(14, 10))
     plt.subplot(2, 2, 1)
-    # 图片保存在imshow里完成
     imshow(clip_0_1(2 * y_deltas + 0.5), "Horizontal_Deltas_Original")
 
     plt.subplot(2, 2, 2)
@@ -264,3 +270,4 @@ if __name__ == '__main__':
 
     plt.subplot(2, 2, 4)
     imshow(clip_0_1(2 * x_deltas + 0.5), "Vertical_Deltas_Styled")
+    '''
