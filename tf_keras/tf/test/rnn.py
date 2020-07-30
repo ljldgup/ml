@@ -74,6 +74,7 @@ class LNSimpleRNNCell(keras.layers.Layer):
 
 
 if __name__ == '__main__':
+    x = keras.layers.Input((1, 1))
     y, h = keras.layers.GRU(20, return_sequences=True, return_state=True)
     y, h, c = keras.layers.LSTM(20, return_sequences=True, return_state=True)
     # 双向rnn，init参数是rnn层，可以使用cuda支持的rnn

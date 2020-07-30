@@ -111,8 +111,7 @@ def separable_conv2D_network():
     model.add(tf.keras.layers.MaxPooling2D((2, 2)))
     model.add(tf.keras.layers.SeparableConv2D(64, (3, 3), activation='relu'))
 
-    # 注意通过summry可以看到Flatten本身就是有数量的，应该可以看成一层全连接
-    # 全连接之间的参数数量巨大，conv2d似乎可以减小flatten时的数量，或许可以理解为信息的压缩
+    # 全连接之间的参数数量巨大，conv2d似乎可以减小flatten时的数量，或许可以理解为信息的提取，压缩
     model.add(tf.keras.layers.Flatten())
 
     # Dropout弃权，避免过拟合

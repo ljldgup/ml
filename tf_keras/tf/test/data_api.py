@@ -17,7 +17,7 @@ dataset = dataset.map(lambda x: x * 2)
 dataset = dataset.apply(tf.data.experimental.unbatch())
 dataset = dataset.filter(lambda x: x < 10)
 
-# 打乱数据
+# 打乱数据,注意这里可以设置size
 dataset = tf.data.Dataset.range(10).repeat(3)  # 0 to 9, three times
 dataset = dataset.shuffle(buffer_size=5, seed=42).batch(7)
 for item in dataset:
@@ -77,6 +77,7 @@ tf.nn.embedding_lookup(embedding_matrix, cat_indices)
 dataset = tf.data.Dataset.from_tensor_slices(np.random.randn(100, 4))
 
 # 这里的window返回的是dataset，所有后面调用batch生成一组数据，并压平
+# drop_remainder表示是否最后一批应在其具有比少的情况下被丢弃batch_size元件，默认行为是不放弃小批量。
 dataset = dataset.window(21, shift=1, drop_remainder=True)
 dataset = dataset.flat_map(lambda w: w.batch(21))
 # 将数据分别映射为两组

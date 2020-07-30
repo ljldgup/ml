@@ -92,9 +92,11 @@ np.maximum(nums, np.random.randint(2, 5, (15, 5)))
 np.minimum(nums, np.random.randint(2, 5, (15, 5)))
 
 # 均值
-# 矩阵只有两维，这两个等价
 np.mean(nums)
+
+# 类似操作可以指定多个轴
 np.mean(nums, axis=(0, 1))
+
 
 # 每列均值
 np.mean(nums, axis=1)
