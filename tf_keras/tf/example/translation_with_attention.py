@@ -196,7 +196,8 @@ def train_step(inp, targ, enc_hidden):
 
         # 每个单词做一次解码，第一次输入都是<start>
         for t in range(1, targ.shape[1]):
-            # 这里输出dec_hidden作为下一次隐藏状态的输入，
+            # 这里输出dec_hidden作为下一次隐藏状态的输入，所以虽然是循环，decoder的总体流程相当完整序列解码
+            # 这是针对解码成一个序列的解码，如果解码成一个的话，decoder中gru应该可以换成fc
             predictions, dec_hidden, _ = decoder(dec_input, dec_hidden, enc_output)
             loss += loss_function(targ[:, t], predictions)
             # 每个batch 输入切换成下一个单词

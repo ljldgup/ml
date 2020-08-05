@@ -218,7 +218,7 @@ def run_deep_dream_with_octaves(img, steps_per_octave=100, step_size=0.01,
 if __name__ == '__main__':
 
     # Downsizing the image makes it easier to work with.
-    original_img = process_image('origin2.jpg', max_dim=500)
+    original_img = process_image('../../keras/generating/origin2.jpg', max_dim=500)
     # original_img = PIL.Image.open('origin1.jpg')
     # show(original_img)
 
