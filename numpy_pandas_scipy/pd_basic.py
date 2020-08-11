@@ -7,13 +7,16 @@ import pandas as pd
 
 # 读写
 df = pd.read_csv(r"../data/000513_d_bas.csv")
-# 读取5行
+# 生成默认列
+pd.DataFrame(np.random.rand(100, 3))
 pd.read_csv(r"../data/000513_d_bas.csv", nrows=5)
 # 逐块迭代读取，返回生成器
 pd.read_csv(r"../data/000513_d_bas.csv", chunksize=10)
 
 df.to_csv("1.csv")
 
+# 不给列名，列名和index一样默认123.。
+df = pd.DataFrame(np.random.rand(100, 3))
 # 使用np生成,注意columns=，pandas很多函数参数很多，需要指定参数名
 df = pd.DataFrame(np.arange(30).reshape(6, 5), columns=['A', 'B', 'C', 'D', 'E'])
 # 生成Series，注意series是一列,不是一行，这里的ABC65是index
