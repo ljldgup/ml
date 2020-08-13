@@ -1,3 +1,4 @@
+from pyparsing import col
 from pyspark.sql import SparkSession
 
 spark = SparkSession \
@@ -40,7 +41,6 @@ schemaPeople.createOrReplaceTempView("people")
 results = spark.sql("SELECT name FROM people")
 results.show()
 
-
 import numpy as np
 import pandas as pd
 
@@ -60,10 +60,12 @@ import pandas as pd
 
 from pyspark.sql.functions import pandas_udf
 
+
 @pandas_udf("col1 string, col2 long")
 def func(s1: pd.Series, s2: pd.Series, s3: pd.DataFrame) -> pd.DataFrame:
     s3['col2'] = s1 + s2.str.len()
     return s3
+
 
 # Create a Spark DataFrame that has three columns including a sturct column.
 df = spark.createDataFrame(
@@ -84,12 +86,14 @@ df.select(func("long_col", "string_col", "struct_col")).printSchema()
 
 import pandas as pd
 
-from pyspark.sql.functions import col, pandas_udf
+from pyspark.sql.functions import pandas_udf
 from pyspark.sql.types import LongType
+
 
 # Declare the function and create the UDF
 def multiply_func(a: pd.Series, b: pd.Series) -> pd.Series:
     return a * b
+
 
 multiply = pandas_udf(multiply_func, returnType=LongType())
 
