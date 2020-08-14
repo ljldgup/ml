@@ -51,10 +51,6 @@ test = spark.createDataFrame([
     (0.0, Vectors.dense([3.0, 2.0, -0.1])),
     (1.0, Vectors.dense([0.0, 2.2, -1.5]))], ["label", "features"])
 
-# Make predictions on test data using the Transformer.transform() method.
-# LogisticRegression.transform will only use the 'features' column.
-# Note that model2.transform() outputs a "myProbability" column instead of the usual
-# 'probability' column since we renamed the lr.probabilityCol parameter previously.
 # 注意logistic 回归 是分类模型
 prediction = model2.transform(test)
 result = prediction.select("features", "label", "myProbability", "prediction") \
