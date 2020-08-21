@@ -1,4 +1,5 @@
 from pyspark import SparkContext, Row
+from pyspark.sql import SparkSession
 from pyspark.streaming import StreamingContext
 
 # pip install psutil

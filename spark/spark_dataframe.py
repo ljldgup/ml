@@ -1,6 +1,7 @@
 from pyparsing import col
 from pyspark.sql import SparkSession
 
+# 这里spark报找不到文件基本都是设置了系统变量，但变量指向的目录不对
 spark = SparkSession \
     .builder \
     .appName("Python Spark SQL basic example") \
@@ -8,10 +9,9 @@ spark = SparkSession \
     .getOrCreate()
 
 # spark is an existing SparkSession
-df = spark.read.json("resources/people.json")
+df = spark.read.json("../data/resources/people.json")
 # Displays the content of the DataFrame to stdout
 df.show()
-
 df.printSchema()
 df.select("name").show()
 df.select(df['name'], df['age'] + 1).show()
@@ -27,7 +27,7 @@ from pyspark.sql.types import *
 sc = spark.sparkContext
 
 # Load a text file and convert each line to a Row.
-lines = sc.textFile("resources/people.txt")
+lines = sc.textFile("../data/resources/people.txt")
 parts = lines.map(lambda l: l.split(","))
 people = parts.map(lambda p: (p[0], p[1].strip()))
 

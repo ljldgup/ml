@@ -22,6 +22,8 @@ print("Pearson correlation matrix:\n" + str(r1[0]))
 r2 = Correlation.corr(df, "features", "spearman").head()
 print("Spearman correlation matrix:\n" + str(r2[0]))
 
+#############################################################################
+# 假设检验
 data = [(0.0, Vectors.dense(0.5, 10.0)),
         (0.0, Vectors.dense(1.5, 20.0)),
         (1.0, Vectors.dense(1.5, 30.0)),
@@ -30,27 +32,23 @@ data = [(0.0, Vectors.dense(0.5, 10.0)),
         (1.0, Vectors.dense(3.5, 40.0))]
 df = spark.createDataFrame(data, ["label", "features"])
 
+# 卡方检验，比较两个及两个以上样本率( 构成比）以及两个分类变量的关联性分析
+# 其根本思想就是在于比较理论频数和实际频数的吻合程度或拟合优度问题。
 r = ChiSquareTest.test(df, "features", "label").head()
+
+# 这里输出的都是两项，代表两列features与label之间相关性假设检验
 print("pValues: " + str(r.pValues))
 print("degreesOfFreedom: " + str(r.degreesOfFreedom))
 print("statistics: " + str(r.statistics))
 
-
 df = sc.parallelize([Row(weight=1.0, features=Vectors.dense(1.0, 1.0, 1.0)),
                      Row(weight=0.0, features=Vectors.dense(1.0, 2.0, 3.0))]).toDF()
 
-# create summarizer for multiple metrics "mean" and "count"
 summarizer = Summarizer.metrics("mean", "count")
 
-# 成以weight之后的均值
-# compute statistics for multiple metrics with weight
+# 乘以weight之后的均值，计数
 df.select(summarizer.summary(df.features, df.weight)).show(truncate=False)
-
-# compute statistics for multiple metrics without weight
 df.select(summarizer.summary(df.features)).show(truncate=False)
 
-# compute statistics for single metric "mean" with weight
 df.select(Summarizer.mean(df.features, df.weight)).show(truncate=False)
-
-# compute statistics for single metric "mean" without weight
 df.select(Summarizer.mean(df.features)).show(truncate=False)
