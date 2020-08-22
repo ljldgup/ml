@@ -1,6 +1,9 @@
 # ！/usr/bin/env python
 # coding:utf-8
-# 导入socket模块
+
+from time import sleep
+
+import numpy as np
 import socket
 
 word = ['cat', 'dog', 'you']
@@ -24,8 +27,14 @@ while True:
     # 打印接受数据 注：当浏览器访问的时候，接受的数据的浏览器的信息等。
     # print(data)
     # 向对方发送数据
+
     while 1:
         input_word = input()
+        # X1 = 2 * np.random.rand(100)
+        # X2 = 4 * np.random.rand(100)
+        # y1 = 4 + 3 * X1 + 6 * X2 + np.random.randn(100)
+        # for x1, x2, y in zip(X1, X2, y1):
+        #    conn.send(bytes('{} {} {}'.format(x1, x2, y), 'utf-8'))
         conn.send(bytes(input_word, 'utf-8'))
-    # 关闭链接
+        sleep(5)
     conn.close()

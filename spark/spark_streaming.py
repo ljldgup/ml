@@ -4,16 +4,17 @@ from pyspark.streaming import StreamingContext
 
 # pip install psutil
 
-# 对应流式rdd
+#  DSream 代表了一系列连续的RDD，DStream中每个RDD包含特定时间间隔的数据，一个DStream 对应了时间维度上的多个RDD。
 
 # Create a local StreamingContext with two working thread and batch interval of 1 second
 sc = SparkContext("local[2]", "NetworkWordCount")
-ssc = StreamingContext(sc, 1)
-# Create a DStream that will connect to hostname:port, like localhost:9999
+ssc = StreamingContext(sc, 5)
+
 lines = ssc.socketTextStream("localhost", 9999)
-# Split each line into words
+
 words = lines.flatMap(lambda line: line.split(" "))
-# Count each word in each batch
+
+#通过映射成元组，再用字典加权来
 pairs = words.map(lambda word: (word, 1))
 wordCounts = pairs.reduceByKey(lambda x, y: x + y)
 

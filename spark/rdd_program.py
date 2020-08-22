@@ -6,6 +6,7 @@ master = 'local'
 conf = SparkConf().setAppName(appName).setMaster(master)
 sc = SparkContext(conf=conf)
 # rdd两种创建方式，直接喂数据结构，或者载入磁盘文件
+# 接受socket，kafka的时dstream不是rdd，rdd时dstream的下层
 data = [1, 2, 3, 4, 5]
 distData = sc.parallelize(data)
 
