@@ -6,6 +6,24 @@ spark = SparkSession \
     .getOrCreate()
 sc = spark.sparkContext
 
+# VectorAssembler用于生成特征列，spark dataframe有多列特征要用这个合并
+# rdd使用LabeledPoint
+from pyspark.ml.linalg import Vectors
+from pyspark.ml.feature import VectorAssembler
+
+dataset = spark.createDataFrame(
+    [(0, 18, 1.0, Vectors.dense([0.0, 10.0, 0.5]), 1.0)],
+    ["id", "hour", "mobile", "userFeatures", "clicked"])
+
+assembler = VectorAssembler(
+    inputCols=["hour", "mobile", "userFeatures"],
+    outputCol="features")
+
+# 注意transform之后输出才带有合并项目，不改变原来数据
+output = assembler.transform(dataset)
+print("Assembled columns 'hour', 'mobile', 'userFeatures' to vector column 'features'")
+output.select("features", "clicked").show(truncate=False)
+
 ##################################################################################
 # TF是词频 表示词条（关键字）在文本中出现的频率。
 # IDF是逆向文件频率 由总文件数目除以包含该词语的文件的数目，再将得到的商取对数得到。

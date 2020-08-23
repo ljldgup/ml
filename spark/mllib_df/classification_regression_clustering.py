@@ -2,7 +2,12 @@ from pyspark.ml import Pipeline
 from pyspark.ml.classification import RandomForestClassifier, SparkSession
 from pyspark.ml.feature import IndexToString, StringIndexer, VectorIndexer
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+'''
 
+    spark.mllib 包含基于RDD的原始算法API。
+    spark.ml 则提供了基于DataFrames 高层次的API，可以用来构建机器学习管道。
+
+'''
 spark = SparkSession \
     .builder \
     .appName("Python mllib example") \
