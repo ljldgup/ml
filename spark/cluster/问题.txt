@@ -1,0 +1,53 @@
+使用./bin/docker-image-tool.sh build 在windows下运行时，SPARK_HOME时windows下路径形式，没法用。可以设成.，然后在SPARK_HOME下运行。
+pyspark镜像 ./bin/docker-image-tool.sh -R ./kubernetes/dockerfiles/spark/bindings/R/Dockerfile build
+
+Dockerfile 中apt-get国外源非常慢，改成国内源，pip也一样。
+
+
+
+注意这里最后使用local://注明使用image内部本地jar，拷贝位置在Dockerfile中可以找到
+bin\spark-submit.cmd   --master k8s://https://kubernetes.docker.internal:6443   --deploy-mode cluster   --name spark-pi   --class org.apache.spark.examples.SparkPi   --conf spark.executor.instances=8  --conf spark.kubernetes.container.image=spark  local:////opt/spark/examples/jars/spark-examples_2.12-3.0.0.jar
+
+k8s需要拉取国外镜像，但无法访问，通过脚本拉取，对应1.16.5
+#!/bin/bash
+
+set -e
+KUBE_VERSION=v1.16.5
+KUBE_PAUSE_VERSION=3.1
+ETCD_VERSION=3.3.15-0
+COREDNS_VERSION=1.6.2
+GCR_URL=k8s.gcr.io
+ALIYUN_URL=registry.cn-hangzhou.aliyuncs.com/google_containers
+
+# get images
+images=(kube-proxy:${KUBE_VERSION}
+    kube-scheduler:${KUBE_VERSION}
+    kube-controller-manager:${KUBE_VERSION}
+    kube-apiserver:${KUBE_VERSION}
+    pause:${KUBE_PAUSE_VERSION}
+    etcd:${ETCD_VERSION}
+    coredns:${COREDNS_VERSION})
+
+for imageName in ${images[@]} ; do
+    docker pull $ALIYUN_URL/$imageName
+    docker tag $ALIYUN_URL/$imageName $GCR_URL/$imageName
+    docker rmi $ALIYUN_URL/$imageName
+done
+
+kubectl -n default get Service
+# 查看spark ui
+kubectl port-forward <driver-pod-name> 4040:4040
+
+通过
+kubectl describe pods spark-pi-33236f741f5dfc80-exec-1
+发现单个pod 的Requests
+    Requests:
+      cpu:     1
+      memory:  1408Mi
+资源不够,spark对Requests的修改,limit 通过memoryoverhead,具体看文档
+这里的容量单位大写，但是改后并没有减小到准确数值，driver没有减小，可能有最小阈值
+--conf spark.driver.memory=512M --conf spark.executor.memory=512M
+
+bin\spark-submit.cmd   --master k8s://https://kubernetes.docker.internal:6443   --deploy-mode cluster   --name spark-pi   --class org.apache.spark.examples.SparkPi   --conf spark.executor.instances=2 --conf spark.driver.memory=512M --conf spark.executor.memory=512M --conf spark.kubernetes.container.image=spark   local:////opt/spark/examples/jars/spark-examples_2.12-3.0.0.jar
+
+具体结果需要kubectl logs spark-pi-42fc3a741f914425-driver
