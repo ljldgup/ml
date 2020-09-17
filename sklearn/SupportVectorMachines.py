@@ -35,6 +35,7 @@ poly_kernel_svm_clf.fit(X, y)
 # 高斯核函数
 rbf_kernel_svm_clf = Pipeline([
     ("scaler", StandardScaler()),
+    # 这里的gamma 和高斯核的宽度有关，gamma越大，支持向量越少，gamma值越小，支持向量越多。
     ("svm_clf", SVC(kernel="rbf", gamma=5, C=0.001))
 ])
 rbf_kernel_svm_clf.fit(X, y)
