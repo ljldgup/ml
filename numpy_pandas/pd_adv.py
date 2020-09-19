@@ -18,6 +18,9 @@ df_str = pd.DataFrame(
      ['Japan', 'Right-handed'],
      ['USA', 'Right-handed'], ], columns=['Nationality', 'Handedness'])
 
+#list（dataframe）返回列名
+list(df_str)
+
 # 可以使用大部分python string内置的函数和正则表达式
 sdata.str.lower()
 sdata.str.contain('A')
@@ -124,8 +127,7 @@ data.rank(method='first')
 ages = np.arange(1, 100, 7)
 # 将ages平分成5个区间
 pd.cut(ages, 5)
-# 不要区间标签，直接用0-4标识
-pd.cut(ages, 5, labels=False)
+
 # 指定labels
 pd.cut(ages, 5, labels=["婴儿", "青年", "中年", "壮年", "老年"])
 # 给定区间(0, 5],(5, 20],(20, 30],(30,50],(50,100]
@@ -134,6 +136,9 @@ human.categories
 human.codes
 pd.value_counts(human)
 human.value_counts
+
+# 不要区间标签，直接用0-4标识，可以用于数据离散化
+pd.cut(ages, 5, labels=False)
 
 # 根据样本分位数划分，数字是比列累加
 cuts = pd.qcut(df['A'], [0, 0.1, 0.5, 0.9, 1.])
@@ -146,6 +151,7 @@ human = pd.cut(ages, [0, 5, 20, 30, 50, 100], labels=["婴儿", "青年", "中�
 
 # 虚拟变量 ( Dummy Variables) 又称虚设变量、名义变量或哑变量
 # 将列中值变为为独立列，对应列名值的位置取1，其余取0。
+# 可以作为onehot编码,但所需内存较大，使用sklearn的onehot编码返回稀疏矩阵，效果更适合
 pd.get_dummies(df['A'])
 pd.get_dummies(pd.cut(ages, 5))
 pd.get_dummies(pd.qcut(ages, [0, 0.1, 0.5, 0.9, 1.]))

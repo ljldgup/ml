@@ -47,12 +47,14 @@ def display_scores(scores):
     print("Standard deviation:", scores.std())
 
 
+# 文件较大放在百度网盘
 def load_housing_data(housing_path=HOUSING_PATH):
     csv_path = os.path.join(housing_path, "housing.csv")
     return pd.read_csv(csv_path)
 
 
 def test(housing):
+    # 查看数据的基本情况，可以结合可视化
     housing.info()
     housing.describe()
     # 数据呈现长尾分布
@@ -117,10 +119,11 @@ def test(housing):
     housing_tr = pd.DataFrame(X, columns=housing_num.columns,
                               index=housing_num.index)
 
-    # 编码
+    # 编码，OrdinalEncoder相当于LabelEncoder的矩阵版，能对多个特征同时编码
     housing_cat = housing[["ocean_proximity"]]
     ordinal_encoder = OrdinalEncoder()
     housing_cat_encoded = ordinal_encoder.fit_transform(housing_cat)
+
 
     cat_encoder = OneHotEncoder()
     housing_cat_1hot = cat_encoder.fit_transform(housing_cat)
@@ -139,10 +142,15 @@ def test(housing):
     # 注意这里list(housing_num) 返回的是housing_num的列名
     num_attribs = list(housing_num)
     cat_attribs = ["ocean_proximity"]
+
+    # 注意这里传入了dataframe的列名（属性名），使Transformer进行相应的转换
     full_pipeline = ColumnTransformer([
         ("num", num_pipeline, num_attribs),
         ("cat", OneHotEncoder(), cat_attribs),
     ])
+
+    # 这里返回的onehot+连续值使用的是非稀疏举证, 将每个类编都转换成了0/1两种值的列，
+    # 可以分开转换然后用sparse.hstack组装起来，titanic有用过
     housing_prepared = full_pipeline.fit_transform(housing)
 
     lin_reg = LinearRegression()
@@ -158,13 +166,14 @@ def test(housing):
     lin_rmse = np.sqrt(lin_mse)
     print(lin_rmse)
 
+
     tree_reg = DecisionTreeRegressor()
     tree_reg.fit(housing_prepared, housing_labels)
     housing_predictions = tree_reg.predict(housing_prepared)
     tree_mse = mean_squared_error(housing_labels, housing_predictions)
     tree_rmse = np.sqrt(tree_mse)
-    print(tree_rmse)
     # 这里的损失是0，因为没有测试集，决策树严重的过拟合了
+    print(tree_rmse)
 
     # 采用K折验证，决策树的表现不如之前,cv分成几份
     scores = cross_val_score(tree_reg, housing_prepared, housing_labels,
@@ -220,3 +229,5 @@ def test(housing):
 
 if __name__ == '__main__':
     housing = load_housing_data()
+    corr = housing.corr().sort_values(by='median_house_value', ascending=False).round(2)
+    plt.imshow(corr, interpolation='nearest', cmap=plt.cm.hot)

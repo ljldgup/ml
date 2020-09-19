@@ -1,11 +1,13 @@
 import pandas as pd
+import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import SGDClassifier, LogisticRegression
 from sklearn.model_selection import cross_val_predict, cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
+from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder, OrdinalEncoder
 from sklearn.svm import SVC, LinearSVC
+from scipy import sparse
 
 '''
 总体思路：查看缺失值，通过可视化确定缺失值是否重要，发现Cabin，Age缺失较多，且于生存相关较多
@@ -137,28 +139,98 @@ train_test['Cabin'] = train_test['Cabin'].fillna('U')
 train_test['Cabin'] = train_test['Cabin'].map(lambda x: x[0])
 
 # 离散化成四个区间
-train_test['Age'] = pd.cut(train_test['Age'], 8, labels=False)
+train_test['Age_cat'] = pd.cut(train_test['Age'], 8, labels=False)
 # train_test['Age'] 被分为8个类型
 # train_test['Age'].unique()
-train_test['Fare'] = pd.cut(train_test['Fare'], 4, labels=False)
+train_test['Fare_cat'] = pd.cut(train_test['Fare'], 4, labels=False)
 
-train_x = train_test[:len(train)][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
-test_x = train_test[len(train):][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
-train_y = train['Survived'].values
-
+# 使用onehot相比使用original普通标签，效果更好包括
 oh_encoder = OneHotEncoder()
+st_scaler = StandardScaler()
+# StandardScaler 可以对多列特征操作，LabelEncoder 不行， 需要用OrdinalEncoder
+o_encoder = OrdinalEncoder()
 
-onehot_cols = ['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']
-normal_list = []
+# 标签列
+label_cols = ['Pclass', 'Sex', 'Embarked', 'Cabin', 'title']
+# 需要标准化的列
+numeric_cols = ['Age', 'Fare', 'FamilySize']
 
-onehot_x = oh_encoder.fit_transform(train_x[onehot_cols].values)
-classifiers = [LinearSVC(C=1), SVC(kernel="rbf", C=1), KNeighborsClassifier(n_neighbors=5),
-               SGDClassifier(random_state=42), RandomForestClassifier(random_state=42),
-               GradientBoostingClassifier(), LogisticRegression()]
+
+def all_onehot():
+    train_df = train_test[:len(train)][
+        ['Pclass', 'Sex', 'Age_cat', 'Fare_cat', 'FamilySize', 'Embarked', 'Cabin', 'title']]
+    test_df = train_test[len(train):][
+        ['Pclass', 'Sex', 'Age_cat', 'Fare_cat', 'FamilySize', 'Embarked', 'Cabin', 'title']]
+
+    train_x = oh_encoder.fit_transform(train_df.values)
+    test_x = oh_encoder.transform(test_df.values)
+    return train_x, test_x
+
+
+def label_and_values():
+    # 注意先对整个训练测试集合fit
+    train_df = train_test[:len(train)][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
+    test_df = train_test[len(train):][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
+
+    o_encoder.fit(train_test[label_cols].values)
+    X_1 = o_encoder.transform(train_df[label_cols].values)
+
+    st_scaler.fit_transform(train_test[numeric_cols].values)
+    X_2 = st_scaler.transform(train_df[numeric_cols].values)
+    train_x = np.concatenate([X_1, X_2], axis=1)
+
+    X_1 = o_encoder.transform(test_df[label_cols].values)
+    X_2 = st_scaler.transform(test_df[numeric_cols].values)
+    test_x = np.concatenate([X_1, X_2], axis=1)
+    return train_x, test_x
+
+
+def onehot_and_values():
+    train_df = train_test[:len(train)][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
+    test_df = train_test[len(train):][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
+
+    oh_encoder.fit(train_test[label_cols].values)
+    X_1 = oh_encoder.transform(train_df[label_cols].values)
+
+    # 稀疏矩阵和普通矩阵相连
+    st_scaler.fit_transform(train_test[numeric_cols].values)
+    X_2 = st_scaler.transform(train_df[numeric_cols].values)
+    train_x = sparse.hstack([X_1, X_2])
+
+    X_1 = oh_encoder.transform(test_df[label_cols].values)
+    X_2 = st_scaler.transform(test_df[numeric_cols].values)
+    test_x = sparse.hstack([X_1, X_2])
+    return train_x, test_x
+
+
+train_y = train['Survived']
+train_x, test_x = all_onehot()
+# train_x, test_x = label_and_values()
+# train_x, test_x = onehot_and_values()
+# 对于非交叉交叉
+# 前四个分类器使用onehot有明显提升，knn，随机森林，提升树无变化
+# knn是距离敏感的，应该在内部做了onehot处理，不然不可能不变
+# 使用label+连续数值后随机森林和提升树，knn有提升
+
+# 交叉验证中使用onehot 线性svm总体得分最高，
+classifiers = [SGDClassifier(random_state=42), LogisticRegression(), LinearSVC(C=1), SVC(kernel="rbf", C=1),
+               KNeighborsClassifier(n_neighbors=8),
+               RandomForestClassifier(),
+               # 这里调整最大深度后，精度会提高，但交叉验证变差了
+               GradientBoostingClassifier(max_depth=6)]
 
 for classifier in classifiers:
     print(classifier)
-    classifier.fit(onehot_x, train_y)
-    print(classifier.score(onehot_x, train_y))
-    print(cross_val_score(classifier, onehot_x, train_y, cv=2, scoring="accuracy"))
+    classifier.fit(train_x, train_y)
+    print(classifier.score(train_x, train_y))
+    print(cross_val_score(classifier, train_x, train_y, cv=2, scoring="accuracy"))
     print('\n--------------------------------------------------------------------------\n\n')
+
+# 注意这里不必再fit
+
+classifiers[3].predict(test_x)
+
+test['Survived'] = classifiers[3].predict(test_x)
+
+# kaggle 提交格式不用index
+test[['PassengerId', 'Survived']].to_csv('submission.csv', index=None)
