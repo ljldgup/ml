@@ -232,5 +232,5 @@ classifiers[3].predict(test_x)
 
 test['Survived'] = classifiers[3].predict(test_x)
 
-# kaggle 提交格式不用index
+# mine 提交格式不用index
 test[['PassengerId', 'Survived']].to_csv('submission.csv', index=None)

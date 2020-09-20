@@ -221,6 +221,7 @@ def test(housing):
     print(final_rmse)
 
     # 95置信区间
+    # 一般的t统计量写成t=(估计值-假设值)/标准误,它服从自由度为(n-2)的t分布
     confidence = 0.95
     squared_errors = (final_predictions - y_test) ** 2
     np.sqrt(stats.t.interval(confidence, len(squared_errors) - 1, loc=squared_errors.mean(),
