@@ -15,6 +15,12 @@ pd.read_csv(r"../data/000513_d_bas.csv", chunksize=10)
 
 df.to_csv("1.csv")
 
+# 通过assign 直接赋予一列
+data = {'name': ['lily', 'jack', 'hanson', 'bom'], 'age': np.random.randint(15, 25, size=4),
+        'gerder': ['F', 'M', 'M', 'F']}
+df = pd.DataFrame(data)
+df.assign(score=np.random.randint(60, 100, size=4))
+
 # 不给列名，列名和index一样默认123.。
 df = pd.DataFrame(np.random.rand(100, 3))
 # 使用np生成,注意columns=，pandas很多函数参数很多，需要指定参数名
@@ -26,6 +32,8 @@ pd.Series([11, 22, 33, 44, 55], ['A', 'B', 'C', 6, 5])
 
 # D项为NaN
 pd.DataFrame(sdata, index=['A', 'B', 'C', 'D'])
+
+
 
 # 两种基本类型，DataFrame，Series
 type(df)

@@ -1,4 +1,4 @@
-from pyparsing import col
+from pyspark.sql.functions import col
 from pyspark.sql import SparkSession
 
 # 这里spark报找不到文件基本都是设置了系统变量，但变量指向的目录不对

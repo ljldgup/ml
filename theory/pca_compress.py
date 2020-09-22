@@ -7,7 +7,7 @@ def loadImage(path):
     img = Image.open(path)
     img.show()
     # 将图像转换成灰度图
-    # img = img.convert("L")
+    img = img.convert("L")
 
     # 图像的大小在size中是（宽，高）
     # 所以width取size的第一个值，height取第二个
@@ -15,7 +15,7 @@ def loadImage(path):
     height = img.size[1]
     data = img.getdata()
     # 直接将3位rpg放在行上，尝试做彩色压缩
-    data = np.array(data).reshape(height, width * 3) / 255
+    data = np.array(data).reshape(height, -1) / 255
     return data
 
 
@@ -39,7 +39,8 @@ def pca(data, k):
     '''
     Y = P * X ==>   P(-1) * Y = P(-1) * P * X,  P（-1）是P的逆矩阵, 即 P(-1) * P = 1
     ==>   P(-1) * Y = X
-    由于特征向量模为1，彼此点积得0，所以实际上乘以P的转置PT即可，当K小于数据的特征数时，可以起到压缩作用，但无法还原完整的数据
+    由于特征向量模为1，彼此点积得0，所以特征向量方阵的逆矩阵即为他的转置，
+    当K小于数据的特征数时，补0乘以完整逆矩阵，和直接乘以前k各特征向量的转置效果小童
     '''
     rec_data = np.dot(new_data, np.transpose(feature)) + mean
     return rec_data
@@ -69,14 +70,22 @@ def sklearn_pca(data, k):
 
 if __name__ == '__main__':
     # sklearn中直接用pca的fit和inverse_transform进行逆变换
-    data = loadImage("timg.jpg")
-    # 降维
-    # recdata = pca(data, 40)
-    recdata = sklearn_pca(data, 40)
+    data = loadImage("tun.jpg")
+
+    data = data.reshape(data.shape[0], -1)
+    recdata = pca(data, 20)
+    recdata = sklearn_pca(data, 20)
+    '''
+    recdata0 = sklearn_pca(data[:, :, 0], 80)
+    recdata1 = sklearn_pca(data[:, :, 1], 80)
+    recdata2 = sklearn_pca(data[:, :, 2], 80)
+    recdata = np.concatenate([recdata0[:,:,np.newaxis], recdata1[:,:,np.newaxis], recdata2[:,:,np.newaxis]],axis=2)
+    '''
     # 计算误差
-    error(data, recdata)
-    # 这里返回值有负数，所以直接娶了实部，最终图像图像有缺失, sklearn说明他也是取了实部
-    recdata = recdata.reshape(recdata.shape[0], -1, 3)
+    # error(data, recdata)
+    # 使用彩色，返回值有复数数，取实部还是模，图像都有缺失, sklearn同样如此
+    # 即使每个都分开压缩，最后仍然有损失，  进一步发现有些图，即使用灰度图也会有损失
+    recdata = recdata.reshape(data.shape[0], -1)
     recdata = (np.real(recdata) * 255).astype(np.uint8)
     newImg = Image.fromarray(recdata)
     newImg.show()

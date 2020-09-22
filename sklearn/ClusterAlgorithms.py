@@ -6,7 +6,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.manifold import TSNE
 from sklearn.metrics import silhouette_score
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import KNeighborsClassifier, kneighbors_graph
 from sklearn.pipeline import Pipeline
 from sklearn.datasets import load_digits
 
@@ -14,10 +14,10 @@ import numpy as np
 from sklearn.preprocessing import OrdinalEncoder, LabelEncoder
 
 X, y = make_classification(n_classes=4,
-    n_samples=300, n_features=2,
-    n_redundant=0, n_informative=2,
-    random_state=22, n_clusters_per_class=1,
-    scale=100)
+                           n_samples=300, n_features=2,
+                           n_redundant=0, n_informative=2,
+                           random_state=22, n_clusters_per_class=1,
+                           scale=100)
 silhouette_scores = []
 inertias = []
 for i in range(2, 15):
@@ -28,13 +28,12 @@ for i in range(2, 15):
 # inertial趋于平缓的拐点最好
 plt.plot(inertias, c='red')
 
-
 plt.clf()
-#silhouette_scores大效果好
+# silhouette_scores大效果好
 plt.plot(silhouette_scores, c='purple')
 
 # 图片像素分割
-image = imread('timg.jpg')
+image = imread('tun.jpg')
 X = image.reshape(-1, 3)
 
 '''
@@ -139,4 +138,7 @@ plt.scatter(x[:, 0], x[:, 1], s=80, c=pred_y, cmap='brg', label='Samples')
 plt.legend()
 plt.show()
 
-kneighbors_graph()
+# 计算每个元素的2最近的两个近邻
+X = [[0], [3], [1]]
+A = kneighbors_graph(X, 2, mode='connectivity', include_self=True)
+A.toarray()
