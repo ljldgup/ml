@@ -33,7 +33,7 @@ pd.Series([11, 22, 33, 44, 55], ['A', 'B', 'C', 6, 5])
 # D项为NaN
 pd.DataFrame(sdata, index=['A', 'B', 'C', 'D'])
 
-
+pd.Series(10, range(10))
 
 # 两种基本类型，DataFrame，Series
 type(df)
@@ -91,6 +91,7 @@ sdata[lambda x: x > 25]
 sdata.index = range(5)
 sdata['aa']
 
+
 # 自定义索引
 df = pd.DataFrame([1, 2, 3, 4, 5], columns=['test'], index=['a', 'b', 'c', 'd', 'e'])
 df['test']['a']
@@ -103,6 +104,8 @@ df.reindex(index=['a', 'd', 'e', 'b', 'c'])
 df.rename(index=str, columns={"A": "A-", "C": "-C"})
 # 列重排
 
+# 直接返回变形后的numpy数组
+df['A'][:, np.newaxis]
 
 # 提取行
 print(df['A'])
@@ -144,6 +147,10 @@ df['A'].unique()
 # 排序
 df.sort_values(by='A', ascending=False)
 df.sort_index(ascending=False)
+
+# 返回按照列A逆序，的头两行
+df.nlargest(2, 'A')
+
 # 最大最小索引
 df.idxmax()
 df.idxmin()

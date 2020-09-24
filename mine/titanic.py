@@ -10,8 +10,10 @@ from sklearn.svm import SVC, LinearSVC
 from scipy import sparse
 
 '''
-总体思路：查看缺失值，通过可视化确定缺失值是否重要，发现Cabin，Age缺失较多，且于生存相关较多
+查看缺失值，通过可视化确定缺失值是否重要，发现Cabin，Age缺失较多，且于生存相关较多
 通过name中的称谓的年龄中位数，补全年龄缺失，cabin有无对生存有明显关系，所以缺失单独一类,将cabin首字母作为cabin等及
+Embarked,Fare 缺失较少，且与其他项目没有明显关系， Embarked为离散值填充众数，Fare为连续值填充中位数
+Parch，SibSp直系旁系亲属，对生存影响非常相似，将其合并为FamilySize，后续可以考虑加权重
 
 '''
 train = pd.read_csv('train_titanic.csv')
@@ -172,11 +174,8 @@ def label_and_values():
     train_df = train_test[:len(train)][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
     test_df = train_test[len(train):][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
 
-    o_encoder.fit(train_test[label_cols].values)
-    X_1 = o_encoder.transform(train_df[label_cols].values)
-
-    st_scaler.fit_transform(train_test[numeric_cols].values)
-    X_2 = st_scaler.transform(train_df[numeric_cols].values)
+    X_1 = o_encoder.fit_transform(train_df[label_cols].values)
+    X_2 = st_scaler.fit_transform(train_df[numeric_cols].values)
     train_x = np.concatenate([X_1, X_2], axis=1)
 
     X_1 = o_encoder.transform(test_df[label_cols].values)
@@ -189,12 +188,9 @@ def onehot_and_values():
     train_df = train_test[:len(train)][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
     test_df = train_test[len(train):][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
 
-    oh_encoder.fit(train_test[label_cols].values)
-    X_1 = oh_encoder.transform(train_df[label_cols].values)
-
+    X_1 = oh_encoder.fit_transform(train_df[label_cols].values)
+    X_2 = st_scaler.fit_transform(train_df[numeric_cols].values)
     # 稀疏矩阵和普通矩阵相连
-    st_scaler.fit_transform(train_test[numeric_cols].values)
-    X_2 = st_scaler.transform(train_df[numeric_cols].values)
     train_x = sparse.hstack([X_1, X_2])
 
     X_1 = oh_encoder.transform(test_df[label_cols].values)
@@ -204,7 +200,7 @@ def onehot_and_values():
 
 
 train_y = train['Survived']
-train_x, test_x = all_onehot()
+train_x, test_x = onehot_and_values()
 # train_x, test_x = label_and_values()
 # train_x, test_x = onehot_and_values()
 # 对于非交叉交叉
@@ -214,10 +210,10 @@ train_x, test_x = all_onehot()
 
 # 交叉验证中使用onehot 线性svm总体得分最高，
 classifiers = [SGDClassifier(random_state=42), LogisticRegression(), LinearSVC(C=1), SVC(kernel="rbf", C=1),
-               KNeighborsClassifier(n_neighbors=8),
+               KNeighborsClassifier(n_neighbors=6),
                RandomForestClassifier(),
                # 这里调整最大深度后，精度会提高，但交叉验证变差了
-               GradientBoostingClassifier(max_depth=6)]
+               GradientBoostingClassifier()]
 
 for classifier in classifiers:
     print(classifier)
@@ -230,7 +226,11 @@ for classifier in classifiers:
 
 classifiers[3].predict(test_x)
 
-test['Survived'] = classifiers[3].predict(test_x)
 
+# cross_val_score 和 直接fit返回的效果不一样
+classifiers[-1].fit(train_x, train_y)
+test['Survived'] = classifiers[-1].predict(test_x)
+
+# 目前label_and_values + GradientBoostingClassifier得分最高 77.99
 # mine 提交格式不用index
 test[['PassengerId', 'Survived']].to_csv('submission.csv', index=None)

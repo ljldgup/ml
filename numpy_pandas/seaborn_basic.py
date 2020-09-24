@@ -29,6 +29,10 @@ plt.legend()
 x = np.random.gamma(6, size=200)
 sns.distplot(x, kde=False, fit=stats.gamma)
 
+# 双变量分布
 mean, cov = [0, 1], [(1, .5), (.5, 1)]
 data = np.random.multivariate_normal(mean, cov, 200)
 df = pd.DataFrame(data, columns=["x", "y"])
+
+# 散点图
+sns.jointplot(x="x", y="y", data=df)
