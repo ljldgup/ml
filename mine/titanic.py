@@ -3,36 +3,38 @@ import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import SGDClassifier, LogisticRegression
-from sklearn.model_selection import cross_val_predict, cross_val_score
+from sklearn.model_selection import cross_val_predict, cross_val_score, StratifiedKFold
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder, OrdinalEncoder
 from sklearn.svm import SVC, LinearSVC
 from scipy import sparse
+
+from tensorflow.keras import layers, models
+from tensorflow.python.keras.optimizer_v2.rmsprop import RMSprop
 
 '''
 查看缺失值，通过可视化确定缺失值是否重要，发现Cabin，Age缺失较多，且于生存相关较多
 通过name中的称谓的年龄中位数，补全年龄缺失，cabin有无对生存有明显关系，所以缺失单独一类,将cabin首字母作为cabin等及
 Embarked,Fare 缺失较少，且与其他项目没有明显关系， Embarked为离散值填充众数，Fare为连续值填充中位数
 Parch，SibSp直系旁系亲属，对生存影响非常相似，将其合并为FamilySize，后续可以考虑加权重
-
 '''
-train = pd.read_csv('train_titanic.csv')
-test = pd.read_csv('test_titanic.csv')
+train_df = pd.read_csv('train_titanic.csv')
+test_df = pd.read_csv('test_titanic.csv')
 
 # 产看类型
-train.dtypes.sort_values()
-train.select_dtypes(include='int64').head()
-train.select_dtypes(include='float64').head()
-train.select_dtypes(include='object').head()
+train_df.dtypes.sort_values()
+train_df.select_dtypes(include='int64').head()
+train_df.select_dtypes(include='float64').head()
+train_df.select_dtypes(include='object').head()
 # 查看训练集，测试集nan的比列，注意这里用lamdba筛选
 # 这里发现主要是Cabin 和 Ageq缺失，Embarked少量缺失
 # isna 和 isnull 效果相同
-train.isnull().sum()[lambda x: x > 0] / len(train)
-test.isnull().sum()[lambda x: x > 0] / len(test)
+train_df.isnull().sum()[lambda x: x > 0] / len(train_df)
+test_df.isnull().sum()[lambda x: x > 0] / len(test_df)
 
 # info也可以看到有多少个非空数据
-train.info()
-train.describe()
+train_df.info()
+train_df.describe()
 '''
 # Cabin缺失，绘图发现有无cabin对是否幸存有很大影响，所以后面将的缺失值划为单独的一类
 train['Cabin_isna'] = pd.isna(train['Cabin'])
@@ -95,7 +97,7 @@ pd.crosstab(train['SibSp'],train['Survived']).plot.bar(stacked=True)
 '''
 
 # 同时对train和test中的空值进行处理
-train_test = pd.concat([train.drop(['PassengerId', 'Survived'], axis=1), test.drop(['PassengerId'], axis=1)])
+train_test = pd.concat([train_df.drop(['PassengerId', 'Survived'], axis=1), test_df.drop(['PassengerId'], axis=1)])
 
 # 从Name中提取出title,可以根据title对年龄进行补全
 train_test['title'] = train_test['Name'].apply(lambda x: x.split(',')[1].split('.')[0].strip())
@@ -136,7 +138,7 @@ train_test.info()
 train_test['FamilySize'] = train_test['Parch'] + train_test['SibSp']
 
 # 将cabin缺失单独列为一类，其余保留首字母
-pd.isna(train['Cabin'])
+pd.isna(train_df['Cabin'])
 train_test['Cabin'] = train_test['Cabin'].fillna('U')
 train_test['Cabin'] = train_test['Cabin'].map(lambda x: x[0])
 
@@ -159,50 +161,69 @@ numeric_cols = ['Age', 'Fare', 'FamilySize']
 
 
 def all_onehot():
-    train_df = train_test[:len(train)][
+    train_cols = train_test[:len(train_df)][
         ['Pclass', 'Sex', 'Age_cat', 'Fare_cat', 'FamilySize', 'Embarked', 'Cabin', 'title']]
-    test_df = train_test[len(train):][
+    test_cols = train_test[len(train_df):][
         ['Pclass', 'Sex', 'Age_cat', 'Fare_cat', 'FamilySize', 'Embarked', 'Cabin', 'title']]
 
     train_x = oh_encoder.fit_transform(train_df.values)
-    test_x = oh_encoder.transform(test_df.values)
+    test_x = oh_encoder.transform(test_cols.values)
     return train_x, test_x
 
 
 def label_and_values():
     # 注意先对整个训练测试集合fit
-    train_df = train_test[:len(train)][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
-    test_df = train_test[len(train):][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
+    train_cols = train_test[:len(train_df)][
+        ['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
+    test_cols = train_test[len(train_df):][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
 
-    X_1 = o_encoder.fit_transform(train_df[label_cols].values)
-    X_2 = st_scaler.fit_transform(train_df[numeric_cols].values)
+    X_1 = o_encoder.fit_transform(train_cols[label_cols].values)
+    X_2 = st_scaler.fit_transform(train_cols[numeric_cols].values)
     train_x = np.concatenate([X_1, X_2], axis=1)
 
-    X_1 = o_encoder.transform(test_df[label_cols].values)
-    X_2 = st_scaler.transform(test_df[numeric_cols].values)
+    X_1 = o_encoder.transform(test_cols[label_cols].values)
+    X_2 = st_scaler.transform(test_cols[numeric_cols].values)
     test_x = np.concatenate([X_1, X_2], axis=1)
     return train_x, test_x
 
 
 def onehot_and_values():
-    train_df = train_test[:len(train)][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
-    test_df = train_test[len(train):][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
+    train_cols = train_test[:len(train_df)][
+        ['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
+    test_cols = train_test[len(train_df):][['Pclass', 'Sex', 'Age', 'Fare', 'FamilySize', 'Embarked', 'Cabin', 'title']]
 
-    X_1 = oh_encoder.fit_transform(train_df[label_cols].values)
-    X_2 = st_scaler.fit_transform(train_df[numeric_cols].values)
+    X_1 = oh_encoder.fit_transform(train_cols[label_cols].values)
+    X_2 = st_scaler.fit_transform(train_cols[numeric_cols].values)
     # 稀疏矩阵和普通矩阵相连
     train_x = sparse.hstack([X_1, X_2])
 
-    X_1 = oh_encoder.transform(test_df[label_cols].values)
-    X_2 = st_scaler.transform(test_df[numeric_cols].values)
+    X_1 = oh_encoder.transform(test_cols[label_cols].values)
+    X_2 = st_scaler.transform(test_cols[numeric_cols].values)
     test_x = sparse.hstack([X_1, X_2])
     return train_x, test_x
 
 
-train_y = train['Survived']
+def net_work_without_embedding():
+    model = models.Sequential([
+        layers.Flatten(input_shape=(25,)),
+        layers.Dense(64, activation='relu'),
+        layers.Dropout(0.3),
+        layers.Dense(128, activation='relu'),
+        layers.Dense(64, activation='relu'),
+        layers.Dropout(0.3),
+        layers.Dense(32, activation='relu'),
+        layers.Dense(1, activation='sigmoid')
+    ])
+    model.compile(optimizer=RMSprop(lr=1e-3), loss='binary_crossentropy', metrics=['accuracy'])
+    return model
+
+
+train_y = train_df['Survived'].values
 train_x, test_x = onehot_and_values()
 # train_x, test_x = label_and_values()
 # train_x, test_x = onehot_and_values()
+
+'''
 # 对于非交叉交叉
 # 前四个分类器使用onehot有明显提升，knn，随机森林，提升树无变化
 # knn是距离敏感的，应该在内部做了onehot处理，不然不可能不变
@@ -221,16 +242,32 @@ for classifier in classifiers:
     print(classifier.score(train_x, train_y))
     print(cross_val_score(classifier, train_x, train_y, cv=2, scoring="accuracy"))
     print('\n--------------------------------------------------------------------------\n\n')
+'''
 
-# 注意这里不必再fit
+# 神经网络不能处理scipy的稀疏矩阵对象
+build_net_work_model = net_work_without_embedding
+train_x = train_x.toarray()
 
-classifiers[3].predict(test_x)
+print('神经网络k折验证')
+kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=24)
+for train_idx, test_idx in kfold.split(train_x, train_y):
+    model = build_net_work_model()
+    model.fit(train_x[train_idx], train_y[train_idx], epochs=80, batch_size=64, verbose=0)
+    # evaluate the model
+    scores = model.evaluate(train_x[test_idx], train_y[test_idx], verbose=0)
+    print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
 
+net_work_classifier = build_net_work_model()
+net_work_classifier.fit(train_x, train_y, epochs=80, batch_size=64, validation_split=0.20)
 
+'''
 # cross_val_score 和 直接fit返回的效果不一样
 classifiers[-1].fit(train_x, train_y)
 test['Survived'] = classifiers[-1].predict(test_x)
 
 # 目前label_and_values + GradientBoostingClassifier得分最高 77.99
 # mine 提交格式不用index
-test[['PassengerId', 'Survived']].to_csv('submission.csv', index=None)
+'''
+t = net_work_classifier.predict(test_x.toarray())
+test_df['Survived'] = np.where(t[:, 0] > 0.5, 1, 0)
+test_df[['PassengerId', 'Survived']].to_csv('submission.csv', index=None)

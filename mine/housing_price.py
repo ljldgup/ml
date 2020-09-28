@@ -1,10 +1,12 @@
+from functools import reduce
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from scipy.stats import norm
 from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, StratifiedKFold, KFold
 from sklearn.preprocessing import StandardScaler
 from scipy import stats
 import warnings
@@ -13,6 +15,9 @@ from sklearn.svm import SVR, LinearSVR
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsRegressor
+
+from tensorflow.keras import layers, models
+from tensorflow.python.keras.optimizer_v2.rmsprop import RMSprop
 
 warnings.filterwarnings("ignore")
 '''
@@ -163,6 +168,7 @@ res = stats.probplot(df_train['SalePrice'], plot=plt)
 '''
 
 # 对SalePrice取对数后很明显数据和正态分布的吻合度更高，可以将此作为标准化后的数据
+# 神经网络的目标不能太大，log效果
 df_train['SalePrice'] = np.log(df_train['SalePrice'])
 '''
 sns.distplot(df_train['SalePrice'], fit=norm)
@@ -198,10 +204,95 @@ plt.scatter(df_train['GrLivArea'], df_train['SalePrice'])
 plt.scatter(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], df_train[df_train['TotalBsmtSF'] > 0]['SalePrice'])
 '''
 # 类转换成onehot
-# df_train = pd.get_dummies(df_train)
-X = df_train.drop(columns='SalePrice').values
-y = df_train['SalePrice'].values
+df_train_oh = pd.get_dummies(df_train)
+X = df_train_oh.drop(columns=['SalePrice', 'Id']).values
+y = df_train_oh['SalePrice'].values
 
+'''
+for x,y in zip(df_train_oh.columns, df_test_oh.columns):
+    print(x,'\n',y)   
+    print('\n')
+'''
+
+
+def regressors_test(X, y):
+    regressors = [LinearSVR(C=1), SVR(kernel="rbf", C=1),
+                  KNeighborsRegressor(n_neighbors=6),
+                  RandomForestRegressor(),
+                  GradientBoostingRegressor()]
+
+    for regressor in regressors:
+        print(regressors[0].__class__)
+        regressor.fit(X, y)
+        y_pred = regressor.predict(X)
+        ans = np.c_[y, y_pred, y_pred - y]
+        # 对售价做了对数
+        # ans = np.c_[np.exp(y), np.exp(y_pred), np.exp(y_pred) - np.exp(y)]
+        # 随机打印20个样本及预测值，误差
+        # idx = np.random.randint(0, len(y) - 1, size=20)
+        # print(ans[idx, :])
+        print(mean_squared_error(ans[:, 0], ans[:, 1]))
+        print(cross_val_score(regressor, X, y, cv=3, scoring="neg_mean_squared_error"))
+    return regressors
+
+
+regressors = regressors_test(X, y)
+cols = df_train_oh.drop(columns=['SalePrice', 'Id']).columns
+'''
+# 统计决策树,提升树，相关性重要性前20的特征
+print(cols[regressors[-1].feature_importances_.argsort()[-30:]])
+print(cols[regressors[-2].feature_importances_.argsort()[-30:]])
+# 注意这里是倒序，所以1放在后面
+corrmat = df_train.corr()
+print(corrmat.nlargest(30, 'SalePrice')['SalePrice'].index[:1:-1])
+
+# 将重要的列合并
+cols = cols[regressors[-2].feature_importances_.argsort()[-16:]].union(
+    cols[regressors[-1].feature_importances_.argsort()[-15:]]).union(
+    corrmat.nlargest(16, 'SalePrice')['SalePrice'].index)
+'''
+
+# onehot保留原本的列名
+numeric_cols = list(filter(lambda x: '_' not in x, cols))
+cat_cols = list(set(
+    map(lambda x: x.split('_')[0],
+        (filter(lambda x: '_' in x, cols)))))
+
+for col in ['GarageArea', '1stFlrSF']:
+    if col in numeric_cols:
+        numeric_cols.remove(col)
+    elif col in cat_cols:
+        cat_cols.remove(col)
+
+# 将对每个类别列filter出对应的onehot列，在reduce
+# 多层嵌套的函数式，最好从里向外写
+cat_oh_lists = map(lambda cat: list(filter(lambda x: x.startswith(cat), df_train_oh.columns)), cat_cols)
+cat_oh_cols = reduce(lambda cat1, cat2: cat1 + cat2, cat_oh_lists)
+
+scaler = StandardScaler()
+numeric_x = scaler.fit_transform(df_train_oh[numeric_cols].values)
+cat_x = df_train_oh[cat_oh_cols]
+# np.c_[numeric_x,cat_x].shape
+X = np.concatenate([numeric_x, cat_x], axis=1)
+
+# 通过图示可以看到 'LotArea', 'OpenPorchSF' WoodDeckSF‘存在较大的离群值离群值
+# sns.histplot(numeric_x.flatten())
+# df_train_oh[numeric_cols[5:14]].hist()
+
+# 删除标准化后任然较大的值
+index = np.argwhere(abs(X) > 6)
+row = index[:, 0]
+filter_array = np.full(X.shape[0], True, np.bool)
+filter_array[row] = False
+X = X[filter_array]
+y = y[filter_array]
+
+# np.unravel_index(X.argmax(), X.shape)
+# scaler.transform(df_train_oh[numeric_cols].values[np.newaxis, 313])
+# regressors = regressors_test(X, y)
+
+
+# 将测试集处理成和训练集相同的模式
 df_test = pd.read_csv('test_housing.csv')
 
 # 有不少列缺失值
@@ -214,20 +305,65 @@ df_test['HasBsmt'] = pd.Series(len(df_test['TotalBsmtSF']), index=df_test.index)
 df_test['HasBsmt'] = 0
 df_test.loc[df_test['TotalBsmtSF'] > 0, 'HasBsmt'] = 1
 df_test.loc[df_test['HasBsmt'] == 1, 'TotalBsmtSF'] = np.log(df_test['TotalBsmtSF'])
+df_test_oh = pd.get_dummies(df_test)
 
-'''
-regressors = [LinearSVR(C=1), SVR(kernel="rbf", C=1),
-              KNeighborsRegressor(n_neighbors=6),
-              RandomForestRegressor(),
-              GradientBoostingRegressor()]
+# 参与计算的列
+cols = df_train.drop(columns=['SalePrice', 'Id']).columns
 
-for regressor in regressors:
-    print(regressor)
-    y_pred = regressor.fit(X, y)
-    y_pred = regressor.predict(X)
-    # 随机打印20个样本及预测值，误差
-    idx = np.random.randint(0, len(y) - 1, size=20)
-    print(np.c_[np.exp(y),np.exp(y_pred), np.exp(y_pred) - np.exp(y)][idx, :])
-    print(mean_squared_error(y_pred, y))
-    print(cross_val_score(regressor, X, y, cv=3, scoring="neg_mean_squared_error"))
+# 用众数和中位数填充空值
+for col in cols:
+    if col in cat_cols:
+        df_test[col] = df_test[col].fillna(df_test[col].value_counts().index[0])
+    elif col in numeric_cols:
+        df_test[col] = df_test[col].fillna(df_test[col].median())
+
+df_test_oh = pd.get_dummies(df_test)
+# 测试集有些项没有，手动补0
+for c in set(df_train_oh.columns).difference(df_test_oh.columns):
+    df_test_oh[c] = 0
+
+test_numeric_x = scaler.transform(df_test_oh[numeric_cols].values)
+test_cat_x = df_test_oh[cat_oh_cols]
+test_X = np.c_[test_numeric_x, test_cat_x]
 '''
+regressors[-1].fit(X,y)
+test_y = regressors[-1].predict(test_X)
+df_test['SalePrice'] = test_y
+df_test[['Id', 'SalePrice']].to_csv('submission.csv', index=None)
+'''
+
+
+def net_work_without_embedding(input_x):
+    model = models.Sequential([
+        layers.Flatten(input_shape=(input_x,)),
+        layers.Dense(256, activation='relu'),
+        layers.Dense(512, activation='relu'),
+        layers.Dropout(0.1),
+        layers.Dense(256, activation='relu'),
+        layers.Dropout(0.1),
+        layers.Dense(64, activation='relu'),
+        layers.Dropout(0.1),
+        layers.Dense(1)
+    ])
+    model.compile(optimizer=RMSprop(lr=1e-4), loss='mse', metrics=['mae'])
+    return model
+
+
+target_scaler = StandardScaler()
+y = target_scaler.fit_transform(y.reshape(-1, 1)).reshape(-1)
+
+build_net_work_model = net_work_without_embedding
+
+print('神经网络k折验证')
+kfold = KFold(n_splits=10, shuffle=True, random_state=24)
+for train_idx, test_idx in kfold.split(X, y):
+    model = build_net_work_model(X.shape[1])
+    model.fit(X[train_idx], y[train_idx], epochs=60, batch_size=64, verbose=0)
+    # evaluate the model
+    scores = model.evaluate(X[test_idx], y[test_idx], verbose=0)
+    print("%s: %.2f%" % (model.metrics_names[1], scores[1] * 100))
+
+net_work_classifier = build_net_work_model(X.shape[1])
+net_work_classifier.fit(X, y, epochs=200, batch_size=64, validation_split=0.20)
+t = net_work_classifier.predict(X)
+print(np.c_[t[:10, 0], y[:10]])
