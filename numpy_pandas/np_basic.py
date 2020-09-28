@@ -41,7 +41,7 @@ arr[:, 1]
 arr[:, [1, 2]]
 arr[range(3), :]
 
-#可重复
+# 可重复
 arr[:, [1, 2, 2, 1, 2]]
 
 # 这里的2是切片间隔
@@ -76,6 +76,22 @@ nums.max()
 nums.argmax()
 nums.argsort()
 
+# 多维数组索引转换,获得最大值索引
+X = np.array([[1, 2, 3], [11, 22, 33]])
+np.unravel_index(X.argmax(), X.shape)
+# 直接这样取返回的是一维数组
+X = X[X > 5]
+# 先拿到索引，再取效果同上
+index = np.argwhere(X < 5)
+X[index]
+
+# 通过构造一个布尔矩阵过滤 绝对值太大的行
+index = np.argwhere(abs(X) > 6)
+row = index[:, 0]
+filter_array = np.full(X.shape[0], True, np.bool)
+filter_array[row] = False
+X = X[filter_array].shape
+
 # sort会改变自身的值
 nums.sort()
 # 可以只排序一部分，同样会改变自身
@@ -96,7 +112,6 @@ np.mean(nums)
 
 # 类似操作可以指定多个轴
 np.mean(nums, axis=(0, 1))
-
 
 # 每列均值
 np.mean(nums, axis=1)

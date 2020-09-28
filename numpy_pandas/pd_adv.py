@@ -162,6 +162,10 @@ t = df.groupby(['A', 'B']).count()
 # 多级索引访问
 t.loc['0.00'].loc['0.00']
 
+
+# pandas会更具列自动绘制多图，返回对应axis
+t.plot.bar()
+
 # 这里绘制出来的是按照索引作为x，列作为分类的效果
 t.index
 t['C'].plot.bar()

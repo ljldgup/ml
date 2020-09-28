@@ -48,7 +48,7 @@ y_test_5 = (y_test == 5)
 sgd_clf = SGDClassifier(random_state=42)
 sgd_clf.fit(X_train, y_train_5)
 
-# StratifiedKFold分层k折抽样
+# StratifiedKFold分层k折抽样,只能用于分类
 skfolds = StratifiedKFold(n_splits=3, random_state=42)
 for train_index, test_index in skfolds.split(X_train, y_train_5):
     clone_clf = clone(sgd_clf)

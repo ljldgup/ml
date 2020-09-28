@@ -97,3 +97,9 @@ arr = np.random.rand(2, 3, 4)
 # 纵向，横向分割,2,3代表分成几块
 np.vsplit(arr, 2)
 np.hsplit(arr, 3)
+
+t1 = np.random.randint(0, 10, size=10000)
+t2 = np.random.randint(0, 5, size=10000)
+
+# 布尔值值可以直接sum，可以用于求预测正确率之类
+sum(t1 == t2) / len(t1)
