@@ -1,3 +1,4 @@
+import math
 from functools import reduce
 
 import pandas as pd
@@ -7,7 +8,7 @@ import numpy as np
 from scipy.stats import norm
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score, StratifiedKFold, KFold
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, LabelEncoder
 from scipy import stats
 import warnings
 
@@ -17,6 +18,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsRegressor
 
 from tensorflow.keras import layers, models
+from tensorflow.python.keras import Model
 from tensorflow.python.keras.optimizer_v2.rmsprop import RMSprop
 
 warnings.filterwarnings("ignore")
@@ -34,9 +36,8 @@ warnings.filterwarnings("ignore")
 通过可视化查看离群值，删除明显与趋势不符合的点
 
 对重要的连续值进行线性变化，使其更加符合正态分布
-
-
 '''
+
 df_train = pd.read_csv("train_housin.csv")
 
 '''
@@ -120,12 +121,28 @@ plt.show()
 total = df_train.isnull().sum().sort_values(ascending=False)
 percent = (df_train.isnull().sum() / df_train.isnull().count()).sort_values(ascending=False)
 missing_data = pd.concat([total, percent], axis=1, keys=['Total', 'Percent'])
+# 增加没个列的类别数，用来判断填充方法, 注意这里missing_data和df_train.nunique()虽然顺序不同但是index相同，会自动调整
+# df_train.nunique()[df_train.isnull().sum()>0].reindex(df_train.isnull().sum().sort_values(ascending=False).index).head(20)
+missing_data['classes'] = df_train.nunique()
+missing_data['dtypes'] = df_train.dtypes
 missing_data.head(20)
+# 查看前20个缺失列的分类数
 
+'''
+# 丢弃数据
 # 对于缺失较多得，经过分析发现和目标没有太多关系，删除这些列
 df_train = df_train.drop((missing_data[missing_data['Total'] > 1]).index, 1)
 # Electrical与目标有一定关系，删除缺失的数据，这里的loc和直接用中括号是一样的
 df_train = df_train.drop(df_train.loc[df_train['Electrical'].isnull()].index)
+'''
+
+# 对所有列进行填充
+for col in missing_data[missing_data['Percent'] > 0].index:
+    if missing_data.loc[col]['classes'] < 50:
+        df_train[col].fillna('NA')
+    else:
+        df_train[col].fillna(df_train[col].median())
+
 # 确定没有缺失
 df_train.isnull().sum().max()
 
@@ -194,12 +211,13 @@ df_train['HasBsmt'] = pd.Series(len(df_train['TotalBsmtSF']), index=df_train.ind
 df_train['HasBsmt'] = 0
 df_train.loc[df_train['TotalBsmtSF'] > 0, 'HasBsmt'] = 1
 df_train.loc[df_train['HasBsmt'] == 1, 'TotalBsmtSF'] = np.log(df_train['TotalBsmtSF'])
+
 '''
 sns.distplot(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], fit=norm);
 fig = plt.figure()
 res = stats.probplot(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], plot=plt)
 
-# 进行变换后从三点图上可以看出，线性关系更强了
+# 进行变换后从三点图上可以看出，线性关系更强了,便于机器学习
 plt.scatter(df_train['GrLivArea'], df_train['SalePrice'])
 plt.scatter(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], df_train[df_train['TotalBsmtSF'] > 0]['SalePrice'])
 '''
@@ -207,6 +225,8 @@ plt.scatter(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], df_train[df_tr
 df_train_oh = pd.get_dummies(df_train)
 X = df_train_oh.drop(columns=['SalePrice', 'Id']).values
 y = df_train_oh['SalePrice'].values
+target_scaler = StandardScaler()
+y = target_scaler.fit_transform(y.reshape(-1, 1)).reshape(-1)
 
 '''
 for x,y in zip(df_train_oh.columns, df_test_oh.columns):
@@ -226,69 +246,75 @@ def regressors_test(X, y):
         regressor.fit(X, y)
         y_pred = regressor.predict(X)
         ans = np.c_[y, y_pred, y_pred - y]
-        # 对售价做了对数
-        # ans = np.c_[np.exp(y), np.exp(y_pred), np.exp(y_pred) - np.exp(y)]
-        # 随机打印20个样本及预测值，误差
-        # idx = np.random.randint(0, len(y) - 1, size=20)
-        # print(ans[idx, :])
         print(mean_squared_error(ans[:, 0], ans[:, 1]))
         print(cross_val_score(regressor, X, y, cv=3, scoring="neg_mean_squared_error"))
     return regressors
 
 
+'''
 regressors = regressors_test(X, y)
-cols = df_train_oh.drop(columns=['SalePrice', 'Id']).columns
-'''
-# 统计决策树,提升树，相关性重要性前20的特征
-print(cols[regressors[-1].feature_importances_.argsort()[-30:]])
-print(cols[regressors[-2].feature_importances_.argsort()[-30:]])
-# 注意这里是倒序，所以1放在后面
+
 corrmat = df_train.corr()
-print(corrmat.nlargest(30, 'SalePrice')['SalePrice'].index[:1:-1])
+# 统计决策树,提升树，相关性重要性靠前的特征
+cols = df_train_oh.drop(columns=['SalePrice', 'Id']).columns
+print(cols[regressors[-1].feature_importances_.argsort()[-10:]])
+print(cols[regressors[-2].feature_importances_.argsort()[-10:]])
+# 注意这里是倒序，所以1放在后面
+print(corrmat.nlargest(10, 'SalePrice')['SalePrice'].index[:1:-1])
 
-# 将重要的列合并
-cols = cols[regressors[-2].feature_importances_.argsort()[-16:]].union(
-    cols[regressors[-1].feature_importances_.argsort()[-15:]]).union(
-    corrmat.nlargest(16, 'SalePrice')['SalePrice'].index)
+# 将前k个重要的列合并
+k = 20
+cols = cols[regressors[-2].feature_importances_.argsort()[-k:]].union(
+    cols[regressors[-1].feature_importances_.argsort()[-k:]]).union(
+    corrmat.nlargest(k + 1, 'SalePrice')['SalePrice'].index).to_list()
 '''
+cols = df_train_oh.columns.to_list()
+cols.remove('SalePrice')
 
-# onehot保留原本的列名
 numeric_cols = list(filter(lambda x: '_' not in x, cols))
+# onehot,过滤出含有_的列, 在还原列名，再用set去重, 方便后续查看转为set
 cat_cols = list(set(
     map(lambda x: x.split('_')[0],
         (filter(lambda x: '_' in x, cols)))))
 
-for col in ['GarageArea', '1stFlrSF']:
+# 查看分类数
+cat_nums = list(zip(cat_cols, map(lambda col: len(df_train[col].unique()), cat_cols)))
+# 只有一个分类的可以直接删掉，[('Utilities', 1), ('Street', 1), ('CentralAir', 1)]
+one_cat = list(filter(lambda x: x[1] == 1, cat_nums))
+
+'''
+for col in ['GarageArea', '1stFlrSF', 'Utilities', 'Street', 'CentralAir']:
     if col in numeric_cols:
         numeric_cols.remove(col)
     elif col in cat_cols:
         cat_cols.remove(col)
+'''
 
 # 将对每个类别列filter出对应的onehot列，在reduce
 # 多层嵌套的函数式，最好从里向外写
+# 这里map返回的是一次性生成器，无法重复用
 cat_oh_lists = map(lambda cat: list(filter(lambda x: x.startswith(cat), df_train_oh.columns)), cat_cols)
 cat_oh_cols = reduce(lambda cat1, cat2: cat1 + cat2, cat_oh_lists)
 
-scaler = StandardScaler()
-numeric_x = scaler.fit_transform(df_train_oh[numeric_cols].values)
-cat_x = df_train_oh[cat_oh_cols]
-# np.c_[numeric_x,cat_x].shape
-X = np.concatenate([numeric_x, cat_x], axis=1)
+input_scaler = StandardScaler()
+train_numeric_x = input_scaler.fit_transform(df_train_oh[numeric_cols].values)
+train_onehot_x = df_train_oh[cat_oh_cols]
+
+# np.c_[train_numeric_x,cat_x].shape
+X = np.concatenate([train_numeric_x, train_onehot_x], axis=1)
 
 # 通过图示可以看到 'LotArea', 'OpenPorchSF' WoodDeckSF‘存在较大的离群值离群值
-# sns.histplot(numeric_x.flatten())
+# sns.histplot(train_numeric_x.flatten())
 # df_train_oh[numeric_cols[5:14]].hist()
 
-# 删除标准化后任然较大的值
-index = np.argwhere(abs(X) > 6)
+# 删除标准化后任然较大的值，这里剔除过多数据会有很大影响，去除少数极值就可以了
+index = np.argwhere(abs(X) > 10)
 row = index[:, 0]
 filter_array = np.full(X.shape[0], True, np.bool)
 filter_array[row] = False
 X = X[filter_array]
 y = y[filter_array]
 
-# np.unravel_index(X.argmax(), X.shape)
-# scaler.transform(df_train_oh[numeric_cols].values[np.newaxis, 313])
 # regressors = regressors_test(X, y)
 
 
@@ -300,42 +326,33 @@ df_test.dtypes[df_test.isna().sum() > 0]
 df_test.isna().sum()[df_test.isna().sum() > 0]
 
 df_test['GrLivArea'] = np.log(df_test['GrLivArea'])
-df_test = df_test.drop((missing_data[missing_data['Total'] > 1]).index, 1)
+# df_test = df_test.drop((missing_data[missing_data['Total'] > 1]).index, 1)
 df_test['HasBsmt'] = pd.Series(len(df_test['TotalBsmtSF']), index=df_test.index)
 df_test['HasBsmt'] = 0
 df_test.loc[df_test['TotalBsmtSF'] > 0, 'HasBsmt'] = 1
 df_test.loc[df_test['HasBsmt'] == 1, 'TotalBsmtSF'] = np.log(df_test['TotalBsmtSF'])
 df_test_oh = pd.get_dummies(df_test)
 
-# 参与计算的列
-cols = df_train.drop(columns=['SalePrice', 'Id']).columns
-
-# 用众数和中位数填充空值
-for col in cols:
+# 用众数和中位数填充空值,注意应该和训练集使用的相同，这里统一使用训练集
+for col in df_train:
+    # NaN补全
     if col in cat_cols:
-        df_test[col] = df_test[col].fillna(df_test[col].value_counts().index[0])
+        df_test[col] = df_test[col].fillna(df_train[col].value_counts().index[0])
     elif col in numeric_cols:
-        df_test[col] = df_test[col].fillna(df_test[col].median())
+        df_test[col] = df_test[col].fillna(df_train[col].median())
+# 测试集某些分类没有，手动补0
 
-df_test_oh = pd.get_dummies(df_test)
-# 测试集有些项没有，手动补0
-for c in set(df_train_oh.columns).difference(df_test_oh.columns):
-    df_test_oh[c] = 0
+for col in df_train_oh.columns.difference(df_test_oh.columns):
+    df_test_oh[col] = 0
 
-test_numeric_x = scaler.transform(df_test_oh[numeric_cols].values)
-test_cat_x = df_test_oh[cat_oh_cols]
-test_X = np.c_[test_numeric_x, test_cat_x]
-'''
-regressors[-1].fit(X,y)
-test_y = regressors[-1].predict(test_X)
-df_test['SalePrice'] = test_y
-df_test[['Id', 'SalePrice']].to_csv('submission.csv', index=None)
-'''
+test_numeric_x = input_scaler.transform(df_test_oh[numeric_cols].values)
+test_onehot_x = df_test_oh[cat_oh_cols]
+test_X = np.c_[test_numeric_x, test_onehot_x]
 
 
-def net_work_without_embedding(input_x):
+def network_without_embedding(input_x):
     model = models.Sequential([
-        layers.Flatten(input_shape=(input_x,)),
+        layers.Input(shape=(input_x.shape[1],)),
         layers.Dense(256, activation='relu'),
         layers.Dense(512, activation='relu'),
         layers.Dropout(0.1),
@@ -349,21 +366,76 @@ def net_work_without_embedding(input_x):
     return model
 
 
-target_scaler = StandardScaler()
-y = target_scaler.fit_transform(y.reshape(-1, 1)).reshape(-1)
+def network_with_embedding(numric_x, label_x):
+    embedding_layers = []
+    inputs_layers = []
+    numeric_input = layers.Input(shape=(numric_x.shape[1],))
+    inputs_layers.append(numeric_input)
 
-build_net_work_model = net_work_without_embedding
+    for label in label_x:
+        t_input = layers.Input(shape=(1,))
+        # 嵌入维度取对数, 注意这里的input维度是最大值+1，因为有0
+        t_embedding = layers.Embedding(label.max() + 1, 2 * int(math.log2(label.max())) + 1, input_length=1)(t_input)
+        t_Flatten = layers.Flatten()(t_embedding)
+        inputs_layers.append(t_input)
+        embedding_layers.append(t_Flatten)
 
-print('神经网络k折验证')
-kfold = KFold(n_splits=10, shuffle=True, random_state=24)
-for train_idx, test_idx in kfold.split(X, y):
-    model = build_net_work_model(X.shape[1])
-    model.fit(X[train_idx], y[train_idx], epochs=60, batch_size=64, verbose=0)
-    # evaluate the model
-    scores = model.evaluate(X[test_idx], y[test_idx], verbose=0)
-    print("%s: %.2f%" % (model.metrics_names[1], scores[1] * 100))
+    numeric_layers = layers.Dense(64)(numeric_input)
+    concatenate_layers = layers.concatenate(embedding_layers + [numeric_layers])
 
-net_work_classifier = build_net_work_model(X.shape[1])
-net_work_classifier.fit(X, y, epochs=200, batch_size=64, validation_split=0.20)
-t = net_work_classifier.predict(X)
-print(np.c_[t[:10, 0], y[:10]])
+    t = layers.Dense(256, activation='relu')(concatenate_layers)
+    t = layers.Dense(512, activation='relu')(t)
+    t = layers.Dropout(0.1)(t)
+    t = layers.Dense(256, activation='relu')(t)
+    t = layers.Dropout(0.1)(t)
+    t = layers.Dense(64, activation='relu')(t)
+    t = layers.Dropout(0.1)(t)
+    output = layers.Dense(1)(t)
+    model = Model(inputs_layers, output)
+    model.compile(optimizer=RMSprop(lr=1e-4), loss='mse', metrics=['mae'])
+    return model
+
+
+def network_kfold(model):
+    print('神经网络k折验证')
+    kfold = KFold(n_splits=10, shuffle=True, random_state=24)
+    for train_idx, test_idx in kfold.split(X, y):
+        model.fit(X[train_idx], y[train_idx], epochs=60, batch_size=64, verbose=0)
+        # evaluate the model
+        scores = model.evaluate(X[test_idx], y[test_idx], verbose=0)
+        print("%s: %.2f%" % (model.metrics_names[1], scores[1] * 100))
+
+
+
+# 神经网络一起输入，val_loss到达0.09的时候验证集没有在明显的进步，但直接停输出的数据匹配度很低
+dense_regressor = network_without_embedding(X)
+dense_regressor.fit(X, y, epochs=80, batch_size=64, validation_split=0.20)
+ans = dense_regressor.predict(X)
+idx = np.random.randint(0,len(X),size=10)
+print(np.c_[ans[idx, 0], y[idx]])
+
+'''
+# 使用lable + embedding
+# embedding 随着训练的增加，训练集loss下降，val的loss反增
+# 效果不如普通模型，说明列列之间无明显联系
+label_encoders = {}
+train_label_x = []
+for col in cat_cols:
+    label_encoders[col] = LabelEncoder()
+    train_label_x.append(label_encoders[col].fit_transform(df_train[col].values))
+
+test_label_x = []
+for col in cat_cols:
+    test_label_x.append(label_encoders[col].transform(df_test[col].values))
+
+embedding_regressor = network_with_embedding(train_numeric_x, train_label_x)
+embedding_regressor.fit([train_numeric_x] + train_label_x, y, epochs=40, batch_size=64, validation_split=0.20)
+ans = embedding_regressor.predict([test_numeric_x] + test_label_x)
+print(np.c_[ans[:10, 0], y[:10]])
+
+
+y_pred = dense_regressor.predict(test_X)
+test_y = np.exp(target_scaler.inverse_transform(y_pred))
+df_test['SalePrice'] = test_y
+df_test[['Id', 'SalePrice']].to_csv('submission.csv', index=None)
+'''

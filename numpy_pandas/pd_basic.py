@@ -19,19 +19,34 @@ df.to_csv("1.csv")
 data = {'name': ['lily', 'jack', 'hanson', 'bom'], 'age': np.random.randint(15, 25, size=4),
         'gerder': ['F', 'M', 'M', 'F']}
 df = pd.DataFrame(data)
-df.assign(score=np.random.randint(60, 100, size=4))
+
+# 类型
+df.info()
+# 中位数等
+t = df.describe()
+
+# 列名也可以当成series操作
+df.columns.str.contains('der')
+
+# 直接指定一列
+df = df.assign(score=np.random.randint(60, 100, size=4))
+
+
 
 # 不给列名，列名和index一样默认123.。
 df = pd.DataFrame(np.random.rand(100, 3))
 # 使用np生成,注意columns=，pandas很多函数参数很多，需要指定参数名
 df = pd.DataFrame(np.arange(30).reshape(6, 5), columns=['A', 'B', 'C', 'D', 'E'])
+
 # 生成Series，注意series是一列,不是一行，这里的ABC65是index
-sdata = pd.Series({'A': 11, 'B': 22, 'C': 33, 6: 44, 5: 55})
+s1 = pd.Series({'A': 11, 'B': 22, 'C': 33, 6: 44, 5: 55})
 # 也可以这样
-pd.Series([11, 22, 33, 44, 55], ['A', 'B', 'C', 6, 5])
+s2 = pd.Series([13, 24, 35, 46, 57], ['A', 6, 5, 'B', 'C'])
 
 # D项为NaN
-pd.DataFrame(sdata, index=['A', 'B', 'C', 'D'])
+df1 = pd.DataFrame(s1, index=['A', 'B', 'C', 'D'],columns=['s1'])
+# 及时index顺序内容不完全匹配也可以赋值
+df1['s2'] = s2
 
 pd.Series(10, range(10))
 
@@ -39,10 +54,10 @@ pd.Series(10, range(10))
 type(df)
 type(df['A'])
 df['A'].dtype
-type(sdata)
+type(s1)
 
 # series可以看做是一个字典， index是key
-5 in sdata
+5 in s1
 1 in df['E']
 
 # 基本组成:索引,值
@@ -80,17 +95,16 @@ df.reindex(index=['B', 'A'])
 # 根据index获取
 df.take([5, 3, 4, 2])
 
-sdata.index
-sdata[['C', 'A']]
-sdata[[1, 2]]
+s1.index
+s1[['C', 'A']]
+s1[[1, 2]]
 # 使用lambda 函数筛选，可以避免使用临时变量
-sdata[lambda x: x > 25]
+s1[lambda x: x > 25]
 # 这就会错。。需要用iloc
-# sdata[[5, 6]]
+# s1[[5, 6]]
 # 索引可直接设置，并且重复
-sdata.index = range(5)
-sdata['aa']
-
+s1.index = range(5)
+s1['aa']
 
 # 自定义索引
 df = pd.DataFrame([1, 2, 3, 4, 5], columns=['test'], index=['a', 'b', 'c', 'd', 'e'])
@@ -157,9 +171,9 @@ df.idxmin()
 
 # 相加,这里可以发现series的index实际上匹配的dataframe的columns
 # 相加后自动扩充了index，并且非共有的值为NA
-df + sdata
+df + s1
 df + df
-df + (df + sdata)
+df + (df + s1)
 
 # 采样
 df.sample()

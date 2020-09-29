@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from pandas.tseries.offsets import Hour, Minute, Day, MonthEnd
 
-df = pd.DataFrame(np.random.randint(100, size=(8, 5)), columns=['A', 'B', 'C', 'D', 'E'])
+df = pd.DataFrame(np.random.randint(40, size=(8, 5)), columns=['A', 'B', 'C', 'D', 'E'])
 sdata = pd.Series(['AA', 'BB', 'CC', 'DD', 'EE'], [22, 44, 66, 88, 1010])
 df_str = pd.DataFrame(
     [['USA', 'Right-handed'],
@@ -18,7 +18,7 @@ df_str = pd.DataFrame(
      ['Japan', 'Right-handed'],
      ['USA', 'Right-handed'], ], columns=['Nationality', 'Handedness'])
 
-#list（dataframe）返回列名
+# list（dataframe）返回列名
 list(df_str)
 
 # 可以使用大部分python string内置的函数和正则表达式
@@ -45,9 +45,14 @@ df.cumsum()
 df.cummax()
 df.cummin()
 
+# 通过拼接df的series得到结果，很适合按列统计
+pd.concat([df.dtypes, df.nunique(), df.sum()], axis=1, keys=['dtypes', 'types', 'sum'])
+# 完全不一样的index都能concat
+pd.concat([df.dtypes, df.nunique(), df.cummax()], axis=1, keys=['dtypes', 'types', 'cummax'])
+
 # 变动百分比
 df.pct_change()
-df.A.pct_change(1)
+df['A'].pct_change(1)
 
 # 变动数量，
 # 与前1个数据比
@@ -106,18 +111,21 @@ data = data.take(np.random.permutation(20))
 data['sum'] = data['test'].rolling(3).sum()
 # 移动3个值，进行求平均数
 data['mean'] = data['test'].rolling(3).mean()
-# 指数加权平均
-data['ewm_mean'] = data['test'].ewm(3).mean()
+
 # 移动3个值，最小计数为2
 data['mean_min_periods_2'] = data['test'].rolling(3, min_periods=2).mean()
-# 加权均值
+
+# 指数加权平均 默认com α=1/(1+com)
+data['ewm_mean'] = data['test'].ewm(3).mean()
+# 加权均值，span窗口，衰减 α=2/(span+1)
 data['ewm_mean'] = data['test'].ewm(span=30).mean()
+
 # rolling默认窗口向前，无法向后，可以采用rolling + shift的操作来向后
 # 这里采用自定义函数求了今天开始向后三天内最大值位置，x是一个ndarray
 # 注意这里shift 只需要3-1=2位
 data['max_id'] = data['test'].rolling(3).apply(lambda x: x.argmax()).shift(-2)
 
-# 正向rolling， 将series逆向，然后rolling，再将结果逆向
+# 向后rolling， 将series逆向，然后rolling，再将结果逆向
 data['test'][::-1].rolling(window=3, min_periods=0).sum()[::-1]
 
 # 排名，默认相等排名相同，
@@ -149,6 +157,9 @@ groups.count()
 # 修改闭区间
 human = pd.cut(ages, [0, 5, 20, 30, 50, 100], labels=["婴儿", "青年", "中年", "壮年", "老年"], right=False)
 
+# 转换成列名-值二列，可用于聚类
+pd.melt(df, value_vars=['B', 'C'])
+
 # 虚拟变量 ( Dummy Variables) 又称虚设变量、名义变量或哑变量
 # 将列中值变为为独立列，对应列名值的位置取1，其余取0。
 # 可以作为onehot编码,但所需内存较大，使用sklearn的onehot编码返回稀疏矩阵，效果更适合
@@ -161,7 +172,6 @@ t = df.groupby(['A', 'B']).count()
 
 # 多级索引访问
 t.loc['0.00'].loc['0.00']
-
 
 # pandas会更具列自动绘制多图，返回对应axis
 t.plot.bar()
@@ -219,6 +229,9 @@ df.groupby(['A', 'B']).apply(lambda x: x.applymap(float).sum())
 
 # 与apply类似， transform的函数会返回Series，但是结果必须与输⼊⼤⼩相同
 groups.transform(lambda x: x.mean())
+
+# mode 众数
+groups.transform(lambda x: x.mode())
 
 df.groupby(['A', 'B'])['C'].quantile(0.9)
 

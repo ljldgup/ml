@@ -98,3 +98,11 @@ sns.pairplot(data=titanic[['Survived', 'Pclass', 'Fare']])
 
 # 热力图
 sns.heatmap(titanic.corr(), fmt='.2f', annot=True)
+
+# 网格多图展示
+quantitative = [f for f in titanic.columns if titanic.dtypes[f] != 'object'and  titanic.dtypes[f] != 'str']
+quantitative.remove('SalePrice')
+f = pd.melt(titanic, value_vars=quantitative)
+g = sns.FacetGrid(f, col="variable",  col_wrap=5, sharex=False, sharey=False)
+g = g.map(sns.distplot, "value")
+plt.show()
