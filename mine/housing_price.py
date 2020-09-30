@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-from scipy.stats import norm
+from scipy.stats import norm, skew
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score, StratifiedKFold, KFold
 from sklearn.preprocessing import StandardScaler, LabelEncoder
@@ -40,6 +40,8 @@ warnings.filterwarnings("ignore")
 
 df_train = pd.read_csv("train_housin.csv")
 
+#####################################################################################################
+## 可视化了解大体信息
 '''
 # 共有81列，除去价格仍然有80各特征
 df_train.columns
@@ -117,6 +119,9 @@ sns.pairplot(df_train[cols], size=2.5)
 plt.show()
 '''
 
+#####################################################################################################
+## 处理缺失值，离群值
+
 # 缺失数据统计,聚合操作sum后列转到了索引上
 total = df_train.isnull().sum().sort_values(ascending=False)
 percent = (df_train.isnull().sum() / df_train.isnull().count()).sort_values(ascending=False)
@@ -125,27 +130,30 @@ missing_data = pd.concat([total, percent], axis=1, keys=['Total', 'Percent'])
 # df_train.nunique()[df_train.isnull().sum()>0].reindex(df_train.isnull().sum().sort_values(ascending=False).index).head(20)
 missing_data['classes'] = df_train.nunique()
 missing_data['dtypes'] = df_train.dtypes
-missing_data.head(20)
 # 查看前20个缺失列的分类数
+missing_data.head(20)
+# 通过分类散点图，查看某一分类缺失是否对售价有影响
+# fig = sns.stripplot(x='Alley', y="SalePrice", data=df_train.fillna(0))
 
-'''
 # 丢弃数据
-# 对于缺失较多得，经过分析发现和目标没有太多关系，删除这些列
-df_train = df_train.drop((missing_data[missing_data['Total'] > 1]).index, 1)
-# Electrical与目标有一定关系，删除缺失的数据，这里的loc和直接用中括号是一样的
-df_train = df_train.drop(df_train.loc[df_train['Electrical'].isnull()].index)
-'''
+# 对于缺失较多得，经过分析发现和目标没有太多关系，删除这些列,这里要和test一致
+df_train = df_train.drop((missing_data[missing_data['Percent'] > 0.8]).index, axis=1)
+# Electrical仅仅缺失1个，删除缺失的数据，这里的loc和直接用中括号是一样的
+# df_train = df_train.drop(df_train.loc[df_train['Electrical'].isnull()].index)
 
-# 对所有列进行填充
-for col in missing_data[missing_data['Percent'] > 0].index:
+
+# 填充数据
+for col in missing_data[(missing_data['Percent'] > 0) & (missing_data['Percent'] < 0.8)].index:
     if missing_data.loc[col]['classes'] < 50:
-        df_train[col].fillna('NA')
+        df_train[col] = df_train[col].fillna('NA')
     else:
-        df_train[col].fillna(df_train[col].median())
+        df_train[col] = df_train[col].fillna(df_train[col].median())
 
 # 确定没有缺失
 df_train.isnull().sum().max()
 
+#####################################################################################################
+## 对数据的分布进行转换，标准化，onehot等
 '''
 # 对售价进行进一步分析，标准化后，查看前十个和最后十个数据，最后是个数据离散很严重
 saleprice_scaled = StandardScaler().fit_transform(df_train['SalePrice'][:, np.newaxis])
@@ -182,12 +190,12 @@ sns.distplot(df_train['SalePrice'], fit=norm)
 fig = plt.figure()
 # 理论分布和实际分布很明显不吻合
 res = stats.probplot(df_train['SalePrice'], plot=plt)
-'''
+
 
 # 对SalePrice取对数后很明显数据和正态分布的吻合度更高，可以将此作为标准化后的数据
 # 神经网络的目标不能太大，log效果
 df_train['SalePrice'] = np.log(df_train['SalePrice'])
-'''
+
 sns.distplot(df_train['SalePrice'], fit=norm)
 fig = plt.figure()
 res = stats.probplot(df_train['SalePrice'], plot=plt)
@@ -196,14 +204,12 @@ res = stats.probplot(df_train['SalePrice'], plot=plt)
 sns.distplot(df_train['GrLivArea'], fit=norm);
 fig = plt.figure()
 res = stats.probplot(df_train['GrLivArea'], plot=plt)
-'''
 
 df_train['GrLivArea'] = np.log(df_train['GrLivArea'])
-'''
 sns.distplot(df_train['GrLivArea'], fit=norm);
 fig = plt.figure()
 res = stats.probplot(df_train['GrLivArea'], plot=plt)
-'''
+
 
 # HasBsmt 对于=0的值取1，然后再取log
 # 这里len(df_train['TotalBsmtSF'])实际上只是这一列的值
@@ -211,6 +217,13 @@ df_train['HasBsmt'] = pd.Series(len(df_train['TotalBsmtSF']), index=df_train.ind
 df_train['HasBsmt'] = 0
 df_train.loc[df_train['TotalBsmtSF'] > 0, 'HasBsmt'] = 1
 df_train.loc[df_train['HasBsmt'] == 1, 'TotalBsmtSF'] = np.log(df_train['TotalBsmtSF'])
+'''
+
+numeric_feats = df_train.dtypes[df_train.dtypes != "object"].index
+skewed_feats = df_train[numeric_feats].apply(lambda x: skew(x.dropna()))  # compute skewness
+skewed_feats = skewed_feats[skewed_feats > 0.75]
+skewed_feats = skewed_feats.index.to_list()
+df_train[skewed_feats] = np.log1p(df_train[skewed_feats])
 
 '''
 sns.distplot(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], fit=norm);
@@ -221,20 +234,20 @@ res = stats.probplot(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], plot=
 plt.scatter(df_train['GrLivArea'], df_train['SalePrice'])
 plt.scatter(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], df_train[df_train['TotalBsmtSF'] > 0]['SalePrice'])
 '''
+# 这里的原始数据会被后面替换掉，要用这边把后面注释
+
 # 类转换成onehot
 df_train_oh = pd.get_dummies(df_train)
-X = df_train_oh.drop(columns=['SalePrice', 'Id']).values
+
+input_scaler = StandardScaler()
+X = input_scaler.fit_transform(df_train_oh.drop(columns=['SalePrice', 'Id']).values)
 y = df_train_oh['SalePrice'].values
 target_scaler = StandardScaler()
 y = target_scaler.fit_transform(y.reshape(-1, 1)).reshape(-1)
 
-'''
-for x,y in zip(df_train_oh.columns, df_test_oh.columns):
-    print(x,'\n',y)   
-    print('\n')
-'''
 
-
+#####################################################################################################
+## 初步使用各类机器学西进行计算，提取重要的列
 def regressors_test(X, y):
     regressors = [LinearSVR(C=1), SVR(kernel="rbf", C=1),
                   KNeighborsRegressor(n_neighbors=6),
@@ -242,7 +255,7 @@ def regressors_test(X, y):
                   GradientBoostingRegressor()]
 
     for regressor in regressors:
-        print(regressors[0].__class__)
+        print(regressor.__class__)
         regressor.fit(X, y)
         y_pred = regressor.predict(X)
         ans = np.c_[y, y_pred, y_pred - y]
@@ -251,24 +264,24 @@ def regressors_test(X, y):
     return regressors
 
 
-'''
 regressors = regressors_test(X, y)
-
+cols = df_train_oh.drop(columns=['SalePrice', 'Id']).columns
 corrmat = df_train.corr()
 # 统计决策树,提升树，相关性重要性靠前的特征
-cols = df_train_oh.drop(columns=['SalePrice', 'Id']).columns
+'''
 print(cols[regressors[-1].feature_importances_.argsort()[-10:]])
 print(cols[regressors[-2].feature_importances_.argsort()[-10:]])
 # 注意这里是倒序，所以1放在后面
 print(corrmat.nlargest(10, 'SalePrice')['SalePrice'].index[:1:-1])
-
+'''
 # 将前k个重要的列合并
 k = 20
-cols = cols[regressors[-2].feature_importances_.argsort()[-k:]].union(
-    cols[regressors[-1].feature_importances_.argsort()[-k:]]).union(
-    corrmat.nlargest(k + 1, 'SalePrice')['SalePrice'].index).to_list()
-'''
-cols = df_train_oh.columns.to_list()
+cols = cols[regressors[-2].feature_importances_.argsort()[-k:]].to_list() + \
+       cols[regressors[-1].feature_importances_.argsort()[-k:]].to_list() + \
+       corrmat.nlargest(k + 1, 'SalePrice')['SalePrice'].index.to_list()
+
+# 统计特征出现次数，作为重要度进行排序
+cols = pd.Series(cols).value_counts().index.to_list()
 cols.remove('SalePrice')
 
 numeric_cols = list(filter(lambda x: '_' not in x, cols))
@@ -296,7 +309,6 @@ for col in ['GarageArea', '1stFlrSF', 'Utilities', 'Street', 'CentralAir']:
 cat_oh_lists = map(lambda cat: list(filter(lambda x: x.startswith(cat), df_train_oh.columns)), cat_cols)
 cat_oh_cols = reduce(lambda cat1, cat2: cat1 + cat2, cat_oh_lists)
 
-input_scaler = StandardScaler()
 train_numeric_x = input_scaler.fit_transform(df_train_oh[numeric_cols].values)
 train_onehot_x = df_train_oh[cat_oh_cols]
 
@@ -308,7 +320,7 @@ X = np.concatenate([train_numeric_x, train_onehot_x], axis=1)
 # df_train_oh[numeric_cols[5:14]].hist()
 
 # 删除标准化后任然较大的值，这里剔除过多数据会有很大影响，去除少数极值就可以了
-index = np.argwhere(abs(X) > 10)
+index = np.argwhere(abs(X) > 6)
 row = index[:, 0]
 filter_array = np.full(X.shape[0], True, np.bool)
 filter_array[row] = False
@@ -317,31 +329,26 @@ y = y[filter_array]
 
 # regressors = regressors_test(X, y)
 
-
-# 将测试集处理成和训练集相同的模式
+#####################################################################################################
+## 将测试集处理成和训练集相同的模式
 df_test = pd.read_csv('test_housing.csv')
 
 # 有不少列缺失值
-df_test.dtypes[df_test.isna().sum() > 0]
-df_test.isna().sum()[df_test.isna().sum() > 0]
-
-df_test['GrLivArea'] = np.log(df_test['GrLivArea'])
-# df_test = df_test.drop((missing_data[missing_data['Total'] > 1]).index, 1)
-df_test['HasBsmt'] = pd.Series(len(df_test['TotalBsmtSF']), index=df_test.index)
-df_test['HasBsmt'] = 0
-df_test.loc[df_test['TotalBsmtSF'] > 0, 'HasBsmt'] = 1
-df_test.loc[df_test['HasBsmt'] == 1, 'TotalBsmtSF'] = np.log(df_test['TotalBsmtSF'])
-df_test_oh = pd.get_dummies(df_test)
-
+# df_test.dtypes[df_test.isna().sum() > 0]
+# df_test.isna().sum()[df_test.isna().sum() > 0]
+skewed_feats.remove('SalePrice')
+df_test[skewed_feats] = np.log1p(df_test[skewed_feats])
+df_test = df_test.drop((missing_data[missing_data['Percent'] > 0.8]).index, 1)
 # 用众数和中位数填充空值,注意应该和训练集使用的相同，这里统一使用训练集
 for col in df_train:
     # NaN补全
     if col in cat_cols:
-        df_test[col] = df_test[col].fillna(df_train[col].value_counts().index[0])
+        df_test[col] = df_test[col].fillna('NA')
     elif col in numeric_cols:
         df_test[col] = df_test[col].fillna(df_train[col].median())
-# 测试集某些分类没有，手动补0
 
+df_test_oh = pd.get_dummies(df_test)
+# 测试集某些分类没有，手动补0
 for col in df_train_oh.columns.difference(df_test_oh.columns):
     df_test_oh[col] = 0
 
@@ -350,6 +357,8 @@ test_onehot_x = df_test_oh[cat_oh_cols]
 test_X = np.c_[test_numeric_x, test_onehot_x]
 
 
+#####################################################################################################
+## 神经网络模型
 def network_without_embedding(input_x):
     model = models.Sequential([
         layers.Input(shape=(input_x.shape[1],)),
@@ -406,7 +415,7 @@ def network_kfold(model):
         print("%s: %.2f%" % (model.metrics_names[1], scores[1] * 100))
 
 
-
+'''
 # 神经网络一起输入，val_loss到达0.09的时候验证集没有在明显的进步，但直接停输出的数据匹配度很低
 dense_regressor = network_without_embedding(X)
 dense_regressor.fit(X, y, epochs=80, batch_size=64, validation_split=0.20)
@@ -414,7 +423,7 @@ ans = dense_regressor.predict(X)
 idx = np.random.randint(0,len(X),size=10)
 print(np.c_[ans[idx, 0], y[idx]])
 
-'''
+
 # 使用lable + embedding
 # embedding 随着训练的增加，训练集loss下降，val的loss反增
 # 效果不如普通模型，说明列列之间无明显联系
