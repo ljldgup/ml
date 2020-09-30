@@ -45,7 +45,7 @@ df.cumsum()
 df.cummax()
 df.cummin()
 
-# 通过拼接df的series得到结果，很适合按列统计
+# 通过拼接df的series得到结果，很适合按列统计,注意这里是nunique 不是unique
 pd.concat([df.dtypes, df.nunique(), df.sum()], axis=1, keys=['dtypes', 'types', 'sum'])
 # 完全不一样的index都能concat
 pd.concat([df.dtypes, df.nunique(), df.cummax()], axis=1, keys=['dtypes', 'types', 'cummax'])
@@ -187,6 +187,9 @@ t.unstack().index
 # 可以通过这种方式绘制和两个列有关的柱状图
 t['C'].plot.bar()
 t.unstack()['C'].plot.bar()
+
+# 可以对数据直接绘制多图，注意尺寸第一个是行数
+pd.DataFrame(np.random.randint(40, size=(500, 8))).hist()
 
 # 使用Handedness做索引
 t = df_str.set_index(['Handedness'])

@@ -1,16 +1,15 @@
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.linear_model import SGDClassifier, LogisticRegression
+
 from sklearn.model_selection import cross_val_predict, cross_val_score, StratifiedKFold
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder, OrdinalEncoder
-from sklearn.svm import SVC, LinearSVC
 from scipy import sparse
 
 from tensorflow.keras import layers, models
 from tensorflow.python.keras.optimizer_v2.rmsprop import RMSprop
+
+from mine.tools import classifier_test
 
 '''
 查看缺失值，通过可视化确定缺失值是否重要，发现Cabin，Age缺失较多，且于生存相关较多
@@ -223,27 +222,16 @@ train_x, test_x = onehot_and_values()
 # train_x, test_x = label_and_values()
 # train_x, test_x = onehot_and_values()
 
-'''
+
 # 对于非交叉交叉
 # 前四个分类器使用onehot有明显提升，knn，随机森林，提升树无变化
 # knn是距离敏感的，应该在内部做了onehot处理，不然不可能不变
-# 使用label+连续数值后随机森林和提升树，knn有提升
+# 使用label + 连续数值后随机森林和提升树，knn有提升
 
-# 交叉验证中使用onehot 线性svm总体得分最高，
-classifiers = [SGDClassifier(random_state=42), LogisticRegression(), LinearSVC(C=1), SVC(kernel="rbf", C=1),
-               KNeighborsClassifier(n_neighbors=6),
-               RandomForestClassifier(),
-               # 这里调整最大深度后，精度会提高，但交叉验证变差了
-               GradientBoostingClassifier()]
+# 交叉验证中使用onehot线性svm总体得分最高，
 
-for classifier in classifiers:
-    print(classifier)
-    classifier.fit(train_x, train_y)
-    print(classifier.score(train_x, train_y))
-    print(cross_val_score(classifier, train_x, train_y, cv=2, scoring="accuracy"))
-    print('\n--------------------------------------------------------------------------\n\n')
+classifier_test(train_x, train_y)
 '''
-
 # 神经网络不能处理scipy的稀疏矩阵对象
 build_net_work_model = net_work_without_embedding
 train_x = train_x.toarray()
@@ -260,14 +248,15 @@ for train_idx, test_idx in kfold.split(train_x, train_y):
 net_work_classifier = build_net_work_model()
 net_work_classifier.fit(train_x, train_y, epochs=80, batch_size=64, validation_split=0.20)
 
-'''
+
 # cross_val_score 和 直接fit返回的效果不一样
 classifiers[-1].fit(train_x, train_y)
 test['Survived'] = classifiers[-1].predict(test_x)
 
 # 目前label_and_values + GradientBoostingClassifier得分最高 77.99
 # mine 提交格式不用index
-'''
+
 t = net_work_classifier.predict(test_x.toarray())
 test_df['Survived'] = np.where(t[:, 0] > 0.5, 1, 0)
 test_df[['PassengerId', 'Survived']].to_csv('submission.csv', index=None)
+'''

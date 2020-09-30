@@ -12,16 +12,11 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from scipy import stats
 import warnings
 
-from sklearn.svm import SVR, LinearSVR
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.linear_model import LinearRegression
-from sklearn.neighbors import KNeighborsRegressor
-
 from tensorflow.keras import layers, models
 from tensorflow.python.keras import Model
 from tensorflow.python.keras.optimizer_v2.rmsprop import RMSprop
 
-from mine.tools import muti_scatter
+from mine.tools import muti_scatter, regressors_test
 
 warnings.filterwarnings("ignore")
 '''
@@ -40,7 +35,8 @@ warnings.filterwarnings("ignore")
 对重要的连续值进行线性变化，使其更加符合正态分布
 '''
 
-df_train = pd.read_csv("train_housin.csv")
+df_train_ori = pd.read_csv("train_housin.csv")
+df_train = df_train_ori.copy()
 
 #####################################################################################################
 ## 可视化了解大体信息
@@ -242,9 +238,10 @@ for col in binary_col:
     most_category = df_train[col].value_counts().index[0]
     df_train[col] = df_train[col].map(lambda x: '1' if x == most_category else '0')
 
-# 离群点  ['GarageQual', 'BsmtFinType2', 'OverallCond', 'PoolArea', 'BsmtFinSF1', 'TotalBsmtSF',
+# 存在离群点的列  ['GarageQual', 'BsmtFinType2', 'OverallCond', 'PoolArea', 'BsmtFinSF1', 'TotalBsmtSF',
 #             '1stFlrSF', 'LowQualFinSF', 'BsmtHalfBath', 'Functional', 'LotArea', 'GrLivArea'
-#             'Exterior2nd','LotFrontage']
+#             'Exterior2nd', 'LotFrontage']
+
 delete_index = []
 delete_index.extend(df_train[(df_train['GarageQual'] == 'Ex') & (df_train['SalePrice'] > 400000)].index.to_list())
 delete_index.extend(df_train[(df_train['BsmtFinType2'] == 'ALQ') & (df_train['SalePrice'] > 400000)].index.to_list())
@@ -261,12 +258,13 @@ delete_index.extend(df_train[(df_train['GrLivArea'] > 4500) & (df_train['SalePri
 delete_index.extend(df_train[df_train['LotFrontage'] > 300].index.to_list())
 df_train = df_train.drop(index=delete_index)
 
-cat_cols = cat_nums[cat_nums['classes'] < 30].index.to_list()
+cat_cols = cat_nums[cat_nums['classes'] < 30].index.intersection(df_train.columns).to_list()
 df_train[cat_cols] = df_train[cat_cols].applymap(str)
+
 # 画出所有散点图看看是否还有离散点
 # muti_scatter(cat_cols, 'SalePrice', df_train)
 
-'''
+
 # 对偏度较大的执行log(1+x),使其分布更加正态化
 numeric_feats = df_train.dtypes[df_train.dtypes != "object"].index
 skewed_feats = df_train[numeric_feats].apply(lambda x: skew(x.dropna()))  # compute skewness
@@ -274,7 +272,7 @@ skewed_feats = skewed_feats[skewed_feats > 0.75]
 skewed_feats = skewed_feats.index.to_list()
 df_train[skewed_feats] = np.log1p(df_train[skewed_feats])
 
-
+'''
 sns.distplot(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], fit=norm);
 fig = plt.figure()
 res = stats.probplot(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], plot=plt)
@@ -282,37 +280,27 @@ res = stats.probplot(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], plot=
 # 进行变换后从三点图上可以看出，线性关系更强了,便于机器学习
 plt.scatter(df_train['GrLivArea'], df_train['SalePrice'])
 plt.scatter(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], df_train[df_train['TotalBsmtSF'] > 0]['SalePrice'])
-
+'''
 # 这里的原始数据会被后面替换掉，要用这边把后面注释
-
 # 类转换成onehot
 df_train_oh = pd.get_dummies(df_train)
+numeric_cols = list(filter(lambda x: '_' not in x, df_train_oh.columns))
+numeric_cols.remove('SalePrice')
+cat_oh_cols = list(filter(lambda x: '_' in x, df_train_oh.columns))
 
 input_scaler = StandardScaler()
-X = input_scaler.fit_transform(df_train_oh.drop(columns=['SalePrice', 'Id']).values)
-y = df_train_oh['SalePrice'].values
+numeric_x = input_scaler.fit_transform(df_train_oh[numeric_cols].values)
+onehot_x = df_train_oh[cat_oh_cols].values
+X = np.c_[numeric_x, onehot_x]
+# X = input_scaler.fit_transform(df_train_oh.drop(columns=['Id', 'SalePrice']).values)
 target_scaler = StandardScaler()
-y = target_scaler.fit_transform(y.reshape(-1, 1)).reshape(-1)
+y = target_scaler.fit_transform(df_train['SalePrice'][:, np.newaxis]).flatten()
 
 #####################################################################################################
 ## 初步使用各类机器学西进行计算，提取重要的列
-def regressors_test(X, y):
-    regressors = [LinearSVR(C=1), SVR(kernel="rbf", C=1),
-                  KNeighborsRegressor(n_neighbors=6),
-                  RandomForestRegressor(),
-                  GradientBoostingRegressor()]
-
-    for regressor in regressors:
-        print(regressor.__class__)
-        regressor.fit(X, y)
-        y_pred = regressor.predict(X)
-        ans = np.c_[y, y_pred, y_pred - y]
-        print(mean_squared_error(ans[:, 0], ans[:, 1]))
-        print(cross_val_score(regressor, X, y, cv=3, scoring="neg_mean_squared_error"))
-    return regressors
-
-
 regressors = regressors_test(X, y)
+
+'''
 cols = df_train_oh.drop(columns=['SalePrice', 'Id']).columns
 corrmat = df_train.corr()
 # 统计决策树,提升树，相关性重要性靠前的特征
@@ -343,7 +331,6 @@ cat_nums = list(zip(cat_cols, map(lambda col: len(df_train[col].unique()), cat_c
 # 只有一个分类的可以直接删掉，[('Utilities', 1), ('Street', 1), ('CentralAir', 1)]
 one_cat = list(filter(lambda x: x[1] == 1, cat_nums))
 
-
 for col in ['GarageArea', '1stFlrSF', 'Utilities', 'Street', 'CentralAir']:
     if col in numeric_cols:
         numeric_cols.remove(col)
@@ -363,7 +350,7 @@ train_onehot_x = df_train_oh[cat_oh_cols]
 # np.c_[train_numeric_x,cat_x].shape
 X = np.concatenate([train_numeric_x, train_onehot_x], axis=1)
 
-# 通过图示可以看到 'LotArea', 'OpenPorchSF' WoodDeckSF‘存在较大的离群值离群值
+# 通过图示可以看到存在较大的离群值离群值
 # sns.histplot(train_numeric_x.flatten())
 # df_train_oh[numeric_cols[5:14]].hist()
 
@@ -376,7 +363,7 @@ X = X[filter_array]
 y = y[filter_array]
 
 # regressors = regressors_test(X, y)
-
+'''
 #####################################################################################################
 ## 将测试集处理成和训练集相同的模式
 df_test = pd.read_csv('test_housing.csv')
@@ -384,18 +371,22 @@ df_test = pd.read_csv('test_housing.csv')
 # 有不少列缺失值
 # df_test.dtypes[df_test.isna().sum() > 0]
 # df_test.isna().sum()[df_test.isna().sum() > 0]
-skewed_feats.remove('SalePrice')
-df_test[skewed_feats] = np.log1p(df_test[skewed_feats])
-df_test = df_test.drop((missing_data[missing_data['Percent'] > 0.8]).index, 1)
 
-# df_train['FireplaceQu'] = df_train['FireplaceQu'].fillna('NA')
+df_test = df_test.drop((missing_data[missing_data['Percent'] > 0.8]).index, 1)
 # 用众数和中位数填充空值,注意应该和训练集使用的相同，这里统一使用训练集
-for col in df_train:
+for col in df_train_ori:
     # NaN补全
     if col in cat_cols:
         df_test[col] = df_test[col].fillna(df_train[col].value_counts().index[0])
     elif col in numeric_cols:
         df_test[col] = df_test[col].fillna(df_train[col].median())
+
+for col in binary_col:
+    most_category = df_train_ori[col].value_counts().index[0]
+    df_test[col] = df_test[col].map(lambda x: '1' if x == most_category else '0')
+
+skewed_feats.remove('SalePrice')
+df_test[skewed_feats] = np.log1p(df_test[skewed_feats])
 
 df_test_oh = pd.get_dummies(df_test)
 # 测试集某些分类没有，手动补0
@@ -403,10 +394,26 @@ for col in df_train_oh.columns.difference(df_test_oh.columns):
     df_test_oh[col] = 0
 
 test_numeric_x = input_scaler.transform(df_test_oh[numeric_cols].values)
-test_onehot_x = df_test_oh[cat_oh_cols]
+test_onehot_x = df_test_oh[cat_oh_cols].values
 test_X = np.c_[test_numeric_x, test_onehot_x]
 
 
+
+
+regressors[-1].fit(X,y)
+y_pred = regressors[-1].predict(X)
+idx = np.random.randint(0, len(y) - 1, size=20)
+print(np.c_[np.exp(target_scaler.inverse_transform(y)) - 1,
+            np.exp(target_scaler.inverse_transform(y_pred)) -1,
+            np.exp(target_scaler.inverse_transform(y_pred)) - np.exp(target_scaler.inverse_transform(y))][idx, :])
+
+
+test_y = regressors[-1].predict(test_X)
+df_test['SalePrice'] = np.exp(target_scaler.inverse_transform(test_y)) - 1
+df_test[['Id', 'SalePrice']].to_csv('submission.csv', index=None)
+
+
+'''
 #####################################################################################################
 ## 神经网络模型
 def network_without_embedding(input_x):
@@ -424,77 +431,13 @@ def network_without_embedding(input_x):
     model.compile(optimizer=RMSprop(lr=1e-4), loss='mse', metrics=['mae'])
     return model
 
-
-def network_with_embedding(numric_x, label_x):
-    embedding_layers = []
-    inputs_layers = []
-    numeric_input = layers.Input(shape=(numric_x.shape[1],))
-    inputs_layers.append(numeric_input)
-
-    for label in label_x:
-        t_input = layers.Input(shape=(1,))
-        # 嵌入维度取对数, 注意这里的input维度是最大值+1，因为有0
-        t_embedding = layers.Embedding(label.max() + 1, 2 * int(math.log2(label.max())) + 1, input_length=1)(t_input)
-        t_Flatten = layers.Flatten()(t_embedding)
-        inputs_layers.append(t_input)
-        embedding_layers.append(t_Flatten)
-
-    numeric_layers = layers.Dense(64)(numeric_input)
-    concatenate_layers = layers.concatenate(embedding_layers + [numeric_layers])
-
-    t = layers.Dense(256, activation='relu')(concatenate_layers)
-    t = layers.Dense(512, activation='relu')(t)
-    t = layers.Dropout(0.1)(t)
-    t = layers.Dense(256, activation='relu')(t)
-    t = layers.Dropout(0.1)(t)
-    t = layers.Dense(64, activation='relu')(t)
-    t = layers.Dropout(0.1)(t)
-    output = layers.Dense(1)(t)
-    model = Model(inputs_layers, output)
-    model.compile(optimizer=RMSprop(lr=1e-4), loss='mse', metrics=['mae'])
-    return model
-
-
-def network_kfold(model):
-    print('神经网络k折验证')
-    kfold = KFold(n_splits=10, shuffle=True, random_state=24)
-    for train_idx, test_idx in kfold.split(X, y):
-        model.fit(X[train_idx], y[train_idx], epochs=60, batch_size=64, verbose=0)
-        # evaluate the model
-        scores = model.evaluate(X[test_idx], y[test_idx], verbose=0)
-        print("%s: %.2f%" % (model.metrics_names[1], scores[1] * 100))
-
-
-
-# 神经网络一起输入，val_loss到达0.09的时候验证集没有在明显的进步，但直接停输出的数据匹配度很低
-dense_regressor = network_without_embedding(X)
-dense_regressor.fit(X, y, epochs=80, batch_size=64, validation_split=0.20)
-ans = dense_regressor.predict(X)
-idx = np.random.randint(0,len(X),size=10)
-print(np.c_[ans[idx, 0], y[idx]])
-
-
-# 使用lable + embedding
-# embedding 随着训练的增加，训练集loss下降，val的loss反增
-# 效果不如普通模型，说明列列之间无明显联系
-label_encoders = {}
-train_label_x = []
-for col in cat_cols:
-    label_encoders[col] = LabelEncoder()
-    train_label_x.append(label_encoders[col].fit_transform(df_train[col].values))
-
-test_label_x = []
-for col in cat_cols:
-    test_label_x.append(label_encoders[col].transform(df_test[col].values))
-
-embedding_regressor = network_with_embedding(train_numeric_x, train_label_x)
-embedding_regressor.fit([train_numeric_x] + train_label_x, y, epochs=40, batch_size=64, validation_split=0.20)
-ans = embedding_regressor.predict([test_numeric_x] + test_label_x)
-print(np.c_[ans[:10, 0], y[:10]])
-
-
-y_pred = dense_regressor.predict(test_X)
-test_y = np.exp(target_scaler.inverse_transform(y_pred))
-df_test['SalePrice'] = test_y
-df_test[['Id', 'SalePrice']].to_csv('submission.csv', index=None)
+for regressor in regressors:
+    print(regressor)
+    y_pred = regressor.fit(X, y)
+    y_pred = regressor.predict(X)
+    # 随机打印20个样本及预测值，误差
+    idx = np.random.randint(0, len(y) - 1, size=20)
+    print(np.c_[np.exp(y),np.exp(y_pred), np.exp(y_pred) - np.exp(y)][idx, :])
+    print(mean_squared_error(y_pred, y))
+    print(cross_val_score(regressor, X, y, cv=3, scoring="neg_mean_squared_error"))
 '''
