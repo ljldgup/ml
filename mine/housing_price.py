@@ -21,6 +21,8 @@ from tensorflow.keras import layers, models
 from tensorflow.python.keras import Model
 from tensorflow.python.keras.optimizer_v2.rmsprop import RMSprop
 
+from mine.tools import muti_scatter
+
 warnings.filterwarnings("ignore")
 '''
 过程思路首选观察数据，通过直觉判断哪些列有影响，然后通过散点图，箱型图等确定是否存在明显关系
@@ -57,6 +59,9 @@ df_train['SalePrice'].describe()
 # 峰度包括正态分布（峰度值=3），厚尾（峰度值>3），瘦尾（峰度值<3）
 print("Skewness: %f" % df_train['SalePrice'].skew())
 print("Kurtosis: %f" % df_train['SalePrice'].kurt())
+
+# id 与售价，明显没有任何关系，可以作为其他的参考
+plt.scatter(df_train[numeric_feats[0]], df_train['SalePrice'])
 
 # GrLivArea 和 SalePrice呈线性关系
 var = 'GrLivArea'
@@ -143,9 +148,12 @@ df_train = df_train.drop((missing_data[missing_data['Percent'] > 0.8]).index, ax
 
 
 # 填充数据
-for col in missing_data[(missing_data['Percent'] > 0) & (missing_data['Percent'] < 0.8)].index:
+# FireplaceQu缺失较多单独分一类，其余用众数或中位数
+# 效果不如加入众数
+# df_train['FireplaceQu'] = df_train['FireplaceQu'].fillna('NA')
+for col in missing_data[(missing_data['Percent'] > 0) & (missing_data['Percent'] < 0.5)].index:
     if missing_data.loc[col]['classes'] < 50:
-        df_train[col] = df_train[col].fillna('NA')
+        df_train[col] = df_train[col].fillna(df_train[col].value_counts().index[0])
     else:
         df_train[col] = df_train[col].fillna(df_train[col].median())
 
@@ -171,18 +179,12 @@ data = pd.concat([df_train['SalePrice'], df_train[var]], axis=1)
 data.plot.scatter(x=var, y='SalePrice', ylim=(0, 800000))
 '''
 
-# 图上右下方售价最高的两个点是离群点，删掉
-delete_index = df_train.sort_values(by='GrLivArea', ascending=False)[:2].index
-df_train = df_train.drop(index=delete_index)
-
 '''
 # 没什么问题
 var = 'TotalBsmtSF'
 data = pd.concat([df_train['SalePrice'], df_train[var]], axis=1)
 data.plot.scatter(x=var, y='SalePrice', ylim=(0,800000))
-'''
 
-'''
 # Histogram 画出峰度，偏度
 # probplot 根据分位数据推测其正态分布并与数据画在一起，横坐标是理论分位数，0的地方应该是均值
 # 理论分位数应该给出的是20%，40%，60%，80%，100%的分位数，但是100%的分位数一般会无限大，因此在这里需要进行一下 数据处理 ，找一个“近似”的理论样本，来替代“真正”的理论样本
@@ -218,14 +220,61 @@ df_train['HasBsmt'] = 0
 df_train.loc[df_train['TotalBsmtSF'] > 0, 'HasBsmt'] = 1
 df_train.loc[df_train['HasBsmt'] == 1, 'TotalBsmtSF'] = np.log(df_train['TotalBsmtSF'])
 '''
+cat_nums = pd.DataFrame(df_train.nunique(), columns=['classes'])
+most_cat_nums = cat_nums.index.map(lambda c: df_train[c].value_counts().iloc[0]).to_list()
+cat_nums['most_cat_nums'] = most_cat_nums
+cat_nums['most_cat_pct'] = cat_nums['most_cat_nums'] / len(df_train)
+cat_nums['dtype'] = df_train.dtypes
+cat_nums.sort_values(by='most_cat_pct', ascending=False).head(30)
 
+# 对比较集中的列进行散点图标识
+cat_cols = df_train.columns
+# cat_cols = cat_nums[cat_nums['classes'] > 30].sort_values(by='classes', ascending=False).index.to_list()
+# cat_cols = cat_nums.sort_values(by='most_cat_pct', ascending=False).head(30).index.to_list()
+
+
+# 直接删 Utilities，只有一个点不一样
+df_train = df_train.drop(columns=['Utilities'])
+
+# 二分类，基本主要都是一个类，另外的类没有规律
+binary_col = ['PoolArea', 'Condition2', 'KitchenAbvGr', 'LowQualFinSF', 'MiscVal']
+for col in binary_col:
+    most_category = df_train[col].value_counts().index[0]
+    df_train[col] = df_train[col].map(lambda x: '1' if x == most_category else '0')
+
+# 离群点  ['GarageQual', 'BsmtFinType2', 'OverallCond', 'PoolArea', 'BsmtFinSF1', 'TotalBsmtSF',
+#             '1stFlrSF', 'LowQualFinSF', 'BsmtHalfBath', 'Functional', 'LotArea', 'GrLivArea'
+#             'Exterior2nd','LotFrontage']
+delete_index = []
+delete_index.extend(df_train[(df_train['GarageQual'] == 'Ex') & (df_train['SalePrice'] > 400000)].index.to_list())
+delete_index.extend(df_train[(df_train['BsmtFinType2'] == 'ALQ') & (df_train['SalePrice'] > 400000)].index.to_list())
+delete_index.extend(df_train[(df_train['OverallCond'] == 2) & (df_train['SalePrice'] > 390000)].index.to_list())
+delete_index.extend(df_train[(df_train['PoolArea'] == '0') & (df_train['SalePrice'] > 600000)].index.to_list())
+delete_index.extend(df_train[(df_train['BsmtFinSF1'] > 2000) & (df_train['SalePrice'] < 200000)].index.to_list())
+delete_index.extend(df_train[(df_train['TotalBsmtSF'] > 3000) & (df_train['SalePrice'] < 200000)].index.to_list())
+delete_index.extend(df_train[(df_train['1stFlrSF'] > 3000) & (df_train['SalePrice'] < 200000)].index.to_list())
+delete_index.extend(df_train[(df_train['LowQualFinSF'] == '0') & (df_train['SalePrice'] > 400000)].index.to_list())
+delete_index.extend(df_train[(df_train['BsmtHalfBath'] == 1.0) & (df_train['SalePrice'] > 600000)].index.to_list())
+delete_index.extend(df_train[(df_train['Functional'] == 'Mod') & (df_train['SalePrice'] > 400000)].index.to_list())
+delete_index.extend(df_train[df_train['LotArea'] > 100000].index.to_list())
+delete_index.extend(df_train[(df_train['GrLivArea'] > 4500) & (df_train['SalePrice'] < 200000)].index.to_list())
+delete_index.extend(df_train[df_train['LotFrontage'] > 300].index.to_list())
+df_train = df_train.drop(index=delete_index)
+
+cat_cols = cat_nums[cat_nums['classes'] < 30].index.to_list()
+df_train[cat_cols] = df_train[cat_cols].applymap(str)
+# 画出所有散点图看看是否还有离散点
+# muti_scatter(cat_cols, 'SalePrice', df_train)
+
+'''
+# 对偏度较大的执行log(1+x),使其分布更加正态化
 numeric_feats = df_train.dtypes[df_train.dtypes != "object"].index
 skewed_feats = df_train[numeric_feats].apply(lambda x: skew(x.dropna()))  # compute skewness
 skewed_feats = skewed_feats[skewed_feats > 0.75]
 skewed_feats = skewed_feats.index.to_list()
 df_train[skewed_feats] = np.log1p(df_train[skewed_feats])
 
-'''
+
 sns.distplot(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], fit=norm);
 fig = plt.figure()
 res = stats.probplot(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], plot=plt)
@@ -233,7 +282,7 @@ res = stats.probplot(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], plot=
 # 进行变换后从三点图上可以看出，线性关系更强了,便于机器学习
 plt.scatter(df_train['GrLivArea'], df_train['SalePrice'])
 plt.scatter(df_train[df_train['TotalBsmtSF'] > 0]['TotalBsmtSF'], df_train[df_train['TotalBsmtSF'] > 0]['SalePrice'])
-'''
+
 # 这里的原始数据会被后面替换掉，要用这边把后面注释
 
 # 类转换成onehot
@@ -244,7 +293,6 @@ X = input_scaler.fit_transform(df_train_oh.drop(columns=['SalePrice', 'Id']).val
 y = df_train_oh['SalePrice'].values
 target_scaler = StandardScaler()
 y = target_scaler.fit_transform(y.reshape(-1, 1)).reshape(-1)
-
 
 #####################################################################################################
 ## 初步使用各类机器学西进行计算，提取重要的列
@@ -268,12 +316,12 @@ regressors = regressors_test(X, y)
 cols = df_train_oh.drop(columns=['SalePrice', 'Id']).columns
 corrmat = df_train.corr()
 # 统计决策树,提升树，相关性重要性靠前的特征
-'''
+
 print(cols[regressors[-1].feature_importances_.argsort()[-10:]])
 print(cols[regressors[-2].feature_importances_.argsort()[-10:]])
 # 注意这里是倒序，所以1放在后面
 print(corrmat.nlargest(10, 'SalePrice')['SalePrice'].index[:1:-1])
-'''
+
 # 将前k个重要的列合并
 k = 20
 cols = cols[regressors[-2].feature_importances_.argsort()[-k:]].to_list() + \
@@ -295,13 +343,13 @@ cat_nums = list(zip(cat_cols, map(lambda col: len(df_train[col].unique()), cat_c
 # 只有一个分类的可以直接删掉，[('Utilities', 1), ('Street', 1), ('CentralAir', 1)]
 one_cat = list(filter(lambda x: x[1] == 1, cat_nums))
 
-'''
+
 for col in ['GarageArea', '1stFlrSF', 'Utilities', 'Street', 'CentralAir']:
     if col in numeric_cols:
         numeric_cols.remove(col)
     elif col in cat_cols:
         cat_cols.remove(col)
-'''
+
 
 # 将对每个类别列filter出对应的onehot列，在reduce
 # 多层嵌套的函数式，最好从里向外写
@@ -339,11 +387,13 @@ df_test = pd.read_csv('test_housing.csv')
 skewed_feats.remove('SalePrice')
 df_test[skewed_feats] = np.log1p(df_test[skewed_feats])
 df_test = df_test.drop((missing_data[missing_data['Percent'] > 0.8]).index, 1)
+
+# df_train['FireplaceQu'] = df_train['FireplaceQu'].fillna('NA')
 # 用众数和中位数填充空值,注意应该和训练集使用的相同，这里统一使用训练集
 for col in df_train:
     # NaN补全
     if col in cat_cols:
-        df_test[col] = df_test[col].fillna('NA')
+        df_test[col] = df_test[col].fillna(df_train[col].value_counts().index[0])
     elif col in numeric_cols:
         df_test[col] = df_test[col].fillna(df_train[col].median())
 
@@ -415,7 +465,7 @@ def network_kfold(model):
         print("%s: %.2f%" % (model.metrics_names[1], scores[1] * 100))
 
 
-'''
+
 # 神经网络一起输入，val_loss到达0.09的时候验证集没有在明显的进步，但直接停输出的数据匹配度很低
 dense_regressor = network_without_embedding(X)
 dense_regressor.fit(X, y, epochs=80, batch_size=64, validation_split=0.20)
