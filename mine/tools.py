@@ -19,7 +19,8 @@ def muti_scatter(x_cols, y_col, data):
         for i in range(12):
             if j * 12 + i == len(x_cols):
                 break
-            axes[i // 4][i % 4].scatter(data[x_cols[j * 12 + i]], data[y_col], s=5)
+            # 数据中有nan的时候scatter会出错
+            axes[i // 4][i % 4].scatter(data[x_cols[j * 12 + i]][~data[x_cols[j * 12 + i]].isna()], data[y_col][~data[x_cols[j * 12 + i]].isna()], s=5)
             axes[i // 4][i % 4].set_title(x_cols[j * 12 + i], fontsize=8, color='b')
             # x轴不显示
             axes[i // 4][i % 4].xaxis.set_ticks([])
@@ -54,3 +55,4 @@ def classifier_test(X, y):
         print(classifier.score(X, y))
         print(cross_val_score(classifier, X, y, cv=2, scoring="accuracy"))
         print('\n--------------------------------------------------------------------------\n\n')
+    return classifiers

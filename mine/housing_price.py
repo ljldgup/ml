@@ -31,24 +31,34 @@ warnings.filterwarnings("ignore")
 缺失较多，缺失数据与目标变量基本无关的直接删除
 缺失较少，缺失数据与目标变量基本有关的可以考虑直接删除样本
 
-通过可视化查看离群值，删除明显与趋势不符合的点
+离散值
+通过可视化散点图查看离群值，删除明显与趋势不符合的点
+标准化后可以去除少量过大的点
 
-对重要的连续值进行线性变化，使其更加符合正态分布
+数据
+偏度较大的数据可以取对数使其更加符合正态分布，并缩小范围
+取对数后不要再进行标准化，效果很差
+
+
+神经网络输入输出直接做标准化，或者归一化
+
 '''
 
 df_train_ori = pd.read_csv("train_housin.csv")
-df_test = pd.read_csv('test_housing.csv')
-
+df_test_ori = pd.read_csv('test_housing.csv')
+df_test = df_test_ori.copy()
 df_train = df_train_ori.copy()
 
 #####################################################################################################
 # 处理离群值
-
+# 存在离群点的列  ['GarageQual', 'BsmtFinType2', 'OverallCond', 'PoolArea', 'BsmtFinSF1', 'TotalBsmtSF',
+#             '1stFlrSF', 'LowQualFinSF', 'BsmtHalfBath', 'Functional', 'LotArea', 'GrLivArea'
+#             'Exterior2nd', 'LotFrontage']
 delete_index = []
 delete_index.extend(df_train[(df_train['GarageQual'] == 'Ex') & (df_train['SalePrice'] > 400000)].index.to_list())
 delete_index.extend(df_train[(df_train['BsmtFinType2'] == 'ALQ') & (df_train['SalePrice'] > 400000)].index.to_list())
 delete_index.extend(df_train[(df_train['OverallCond'] == 2) & (df_train['SalePrice'] > 390000)].index.to_list())
-delete_index.extend(df_train[(df_train['PoolArea'] == '0') & (df_train['SalePrice'] > 600000)].index.to_list())
+delete_index.extend(df_train[(df_train['PoolArea'] > 500) & (df_train['SalePrice'] > 600000)].index.to_list())
 delete_index.extend(df_train[(df_train['BsmtFinSF1'] > 2000) & (df_train['SalePrice'] < 200000)].index.to_list())
 delete_index.extend(df_train[(df_train['TotalBsmtSF'] > 3000) & (df_train['SalePrice'] < 200000)].index.to_list())
 delete_index.extend(df_train[(df_train['1stFlrSF'] > 3000) & (df_train['SalePrice'] < 200000)].index.to_list())
@@ -58,6 +68,9 @@ delete_index.extend(df_train[(df_train['Functional'] == 'Mod') & (df_train['Sale
 delete_index.extend(df_train[df_train['LotArea'] > 100000].index.to_list())
 delete_index.extend(df_train[(df_train['GrLivArea'] > 4500) & (df_train['SalePrice'] < 200000)].index.to_list())
 delete_index.extend(df_train[df_train['LotFrontage'] > 300].index.to_list())
+delete_index.extend(df_train[(df_train['LotFrontage'] > 150) & (df_train['SalePrice'] < 50000)].index.to_list())
+delete_index.extend(df_train[(df_train['YearRemodAdd'] < 2000) & (df_train['SalePrice'] > 600000)].index.to_list())
+delete_index.extend(df_train[(df_train['OpenPorchSF'] > 500) & (df_train['SalePrice'] < 100000)].index.to_list())
 df_train = df_train.drop(index=delete_index)
 
 # 缺失数据统计,聚合操作sum后列转到了索引上
@@ -105,23 +118,26 @@ cat_nums.sort_values(by='most_cat_pct', ascending=False).head(30)
 # 直接删 Utilities，只有一个点不一样
 df_train_test = df_train_test.drop(columns=['Utilities'])
 
+'''
 # 二分类，基本主要都是一个类，另外的类没有规律
 binary_col = ['PoolArea', 'Condition2', 'KitchenAbvGr', 'LowQualFinSF', 'MiscVal']
 for col in binary_col:
     most_category = df_train_test[col].value_counts().index[0]
     df_train_test[col] = df_train_test[col].map(lambda x: '1' if x == most_category else '0')
-
-# 存在离群点的列  ['GarageQual', 'BsmtFinType2', 'OverallCond', 'PoolArea', 'BsmtFinSF1', 'TotalBsmtSF',
-#             '1stFlrSF', 'LowQualFinSF', 'BsmtHalfBath', 'Functional', 'LotArea', 'GrLivArea'
-#             'Exterior2nd', 'LotFrontage']
-
+'''
 
 # 将分类较小的int类型数据转为string，get_dummies时能生成onehot
 # cat_cols = cat_nums[cat_nums['classes'] < 30].index.intersection(df_train_test.columns).to_list()
 # df_train_test[cat_cols] = df_train_test[cat_cols].applymap(str)
-'''
+
 # 对偏度较大的执行log(1+x),使其分布更加正态化
 df_train_test_oh = pd.get_dummies(df_train_test)
+df_test_oh = pd.get_dummies(df_test)
+# 尝试将test集中没有的类删掉
+drop_columns = []
+for col in df_train_test_oh:
+    if col not in df_test_oh:
+        drop_columns.append(col)
 numeric_feats = df_train_test.dtypes[df_train_test.dtypes != "object"].index
 skewed_feats = df_train_test[numeric_feats].apply(lambda x: skew(x.dropna()))  # compute skewness
 skewed_feats = skewed_feats[skewed_feats > 0.75]
@@ -139,11 +155,11 @@ train_y = np.log(df_train['SalePrice'])
 train_x, test_x = x[:len(df_train)], x[len(df_train):]
 regressors = regressors_test(train_x, train_y)
 
-
+'''
 #####################################################################################################
 ## 根据各类机器学习计算结果，提取重要的列
 
-cols = df_train_oh.drop(columns=['SalePrice', 'Id']).columns
+cols = df_train_test_oh.drop(columns=['SalePrice', 'Id']).columns
 corrmat = df_train.corr()
 # 统计决策树,提升树，相关性重要性靠前的特征
 
@@ -176,15 +192,15 @@ one_cat = list(filter(lambda x: x[1] == 1, cat_nums))
 # 将对每个类别列filter出对应的onehot列，在reduce
 # 多层嵌套的函数式，最好从里向外写
 # 这里map返回的是一次性生成器，无法重复用
-cat_oh_lists = map(lambda cat: list(filter(lambda x: x.startswith(cat), df_train_oh.columns)), cat_cols)
+cat_oh_lists = map(lambda cat: list(filter(lambda x: x.startswith(cat), df_train_test_oh.columns)), cat_cols)
 cat_oh_cols = reduce(lambda cat1, cat2: cat1 + cat2, cat_oh_lists)
 '''
-'''
+
 #####################################################################################################
 ## 将测试集处理成和训练集相同的模式
 
 
-regressors[-1].fit(train_y, train_x)
+regressors[-1].fit(train_x, train_y)
 y_pred = regressors[-1].predict(train_x)
 idx = np.random.randint(0, len(train_y) - 1, size=20)
 print(np.c_[np.exp(train_y),
@@ -194,7 +210,7 @@ print(np.c_[np.exp(train_y),
 test_y = regressors[-1].predict(test_x)
 df_test['SalePrice'] = np.exp(test_y) - 1
 df_test[['Id', 'SalePrice']].to_csv('submission.csv', index=None)
-
+'''
 # 可以分开进行，一次运行太慢
 param_test1 = {'n_estimators': range(80, 160, 10), 'max_leaf_nodes': range(4, 20, 3),
                'max_depth': range(4, 11, 2), 'min_samples_leaf': range(5, 40, 4),
@@ -206,25 +222,22 @@ gsearch1 = GridSearchCV(
     param_grid=param_test1, scoring='neg_mean_squared_error', iid=False, cv=3,verbose=1)
 gsearch1.fit(train_x, train_y)
 print(gsearch1.best_params_, gsearch1.best_score_)
-
 '''
-
-
+'''
 #####################################################################################################
 ## 神经网络模型
 def network_without_embedding(input_x):
     model = models.Sequential([
         layers.Input(shape=(input_x.shape[1],)),
-        layers.Dense(256, activation='relu'),
+        layers.Dense(512, activation='relu'),
+        layers.Dense(1024, activation='relu'),
+        layers.Dropout(0.2),
         layers.Dense(512, activation='relu'),
         layers.Dropout(0.1),
         layers.Dense(256, activation='relu'),
-        layers.Dropout(0.1),
-        layers.Dense(64, activation='relu'),
-        layers.Dropout(0.1),
         layers.Dense(1)
     ])
-    model.compile(optimizer=RMSprop(lr=1e-4), loss='mse', metrics=['mae'])
+    model.compile(optimizer=RMSprop(lr=1e-3), loss='mse', metrics=['mae'])
     return model
 
 
@@ -245,13 +258,12 @@ def network_with_embedding(numric_x, label_x):
     numeric_layers = layers.Dense(64)(numeric_input)
     concatenate_layers = layers.concatenate(embedding_layers + [numeric_layers])
 
-    t = layers.Dense(256, activation='relu')(concatenate_layers)
+    t = layers.Dense(1024, activation='relu')(concatenate_layers)
     t = layers.Dense(512, activation='relu')(t)
-    t = layers.Dropout(0.1)(t)
+    t = layers.Dropout(0.2)(t)
     t = layers.Dense(256, activation='relu')(t)
     t = layers.Dropout(0.1)(t)
-    t = layers.Dense(64, activation='relu')(t)
-    t = layers.Dropout(0.1)(t)
+    t = layers.Dense(128, activation='relu')(t)
     output = layers.Dense(1)(t)
     model = Model(inputs_layers, output)
     model.compile(optimizer=RMSprop(lr=1e-4), loss='mse', metrics=['mae'])
@@ -267,7 +279,6 @@ def network_kfold(model, x, y):
         scores = model.evaluate(x[test_idx], y[test_idx], verbose=0)
         print("%s: %.2f%" % (model.metrics_names[1], scores[1] * 100))
 
-
 df_train_test_oh = pd.get_dummies(df_train_test)
 numeric_cols = list(filter(lambda x: '_' not in x, df_train_test_oh.columns))
 input_scaler = MinMaxScaler()
@@ -276,18 +287,20 @@ df_train_test_oh[numeric_cols] = input_scaler.fit_transform(df_train_test_oh[num
 x = df_train_test_oh.values
 train_x, test_x = x[:len(df_train)], x[len(df_train):]
 # 神经网络 y标准化比log效果好得多
-input_scaler = StandardScaler()
-train_y = input_scaler.fit_transform(df_train['SalePrice'][:, np.newaxis])
-# 神经网络一起输入，val_loss到达0.09的时候验证集没有在明显的进步，但直接停输出的数据匹配度很低
+target_scaler = StandardScaler()
+train_y = target_scaler.fit_transform(df_train['SalePrice'][:, np.newaxis])
+
+# 加深加宽网络无明显作用
+# 训练集的损失可以不断减小至0.05左右 val_mae达到最佳0.24左右，之后没有进步
 dense_regressor = network_without_embedding(train_x)
-dense_regressor.fit(train_x, train_y, epochs=80, batch_size=64, validation_split=0.20)
+# dense_regressor.fit(train_x, train_y, epochs=240, batch_size=128, validation_split=0.1)
+dense_regressor.fit(train_x, train_y, epochs=240, batch_size=128)
 ans = dense_regressor.predict(train_x)
 idx = np.random.randint(0, len(train_x), size=10)
 print(np.c_[input_scaler.inverse_transform(ans[:10, 0]), input_scaler.inverse_transform(train_y[:10])])
-'''
-# 使用lable + embedding
-# embedding 随着训练的增加，训练集loss下降，val的loss反增
-# 效果不如普通模型，说明列列之间无明显联系
+
+
+# 使用lable embedding 效果不如普通的全连接 说明列列之间无明显联系
 df_train_test_oh = pd.get_dummies(df_train_test)
 numeric_cols = list(filter(lambda c: df_train_test[c].dtype != np.object, df_train_test.columns))
 label_cols = list(filter(lambda c: c in numeric_cols, df_train_test.columns))
@@ -300,20 +313,20 @@ label_endcoder = OrdinalEncoder()
 label_x = label_endcoder.fit_transform(df_train_test[label_cols]).astype(np.int32)
 train_label_x, test_label_x = label_x[:len(df_train)], label_x[len(df_train):]
 
-input_scaler = StandardScaler()
+target_scaler = StandardScaler()
 train_y = input_scaler.fit_transform(df_train['SalePrice'][:, np.newaxis])
 
 # 按列分割成list
 col_to_list = lambda array:[array[:, row] for row in range(array.shape[1])]
-
 embedding_regressor = network_with_embedding(train_numeric_x, col_to_list(label_x))
 embedding_regressor.fit([train_numeric_x] + col_to_list(train_label_x), train_y, epochs=40, batch_size=64, validation_split=0.20)
 ans = embedding_regressor.predict([test_numeric_x] + col_to_list(test_label_x))
-print(np.c_[np.exp(ans[:10, 0]), np.exp(train_y[:10])])
+print(np.c_[input_scaler.inverse_transform(ans[:10, 0]), input_scaler.inverse_transform(train_y[:10])])
+
 '''
 '''
 y_pred = dense_regressor.predict(test_x)
-test_y = np.exp(target_scaler.inverse_transform(y_pred))
+test_y = target_scaler.inverse_transform(y_pred)
 df_test['SalePrice'] = test_y
 df_test[['Id', 'SalePrice']].to_csv('submission.csv', index=None)
 '''

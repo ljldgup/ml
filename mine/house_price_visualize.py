@@ -19,7 +19,7 @@ df_train.columns
 df_train.info()
 
 # 画出所有散点图看看是否还有离散点
-muti_scatter(df_train, 'SalePrice', df_train)
+muti_scatter(df_train.columns, 'SalePrice', df_train)
 
 
 # 右偏分布（也叫正偏分布） 分位数特征也可以看出来

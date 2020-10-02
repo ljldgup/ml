@@ -135,6 +135,7 @@ df['A'][:, np.newaxis]
 
 # 多列切片loc 用于标签， iloc则用于整数位置，这两个用于弥补[]加index引起的歧义
 df.loc[1:4, ['A', 'B']]
+df.loc[1:4, 'A':'D']
 df.iloc[1:3, [1, 2]]
 df.iloc[1:2, 1:4]
 

@@ -1,8 +1,9 @@
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
+from sklearn.ensemble import GradientBoostingClassifier
 
-from sklearn.model_selection import cross_val_predict, cross_val_score, StratifiedKFold
+from sklearn.model_selection import cross_val_predict, cross_val_score, StratifiedKFold, GridSearchCV
 from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder, OrdinalEncoder
 from scipy import sparse
 
@@ -229,8 +230,8 @@ train_x, test_x = onehot_and_values()
 # 使用label + 连续数值后随机森林和提升树，knn有提升
 
 # 交叉验证中使用onehot线性svm总体得分最高，
+classifiers = classifier_test(train_x, train_y)
 
-classifier_test(train_x, train_y)
 '''
 # 神经网络不能处理scipy的稀疏矩阵对象
 build_net_work_model = net_work_without_embedding
@@ -258,5 +259,17 @@ test['Survived'] = classifiers[-1].predict(test_x)
 
 t = net_work_classifier.predict(test_x.toarray())
 test_df['Survived'] = np.where(t[:, 0] > 0.5, 1, 0)
+test_df[['PassengerId', 'Survived']].to_csv('submission.csv', index=None)
+'''
+'''
+param_test1 = {'n_estimators': range(60, 160, 15), 'max_leaf_nodes': range(4, 20, 3),
+               'max_depth': range(1, 6, 2), 'min_samples_leaf': range(1, 20, 3)}
+gsearch1 = GridSearchCV(
+    estimator=GradientBoostingClassifier(learning_rate=0.1, max_features='sqrt', subsample=0.8, random_state=12),
+    param_grid=param_test1, scoring='roc_auc', iid=False, cv=3, verbose=1)
+gsearch1.fit(train_x, train_y)
+print(gsearch1.best_params_, gsearch1.best_score_)
+
+test_df['Survived'] = gsearch1.predict(test_x)
 test_df[['PassengerId', 'Survived']].to_csv('submission.csv', index=None)
 '''
