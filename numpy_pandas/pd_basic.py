@@ -4,6 +4,13 @@ import pandas as pd
 
 # 最大显示行数
 # pd.options.display.max_rows	= 10
+pd.set_option('display.float_format', lambda x: '{:.3f}'.format(x))
+# 显示所有列
+pd.set_option('display.max_columns', None)
+# 显示所有行
+pd.set_option('display.max_rows', None)
+# 设置value的显示长度为100，默认为50
+pd.set_option('max_colwidth', 100)
 
 # 读写
 df = pd.read_csv(r"../data/000513_d_bas.csv")
@@ -31,8 +38,6 @@ df.columns.str.contains('der')
 # 直接指定一列
 df = df.assign(score=np.random.randint(60, 100, size=4))
 
-
-
 # 不给列名，列名和index一样默认123.。
 df = pd.DataFrame(np.random.rand(100, 3))
 # 使用np生成,注意columns=，pandas很多函数参数很多，需要指定参数名
@@ -44,7 +49,7 @@ s1 = pd.Series({'A': 11, 'B': 22, 'C': 33, 6: 44, 5: 55})
 s2 = pd.Series([13, 24, 35, 46, 57], ['A', 6, 5, 'B', 'C'])
 
 # D项为NaN
-df1 = pd.DataFrame(s1, index=['A', 'B', 'C', 'D'],columns=['s1'])
+df1 = pd.DataFrame(s1, index=['A', 'B', 'C', 'D'], columns=['s1'])
 # 及时index顺序内容不完全匹配也可以赋值
 df1['s2'] = s2
 
@@ -139,6 +144,15 @@ df.loc[1:4, 'A':'D']
 df.iloc[1:3, [1, 2]]
 df.iloc[1:2, 1:4]
 
+df.iloc[1:2, 1:4]
+
+# 通过any all 加 axis 来使用全部的列进行筛选
+t = pd.DataFrame([[1, 2, 3], [2, 5, np.nan], [np.nan, np.nan, np.nan]])
+t[t.isna().any(axis=1)]
+t[t.isna().all(axis=1)]
+
+# 填充类型会将填充列强行转换类型
+t.fillna('None')
 
 # 头尾
 df.head(2)

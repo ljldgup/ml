@@ -70,8 +70,8 @@ sns.lmplot(x="x", y="y", hue='cond', data=data)
 # size控制图片大小
 sns.lmplot(x="x", y="y", data=data, size=6)
 
-# 箱型图
-x = np.random.randint(10, 20, size=(100, 1))
+# 箱型图，会对x做分类然后绘制箱型图，比matplotlib好用一些
+x = np.random.randint(10, 15, size=(100, 1))
 y = x % 5
 data = pd.DataFrame(np.c_[x, y + np.random.randn(100, 1)], columns=['x', 'y'])
 sns.boxplot(x="x", y="y", data=data)

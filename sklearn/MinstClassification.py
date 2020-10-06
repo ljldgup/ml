@@ -61,6 +61,7 @@ for train_index, test_index in skfolds.split(X_train, y_train_5):
     n_correct = sum(y_pred == y_test_fold)
     print(n_correct / len(y_pred))
 
+# cross_val_score 用的是sgd_clf的拷贝，sgd_clf本身不会被fit
 cross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring="accuracy")
 
 

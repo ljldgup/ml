@@ -87,7 +87,7 @@ df['A'] = df['A'].map(lambda x: x % 2)
 df['B'] = df['B'].map(lambda x: x % 3)
 formater = '{:.2f}'.format
 df = df.applymap(formater)
-# apply主要用于聚合运算
+# apply主要用于聚合运算,对列操作
 df.apply(np.sum, axis=1)
 # 也可以对行直接操作，用于一些复杂映射
 df[['A', 'B']].apply(lambda col: (col[0] + col[1]) / 10, axis=1)
