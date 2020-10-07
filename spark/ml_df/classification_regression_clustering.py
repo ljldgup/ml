@@ -6,7 +6,7 @@ from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 
     spark.mllib 包含基于RDD的原始算法API。
     spark.ml 则提供了基于DataFrames 高层次的API，可以用来构建机器学习管道。
-
+    DataFrames ml函数主要特点是要指定输入输出的列,所有的列都和当前数据上一起返回
 '''
 spark = SparkSession \
     .builder \

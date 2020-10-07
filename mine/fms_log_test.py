@@ -10,8 +10,12 @@ from pyspark.sql.types import StructField, StringType, ArrayType, DateType, Time
 
 import pandas as pd
 
-# 处理e6 文件信息
-
+'''
+处理e6 文件信息
+主要是通过udf 增加列和pandas_udf聚合
+mapReduce的操作思想比较重要
+传统的顺序操作，比较适合将数据集缩小后使用pandas等进行
+'''
 
 appName = 'fms_log_test'
 master = 'local'
@@ -77,10 +81,9 @@ def date_2_min(x):
 str_2_date = udf(str_2_date, TimestampType())
 date_2_min = udf(date_2_min, StringType())
 
-
 df = df.withColumn('date', str_2_date(df['date_str']))
 # 这里发现str_2_date 输入已经是datetime 可能spark 进行了处理
-df = df.withColumn('min_str', str_2_date(df['date_str']))
+df = df.withColumn('min_str', date_2_min(df['date_str']))
 
 # 每分钟新开资源统计
 df.filter(df['one_context'].startswith('Begin')).groupby(df['min_str']).count().show(10, False)
@@ -118,13 +121,15 @@ thread_process = thread_process.withColumnRenamed('collect_context(context)', 'c
 crash_time = df.filter(df['context'].startswith('start'))
 crash_time.createOrReplaceTempView("crash_time")
 thread_process.createOrReplaceTempView('thread_process')
-# spark联立没法用不等于，不知道怎么简洁的实现,估计只能用pandas,或者用udf映射
+
 """
+# spark联立没法用不等于，不知道怎么简洁的实现,估计只能用pandas,或者用udf映射
+sql 可以用limit 1
 thread_crash_time = spark.sql('''
     select thread_num, c_context, start_time,
-    (select min(date) from crash_time where date > start_time) as c_time from thread_process
+    (select date from crash_time where date > start_time limit 1) as c_time from thread_process
     ''')
-
+"""
 
 
 #######################################################
@@ -146,6 +151,7 @@ thread_process = thread_process.filter(~ thread_process['c_context'].endswith('O
 
 # .withColumn('l_context', context_split(thread_process['c_context']))
 
+'''
 # 使用fpGrowth寻找频繁项
 fpGrowth = FPGrowth(itemsCol="l_context", minSupport=0.5, minConfidence=0.6)
 model = fpGrowth.fit(thread_process)
@@ -162,4 +168,4 @@ model.freqItemsets.withColumn('last_item', get_last_item(col('items'))) \
 
 # csv 无法保存 arrayType
 # thread_process.write.mode('Overwrite').format('csv').save('fms')
-"""
+'''

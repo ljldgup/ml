@@ -1,6 +1,6 @@
 import numpy as np
 
-# any,all也可以按轴计算，没有轴全局，和max,min一样
+# any,all也可以按轴计算，没有轴全局，和max,min一样  这里1位行，0为列
 arr = np.random.randint(1, 80, (8, 4))
 (arr > 50).any(0)
 (arr > 50).any(1)
@@ -44,9 +44,9 @@ np.cumsum(np.arange(12).reshape(3, 4), axis=1)
 np.cumprod(np.arange(12).reshape(3, 4), axis=0)
 np.cumprod(np.arange(12).reshape(3, 4), axis=1)
 
+# 借助cumsum截取百分比
 t = abs(np.random.randn(10))
 percent = t.cumsum() / t.sum()
-# 借助cumsum截取百分比
 t[percent > .80]
 
 # 去重并排序

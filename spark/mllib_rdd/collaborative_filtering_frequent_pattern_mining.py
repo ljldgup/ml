@@ -11,7 +11,8 @@ sc = spark.sparkContext
 # 协同过滤
 from pyspark.mllib.recommendation import ALS, MatrixFactorizationModel, Rating
 
-# Load and parse the data
+# r = Rating(1, 2, 5.0)
+# (r.user, r.product, r.rating)
 data = sc.textFile("../data/mllib/als/test.data")
 ratings = data.map(lambda l: l.split(',')) \
     .map(lambda l: Rating(int(l[0]), int(l[1]), float(l[2])))

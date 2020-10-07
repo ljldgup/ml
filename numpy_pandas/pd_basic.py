@@ -183,7 +183,7 @@ df.sort_index(ascending=False)
 # 返回按照列A逆序，的头两行
 df.nlargest(2, 'A')
 
-# 最大最小索引
+# 最大最小索引,代替argmax
 df.idxmax()
 df.idxmin()
 
@@ -213,7 +213,7 @@ df2 = pd.DataFrame(np.random.randint(80, 120, size=(6, 4)),
                    index=pd.MultiIndex.from_product([[1, 2, 3], ['girl', 'boy']]),
                    columns=pd.MultiIndex.from_product([['English', 'Chinese'],
                                                        ['Y', 'N']]))
-
+# 每部分列和索引的名字
 df2.columns.names = ['Language', 'Pass']  # 设置列索引名
 df2.index.names = ['Class', 'Sex']  # 设置行索引名
 
@@ -227,7 +227,10 @@ df2.sum(level='Language', axis=1)
 df = pd.DataFrame(np.random.randint(20, size=(6, 3)), columns=['A', 'B', 'C'])
 df.pivot('A', 'B')
 df.set_index('A').unstack('A')
-pd.melt(df.set_index('A').unstack('A'), ['A'])
+
+# melt 把列名变为variable,表中值变成values，成为两列的表
+pd.melt(df)
+pd.melt(df, ['A'])
 
 t = df[df['A'] > 10]
 t['A'].sort_values()

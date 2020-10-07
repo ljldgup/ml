@@ -32,6 +32,8 @@ arr.reshape(3, 4)
 
 # 增加一维
 arr.reshape(-1, 1)
+arr[...,np.newaxis].shape
+
 # 索引
 arr[2, 1]
 # 切片
@@ -88,6 +90,7 @@ X[index]
 # 通过构造一个布尔矩阵过滤 绝对值太大的行
 index = np.argwhere(abs(X) > 6)
 row = index[:, 0]
+# np.full 填充对应值
 filter_array = np.full(X.shape[0], True, np.bool)
 filter_array[row] = False
 X = X[filter_array].shape

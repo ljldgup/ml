@@ -32,7 +32,7 @@ t = (df / 7)
 t.round(decimals=2)
 
 # 和sum，同样的有mean, std, var, median, max, min, nunique, count, mode, prod
-# mode返回中众数，可能有多个
+# mode返回众数，可能有多个
 # prod返回乘积
 df.sum()
 df.A.sum()
@@ -104,7 +104,7 @@ pd.merge(df1, df2, on=['A', ], how='outer')
 index = pd.date_range('2019-01-01', periods=20)
 data = pd.DataFrame(np.arange(len(index)), index=index, columns=['test'])
 
-# 打乱顺序
+# 打乱顺序pd.take
 data = data.take(np.random.permutation(20))
 
 # 移动3个值，进行求和

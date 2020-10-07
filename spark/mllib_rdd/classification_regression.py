@@ -12,8 +12,7 @@ sc = spark.sparkContext
 from pyspark.mllib.classification import LogisticRegressionWithLBFGS, LogisticRegressionModel
 from pyspark.mllib.regression import LabeledPoint
 
-
-# Load and parse the data
+# LabeledPoint将数据转成label 和 features
 def parsePoint(line):
     values = [float(x) for x in line.split(' ')]
     return LabeledPoint(values[0], values[1:])
@@ -21,7 +20,7 @@ def parsePoint(line):
 
 # 模型训练和预测
 # rdd使用train和predict
-# dataframe使用fit 和 transform
+# dataframe使用 fit 和 transform
 data = sc.textFile("../data/mllib/sample_svm_data.txt")
 # 注意这里要用LabeledPoint来生成feature列
 parsedData = data.map(parsePoint)
