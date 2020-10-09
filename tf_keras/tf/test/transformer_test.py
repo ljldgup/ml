@@ -1,105 +1,6 @@
-from matplotlib import pyplot as plt
-from tensorflow import keras
 import numpy as np
 import tensorflow as tf
-
-
-def get_angles(pos, i, d_model):
-    # 嵌入维度越大，角度随位置变化率就越小
-    # 这里 pos的形状是p,1 ,i的形状是1,d_model,两者相乘 形状 p,d_model
-    angle_rates = 1 / np.power(10000, (2 * (i // 2)) / np.float32(d_model))
-    return pos * angle_rates
-
-
-def positional_encoding(position, d_model):
-    # [:, np.newaxis]，[np.newaxis, :]分别在结尾开始追加了一个维度
-    angle_rads = get_angles(np.arange(position)[:, np.newaxis],
-                            np.arange(d_model)[np.newaxis, :],
-                            d_model)
-
-    # i 对应维度，单双不同
-    # 将 sin 应用于数组中的偶数索引（indices）；2i
-    angle_rads[:, 0::2] = np.sin(angle_rads[:, 0::2])
-
-    # 将 cos 应用于数组中的奇数索引；2i+1
-    angle_rads[:, 1::2] = np.cos(angle_rads[:, 1::2])
-
-    #
-    pos_encoding = angle_rads[np.newaxis, ...]
-
-    return tf.cast(pos_encoding, dtype=tf.float32)
-
-
-def plot_position_coding():
-    pos_encoding = positional_encoding(50, 512)
-    print(pos_encoding.shape)
-
-    plt.pcolormesh(pos_encoding[0], cmap='RdBu')
-    plt.xlabel('Depth')
-    plt.xlim((0, 512))
-    plt.ylabel('Position')
-    plt.colorbar()
-    plt.show()
-
-
-def create_padding_mask(seq):
-    seq = tf.cast(tf.math.equal(seq, 0), tf.float32)
-
-    return seq[:, tf.newaxis, tf.newaxis, :]  # (batch_size, 1, 1, seq_len)
-
-
-def create_look_ahead_mask(size):
-    # tf.linalg.band_part主要功能是以对角线为中心，取它的副对角线部分，其他部分用0填充。
-    # 这里保留（负数是全部保留）其下三角和对角线的1，通过1 - 来得上三角部的1作为掩码
-    mask = 1 - tf.linalg.band_part(tf.ones((size, size)), -1, 0)
-    return mask  # (seq_len, seq_len)
-
-
-def scaled_dot_product_attention(q, k, v, mask):
-    """计算注意力权重。
-    q, k, v 必须具有匹配的前置维度。
-    k, v 必须有匹配的倒数第二个维度，例如：seq_len_k = seq_len_v。
-    因为attention_weights的最后一维度是seq_len_k要和value相乘
-    虽然 mask 根据其类型（填充或前瞻）有不同的形状，
-    但是 mask 必须能进行广播转换以便求和。
-
-    参数:
-      q: 请求的形状 == (..., seq_len_q, depth)
-      k: 主键的形状 == (..., seq_len_k, depth)
-      v: 数值的形状 == (..., seq_len_v, depth_v)
-      mask: Float 张量，其形状能转换成
-            (..., seq_len_q, seq_len_k)。默认为None。
-
-    返回值:
-      输出，注意力权重
-    """
-
-    matmul_qk = tf.matmul(q, k, transpose_b=True)  # (..., seq_len_q, seq_len_k)
-
-    # 缩放 matmul_qk
-    dk = tf.cast(tf.shape(k)[-1], tf.float32)
-    scaled_attention_logits = matmul_qk / tf.math.sqrt(dk)
-
-    # 将 mask 加入到缩放的张量上。
-    if mask is not None:
-        scaled_attention_logits += (mask * -1e9)
-
-    # softmax 在最后一个轴（seq_len_k）上归一化，因此分数
-    # 相加等于1。
-    attention_weights = tf.nn.softmax(scaled_attention_logits, axis=-1)  # (..., seq_len_q, seq_len_k)
-
-    output = tf.matmul(attention_weights, v)  # (..., seq_len_q, depth_v)
-
-    return output, attention_weights
-
-
-def print_out(q, k, v):
-    temp_out, temp_attn = scaled_dot_product_attention(
-        q, k, v, None)
-    print('Attention weights are:')
-    print(temp_attn)
-    print('Output is:')
-    print(temp_out)
+from matplotlib import pyplot as plt
 
 
 class MultiHeadAttention(tf.keras.layers.Layer):
@@ -150,14 +51,6 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         output = self.dense(concat_attention)  # (batch_size, seq_len_q, d_model)
 
         return output, attention_weights
-
-
-# 点式前馈网络由两层全联接层组成，两层之间有一个 ReLU 激活函数。
-def point_wise_feed_forward_network(d_model, dff):
-    return tf.keras.Sequential([
-        tf.keras.layers.Dense(dff, activation='relu'),  # (batch_size, seq_len, dff)
-        tf.keras.layers.Dense(d_model)  # (batch_size, seq_len, d_model)
-    ])
 
 
 class EncoderLayer(tf.keras.layers.Layer):
@@ -248,7 +141,7 @@ class Encoder(tf.keras.layers.Layer):
         x += self.pos_encoding[:, :seq_len, :]
 
         x = self.dropout(x, training=training)
-
+        # 注意这x 作为下一个encoder的输入，decoder是同样的操作
         for i in range(self.num_layers):
             x = self.enc_layers[i](x, training, mask)
 
@@ -270,7 +163,8 @@ class Decoder(tf.keras.layers.Layer):
                            for _ in range(num_layers)]
         self.dropout = tf.keras.layers.Dropout(rate)
 
-    def call(self, x, enc_output, training, look_ahead_mask, padding_mask):
+    def call(self, x, enc_output, training,
+             look_ahead_mask, padding_mask):
         seq_len = tf.shape(x)[1]
         attention_weights = {}
 
@@ -292,6 +186,7 @@ class Decoder(tf.keras.layers.Layer):
 
 
 class Transformer(tf.keras.Model):
+    # N,embedding维度，多头数，point wise 全连接数量，输入词数，输出次数，最大输入序列长度，最大目标序列长度
     def __init__(self, num_layers, d_model, num_heads, dff, input_vocab_size,
                  target_vocab_size, pe_input, pe_target, rate=0.1):
         super(Transformer, self).__init__()
@@ -299,13 +194,14 @@ class Transformer(tf.keras.Model):
         self.encoder = Encoder(num_layers, d_model, num_heads, dff,
                                input_vocab_size, pe_input, rate)
 
-        self.decoder = Decoder(num_layers, d_model, num_heads, dff,
+        #输出一个的情况下， 多层解码注意力没有太大意义，改成一层
+        self.decoder = Decoder(1, d_model, num_heads, dff,
                                target_vocab_size, pe_target, rate)
 
         self.final_layer = tf.keras.layers.Dense(target_vocab_size)
 
-    # 这里继承的model模型，但输入参数进行了扩充
-    def call(self, inp, tar, training, enc_padding_mask, look_ahead_mask, dec_padding_mask):
+    def call(self, inp, tar, training, enc_padding_mask,
+             look_ahead_mask, dec_padding_mask):
         enc_output = self.encoder(inp, training, enc_padding_mask)  # (batch_size, inp_seq_len, d_model)
 
         # dec_output.shape == (batch_size, tar_seq_len, d_model)
@@ -333,18 +229,113 @@ class CustomSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
         return tf.math.rsqrt(self.d_model) * tf.math.minimum(arg1, arg2)
 
 
-if __name__ == '__main__':
-    plot_position_coding()
+def get_angles(pos, i, d_model):
+    angle_rates = 1 / np.power(10000, (2 * (i // 2)) / np.float32(d_model))
+    return pos * angle_rates
 
-    # 为0的地方填充1，非0置0
+
+def positional_encoding(position, d_model):
+    angle_rads = get_angles(np.arange(position)[:, np.newaxis],
+                            np.arange(d_model)[np.newaxis, :],
+                            d_model)
+
+    # 将 sin 应用于数组中的偶数索引（indices）；2i
+    angle_rads[:, 0::2] = np.sin(angle_rads[:, 0::2])
+
+    # 将 cos 应用于数组中的奇数索引；2i+1
+    angle_rads[:, 1::2] = np.cos(angle_rads[:, 1::2])
+
+    pos_encoding = angle_rads[np.newaxis, ...]
+
+    return tf.cast(pos_encoding, dtype=tf.float32)
+
+
+def create_padding_mask(seq):
+    seq = tf.cast(tf.math.equal(seq, 0), tf.float32)
+
+    # 添加额外的维度来将填充加到
+    # 注意力对数（logits）。
+    return seq[:, tf.newaxis, tf.newaxis, :]  # (batch_size, 1, 1, seq_len)
+
+
+# 前瞻遮挡（look-ahead mask）用于遮挡一个序列中的后续标记
+# 这意味着要预测第三个词，将仅使用第一个和第二个词。
+def create_look_ahead_mask(size):
+    mask = 1 - tf.linalg.band_part(tf.ones((size, size)), -1, 0)
+    return mask  # (seq_len, seq_len)
+
+
+def scaled_dot_product_attention(q, k, v, mask):
+    """计算注意力权重。
+    q, k, v 必须具有匹配的前置维度。
+    k, v 必须有匹配的倒数第二个维度，例如：seq_len_k = seq_len_v。
+    虽然 mask 根据其类型（填充或前瞻）有不同的形状，
+    但是 mask 必须能进行广播转换以便求和。
+
+    参数:
+      q: 请求的形状 == (..., seq_len_q, depth)
+      k: 主键的形状 == (..., seq_len_k, depth)
+      v: 数值的形状 == (..., seq_len_v, depth_v)
+      mask: Float 张量，其形状能转换成
+            (..., seq_len_q, seq_len_k)。默认为None。
+
+    返回值:
+      输出，注意力权重
+    """
+
+    matmul_qk = tf.matmul(q, k, transpose_b=True)  # (..., seq_len_q, seq_len_k)
+
+    # 缩放 matmul_qk
+    dk = tf.cast(tf.shape(k)[-1], tf.float32)
+    scaled_attention_logits = matmul_qk / tf.math.sqrt(dk)
+
+    # 将 mask 加入到缩放的张量上。
+    if mask is not None:
+        scaled_attention_logits += (mask * -1e9)
+
+        # softmax 在最后一个轴（seq_len_k）上归一化，因此分数
+    # 相加等于1。
+    attention_weights = tf.nn.softmax(scaled_attention_logits, axis=-1)  # (..., seq_len_q, seq_len_k)
+
+    # 这里q,k,v都是样的形状，所以可以相乘 (..., seq_len_q, seq_len_k) * (..., seq_len_v, d_model),这里第二个没有转置
+    output = tf.matmul(attention_weights, v)  # (..., seq_len_q, depth_v)
+
+    return output, attention_weights
+
+
+def print_out(q, k, v):
+    temp_out, temp_attn = scaled_dot_product_attention(
+        q, k, v, None)
+    print('Attention weights are:')
+    print(temp_attn)
+    print('Output is:')
+    print(temp_out)
+
+
+def point_wise_feed_forward_network(d_model, dff):
+    return tf.keras.Sequential([
+        tf.keras.layers.Dense(dff, activation='relu'),  # (batch_size, seq_len, dff)
+        tf.keras.layers.Dense(d_model)  # (batch_size, seq_len, d_model)
+    ])
+
+
+if __name__ == '__main__':
+    '''
+    pos_encoding = positional_encoding(50, 512)
+    print(pos_encoding.shape)
+
+    plt.pcolormesh(pos_encoding[0], cmap='RdBu')
+    plt.xlabel('Depth')
+    plt.xlim((0, 512))
+    plt.ylabel('Position')
+    plt.colorbar()
+    plt.show()
+
     x = tf.constant([[7, 6, 0, 0, 1], [1, 2, 3, 0, 0], [0, 0, 0, 4, 5]])
     create_padding_mask(x)
 
-    # 3x3矩阵，上三角为1
-    x = tf.random.uniform((1, 3))
-    temp = create_look_ahead_mask(x.shape[1])
-
     np.set_printoptions(suppress=True)
+
     temp_k = tf.constant([[10, 0, 0],
                           [0, 10, 0],
                           [0, 0, 10],
@@ -354,25 +345,39 @@ if __name__ == '__main__':
                           [10, 0],
                           [100, 5],
                           [1000, 6]], dtype=tf.float32)  # (4, 2)
+
     # 这条 `请求（query）符合第二个`主键（key）`，
     # 因此返回了第二个`数值（value）`。
     temp_q = tf.constant([[0, 10, 0]], dtype=tf.float32)  # (1, 3)
     print_out(temp_q, temp_k, temp_v)
 
+    # 这条请求符合重复出现的主键（第三第四个），
+    # 因此，对所有的相关数值取了平均。
+    temp_q = tf.constant([[0, 0, 10]], dtype=tf.float32)  # (1, 3)
+    print_out(temp_q, temp_k, temp_v)
+
+    # 这条请求符合第一和第二条主键，
+    # 因此，对它们的数值去了平均。
+    temp_q = tf.constant([[10, 10, 0]], dtype=tf.float32)  # (1, 3)
+    print_out(temp_q, temp_k, temp_v)
+
+    temp_q = tf.constant([[0, 0, 10], [0, 10, 0], [10, 10, 0]], dtype=tf.float32)  # (3, 3)
+    print_out(temp_q, temp_k, temp_v)
+
     temp_mha = MultiHeadAttention(d_model=512, num_heads=8)
     y = tf.random.uniform((1, 60, 512))  # (batch_size, encoder_sequence, d_model)
     out, attn = temp_mha(y, k=y, q=y, mask=None)
-    print('temp_mha', out.shape, attn.shape)
+    out.shape, attn.shape
 
     sample_ffn = point_wise_feed_forward_network(512, 2048)
-    print(sample_ffn(tf.random.uniform((64, 50, 512))).shape)
+    sample_ffn(tf.random.uniform((64, 50, 512))).shape
 
     sample_encoder_layer = EncoderLayer(512, 8, 2048)
 
     sample_encoder_layer_output = sample_encoder_layer(
         tf.random.uniform((64, 43, 512)), False, None)
 
-    print(sample_encoder_layer_output.shape)
+    sample_encoder_layer_output.shape  # (batch_size, input_seq_len, d_model)
 
     sample_decoder_layer = DecoderLayer(512, 8, 2048)
 
@@ -380,25 +385,9 @@ if __name__ == '__main__':
         tf.random.uniform((64, 50, 512)), sample_encoder_layer_output,
         False, None, None)
 
-    print(sample_decoder_layer_output.shape)  # (batch_size, target_seq_len, d_model)
-
-    sample_decoder_layer = DecoderLayer(512, 8, 2048)
-
-    sample_decoder_layer_output, _, _ = sample_decoder_layer(
-        tf.random.uniform((64, 50, 512)), sample_encoder_layer_output,
-        False, None, None)
-
-    print(sample_decoder_layer_output.shape)  # (batch_size, target_seq_len, d_model)
-
-    sample_encoder = Encoder(num_layers=2, d_model=512, num_heads=8,
-                             dff=2048, input_vocab_size=8500,
-                             maximum_position_encoding=10000)
-
-    sample_encoder_output = sample_encoder(tf.random.uniform((64, 62)),
-                                           training=False, mask=None)
-
-    print(sample_encoder_output.shape)  # (batch_size, input_seq_len, d_model)
-
+    sample_decoder_layer_output.shape  # (batch_size, target_seq_len, d_model)
+    '''
+    '''
     sample_transformer = Transformer(
         num_layers=2, d_model=512, num_heads=8, dff=2048,
         input_vocab_size=8500, target_vocab_size=8000,
@@ -413,3 +402,59 @@ if __name__ == '__main__':
                                    dec_padding_mask=None)
 
     fn_out.shape  # (batch_size, tar_seq_len, target_vocab_size)
+
+    num_layers = 4
+    d_model = 128
+    dff = 512
+    num_heads = 8
+
+    # input_vocab_size = tokenizer_pt.vocab_size + 2
+    # target_vocab_size = tokenizer_en.vocab_size + 2
+    dropout_rate = 0.1
+
+    temp_learning_rate_schedule = CustomSchedule(d_model)
+
+    plt.plot(temp_learning_rate_schedule(tf.range(40000, dtype=tf.float32)))
+    plt.ylabel("Learning Rate")
+    plt.xlabel("Train Step")
+    '''
+    '''
+    # 直接在encoder输入词向量
+    sample_transformer = Transformer(
+        num_layers=2, d_model=64, num_heads=4, dff=256,
+        input_vocab_size=64, target_vocab_size=28,
+        pe_input=8, pe_target=1)
+    # 这里的
+    temp_input_embedding = tf.random.uniform((64, 8, 64))
+    temp_target = tf.random.uniform((64, 1))
+
+    fn_out, _ = sample_transformer(temp_input_embedding, temp_target, training=False,
+                                   enc_padding_mask=None,
+                                   look_ahead_mask=None,
+                                   dec_padding_mask=None)
+
+    fn_out.shape  # (batch_size, tar_seq_len, target_vocab_size)
+    '''
+
+    sample_transformer = Transformer(
+        num_layers=2, d_model=64, num_heads=4, dff=256,
+        input_vocab_size=64, target_vocab_size=28,
+        pe_input=8, pe_target=1)
+    # 输入序列长度必须加，建模型时会用到
+    input_embedded = tf.keras.layers.Input((8))
+    # target 决定了输出的序列长度，所以必须要加
+    target = tf.keras.layers.Input((1,))
+
+    # 训练的时候train一定要设成true
+    out, _ = sample_transformer(input_embedded, target, training=False,
+                                enc_padding_mask=None,
+                                look_ahead_mask=None,
+                                dec_padding_mask=None)
+    # 注意单个 输出，输出的时候不要用list
+    model = tf.keras.Model([input_embedded, target], out)
+    model.compile(optimizer='adam',
+                  loss='sparse_categorical_crossentropy')
+
+    temp_input_embedding = tf.random.uniform((64, 8))
+    temp_target = tf.random.uniform((64, 1))
+    t = model.predict([temp_input_embedding, temp_target])

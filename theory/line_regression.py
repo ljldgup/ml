@@ -38,7 +38,7 @@ m = 100
 bgd_theta = np.random.randn(2, 1)  # random initialization
 bgd_ans = [bgd_theta]
 for iteration in range(n_iterations):
-    # 对1/m*(xθ-y)^2求导θ  ->  2/m*θ(xθ-y)
+    # 对1/m*(xθ-y)^2求导θ  ->  2/m*x(xθ-y)
     gradients = 2 / m * X_b.T.dot(X_b.dot(bgd_theta) - y)
     bgd_theta = bgd_theta - eta * gradients
     bgd_ans.append(bgd_theta)
@@ -97,6 +97,7 @@ mini_bgd_ans = np.array(mini_bgd_ans)
 
 # Batch GD最平稳
 plt.clf()
-plt.plot(bgd_ans[:, 0, 0], bgd_ans[:, 1, 0], "r-", c='red')
-plt.plot(sgd_ans[:, 0, 0], sgd_ans[:, 1, 0], "r-", c='blue')
-plt.plot(mini_bgd_ans[:, 0, 0], mini_bgd_ans[:, 1, 0], "r-", c='green')
+plt.plot(bgd_ans[:, 0, 0], bgd_ans[:, 1, 0], "r-", c='red', label='bgd')
+plt.plot(sgd_ans[:, 0, 0], sgd_ans[:, 1, 0], "r-", c='blue', label='sgd')
+plt.plot(mini_bgd_ans[:, 0, 0], mini_bgd_ans[:, 1, 0], "r-", c='green', label='mini_bgd')
+plt.legend()

@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 import tensorflow as tf
-from tensorflow_core import int32
 import numpy as np
 
 # 张量是不可变的
@@ -115,7 +114,6 @@ def himmelblau_gradient():
     x = tf.constant([4., 0.])
 
     for step in range(200):
-
         with tf.GradientTape() as tape:
             tape.watch([x])
             y = himmelblau(x)

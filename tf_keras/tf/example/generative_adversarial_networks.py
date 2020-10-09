@@ -3,7 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import tensorflow.keras.backend as K
-
+'''
+Conv2DTranspose反卷积
+'''
 (X_train, y_train), (X_valid, y_valid) = tf.keras.datasets.fashion_mnist.load_data()
 
 codings_size = 30
@@ -35,6 +37,7 @@ def train_gan(gan, dataset, batch_size, codings_size, n_epochs=50):
     for epoch in range(n_epochs):
         for X_batch in dataset:
             # phase 1 - training the discriminator
+            # 将真假图片输入，对判别器进行训练
             noise = tf.random.normal(shape=[batch_size, codings_size])
             generated_images = generator(noise)
             X_fake_and_real = tf.concat([generated_images, X_batch], axis=0)
@@ -42,6 +45,7 @@ def train_gan(gan, dataset, batch_size, codings_size, n_epochs=50):
             discriminator.trainable = True
             discriminator.train_on_batch(X_fake_and_real, y1)
             # phase 2 - training the generator
+            # 生成器输入噪声，全标为真，训练生成器
             noise = tf.random.normal(shape=[batch_size, codings_size])
             y2 = tf.constant([[1.]] * batch_size)
             discriminator.trainable = False
@@ -52,7 +56,7 @@ train_gan(gan, dataset, batch_size, codings_size)
 
 # 卷积模型的gan
 codings_size = 100
-
+# Conv2DTranspose反卷积
 generator = keras.models.Sequential([
     keras.layers.Dense(7 * 7 * 128, input_shape=[codings_size]),
     keras.layers.Reshape([7, 7, 128]),

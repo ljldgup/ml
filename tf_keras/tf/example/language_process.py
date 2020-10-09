@@ -6,7 +6,7 @@ filepath = 'test.txt'
 with open(filepath, encoding='utf-8') as f:
     shakespeare_text = f.read()
 
-# 这里char_level对中文也有效
+# 类似labelEncoder，这里char_level对中文也有效
 tokenizer = keras.preprocessing.text.Tokenizer(char_level=True)
 tokenizer.fit_on_texts([shakespeare_text])
 
@@ -16,13 +16,13 @@ tokenizer.sequences_to_texts([[20, 6, 9, 8, 3]])
 max_id = len(tokenizer.word_index)  # number of distinct characters
 dataset_size = tokenizer.document_count  # total number of characters
 
-# 这样能使np.array降低用一个维度
+# 这样能使词量降低用一个维度
 [encoded] = np.array(tokenizer.texts_to_sequences([shakespeare_text])) - 1
 
 train_size = dataset_size * 90 // 100
 dataset = tf.data.Dataset.from_tensor_slices(encoded[:train_size])
 
-# 直接使用dataset的窗口，相比使用numpy生成，节省一些内存
+# 直接使用dataset的窗口，生成器效果，相比使用numpy生成，节省一些内存
 n_steps = 100
 window_length = n_steps + 1  # target = input shifted 1 character ahead
 dataset = dataset.window(window_length, shift=1, drop_remainder=True)

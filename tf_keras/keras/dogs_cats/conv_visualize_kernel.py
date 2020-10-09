@@ -4,12 +4,11 @@ from matplotlib import pyplot as plt
 import tensorflow as tf
 import numpy as np
 
-from tensorflow_core.python.keras import Model
 
 # from tf_keras.keras.tools import use_proxy
 
 # use_proxy()
-
+from tensorflow.python.keras.models import Model
 
 model = VGG16(weights='imagenet', include_top=False)
 

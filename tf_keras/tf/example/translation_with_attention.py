@@ -11,6 +11,12 @@ import os
 import io
 import time
 
+'''
+文字输入输出
+attention流程
+encoder decoder流程
+checkpoint使用
+'''
 # Converts the unicode file to ascii
 from tf_keras.keras.tools import use_proxy
 
@@ -84,11 +90,13 @@ class BahdanauAttention(tf.keras.layers.Layer):
         self.V = tf.keras.layers.Dense(1)
 
     def call(self, query, values):
+        # query是lstm最后一个传送带状态，values是lstm的整个输出序列
         # query hidden state shape == (batch_size, hidden size)
         # query_with_time_axis shape == (batch_size, 1, hidden size)为了广播
         query_with_time_axis = tf.expand_dims(query, 1)
 
-        # (batch_size, max_length, units) x (batch_size, max_length, units) == (batch_size, max_length, 1)
+        # (batch_size, max_length, units) + (batch_size, max_length, units) == (batch_size, max_length, units)
+        # (batch_size, max_length, units) x (units, 1) -> (batch_size, max_length, 1)
         # we get 1 at the last axis because we are applying score to self.V
         # the shape of the tensor before applying self.V is
         score = self.V(tf.nn.tanh(
@@ -97,8 +105,10 @@ class BahdanauAttention(tf.keras.layers.Layer):
         # attention_weights shape == (batch_size, max_length, 1)
         attention_weights = tf.nn.softmax(score, axis=1)
 
-        # context_vector shape after sum == (batch_size, hidden_size)
+        # 此步骤得到乘以权重的values
+        # (batch_size, max_length, 1) x (batch_size, max_length, embedding_size) -> (batch_size, max_length, embedding_size)
         context_vector = attention_weights * values
+        # (batch_size, max_length, embedding_size) -> (batch_size, embedding_size)
         context_vector = tf.reduce_sum(context_vector, axis=1)
 
         return context_vector, attention_weights
@@ -195,6 +205,9 @@ def train_step(inp, targ, enc_hidden):
         dec_input = tf.expand_dims([targ_lang.word_index['<start>']] * BATCH_SIZE, 1)
 
         # 每个单词做一次解码，第一次输入都是<start>
+        # dec_input: <start>..<start> <start> → <start> ... <start> word1 → <start> ... word1 word2
+        # dec_hidden 第一次是 encoder输出的隐藏状态， 之后是decoder自己输出的状态， attention中的query
+        # enc_output encoder输出，attention的values，始终不变
         for t in range(1, targ.shape[1]):
             # 这里输出dec_hidden作为下一次隐藏状态的输入，所以虽然是循环，decoder的总体流程相当完整序列解码
             # 这是针对解码成一个序列的解码，如果解码成一个的话，decoder中gru应该可以换成fc
@@ -284,7 +297,7 @@ def translate(sentence):
 
 
 if __name__ == '__main__':
-    use_proxy()
+    # use_proxy()
     path_to_zip = tf.keras.utils.get_file(
         'spa-eng.zip', origin='http://storage.googleapis.com/download.tensorflow.org/data/spa-eng.zip',
         extract=True)
@@ -325,7 +338,7 @@ if __name__ == '__main__':
     # units是rnn宽度
     encoder = Encoder(vocab_inp_size, embedding_dim, units, BATCH_SIZE)
 
-    # 第一次输入的隐藏状态0
+    # initialize_hidden_state用于生成，第一次输入的隐藏状态0
     sample_hidden = encoder.initialize_hidden_state()
 
     # 输出的是rnn输出，隐藏状态

@@ -7,7 +7,12 @@ from matplotlib import pyplot as plt
 
 import IPython.display as display
 import PIL.Image
-
+'''
+@tf.function
+图片转成张量输入，用于梯度提升
+deep dream 是梯度提升，用于把卷积核的输出最大化
+style transfer是梯度下降
+'''
 from tensorflow.keras.preprocessing import image
 
 # url = 'https://storage.googleapis.com/download.tensorflow.org/example_images/YellowLabradorLooking_new.jpg'

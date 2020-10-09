@@ -13,8 +13,12 @@ import numpy as np
 import PIL.Image
 import time
 import functools
-
-use_proxy()
+'''
+tf.linalg.einsum
+tf.image.resize
+tf.image.convert_image_dtype
+tf.clip_by_value
+'''
 
 
 def tensor_to_image(tensor):
@@ -68,9 +72,8 @@ def vgg_layers(layer_names):
     model = tf.keras.Model([vgg.input], outputs)
     return model
 
-    # 求格拉姆矩阵，通道之间的乘积和
 
-
+# 求格拉姆矩阵，通道之间的乘积和
 def gram_matrix(input_tensor):
     # bijc,bijd->bcd指定了矩阵操作方式， b batch数，ij位置，cd通道数，b相同batch应该不参与乘法
     # 相乘可以理解对应同一b，第一个矩阵循环取出c对应的ij, 第一个矩阵循环取出d对应的ij 求乘积和，得到 bcd
@@ -78,7 +81,7 @@ def gram_matrix(input_tensor):
     result = tf.linalg.einsum('bijc,bijd->bcd', input_tensor, input_tensor)
     input_shape = tf.shape(input_tensor)
     num_locations = tf.cast(input_shape[1] * input_shape[2], tf.float32)
-    # 除以形状
+    # 除以元素个数得到均值
     return result / (num_locations)
 
 
@@ -138,6 +141,8 @@ def train_step(image):
         loss = style_content_loss(outputs)
 
     grad = tape.gradient(loss, image)
+    # 风格迁移时梯度下降，让风格和内容损失都降到最低
+    # deepdream时梯度上升
     opt.apply_gradients([(grad, image)])
     image.assign(clip_0_1(image))
 
@@ -150,8 +155,8 @@ def high_pass_x_y(image):
 
 
 if __name__ == '__main__':
-    style_file = 'style0.jpg'
-    content_file = 'origin5.jpg'
+    style_file = 'style1.jpg'
+    content_file = 'origin4.jpg'
     content_image = load_img(content_file)
     style_image = load_img(style_file)
     '''
@@ -233,7 +238,7 @@ if __name__ == '__main__':
     opt = tf.optimizers.Adam(learning_rate=0.02, beta_1=0.99, epsilon=1e-1)
 
     style_weight = 1e-2
-    content_weight = 1e4
+    content_weight = 1e3
 
     start = time.time()
 

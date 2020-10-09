@@ -22,7 +22,7 @@ def loadImage(path):
 def pca(data, k):
     n_samples, n_features = data.shape
     # 求均值
-    mean = np.array([np.mean(data[:, i]) for i in range(n_features)])
+    mean = data.mean(axis=1)[..., np.newaxis]
     # 去中心化
     normal_data = data - mean
     # 得到协方差矩阵
@@ -39,7 +39,7 @@ def pca(data, k):
     '''
     Y = P * X ==>   P(-1) * Y = P(-1) * P * X,  P（-1）是P的逆矩阵, 即 P(-1) * P = 1
     ==>   P(-1) * Y = X
-    由于特征向量模为1，彼此点积得0，所以特征向量方阵的逆矩阵即为他的转置，
+    由于特征向量模为1，彼此点积得0，所以特征向量方阵的逆矩阵即为他的转置，P(-1) = PT
     当K小于数据的特征数时，补0乘以完整逆矩阵，和直接乘以前k各特征向量的转置效果小童
     '''
     rec_data = np.dot(new_data, np.transpose(feature)) + mean
@@ -74,7 +74,7 @@ if __name__ == '__main__':
 
     data = data.reshape(data.shape[0], -1)
     recdata = pca(data, 20)
-    recdata = sklearn_pca(data, 20)
+    recdata = sklearn_pca(data, 90)
     '''
     recdata0 = sklearn_pca(data[:, :, 0], 80)
     recdata1 = sklearn_pca(data[:, :, 1], 80)

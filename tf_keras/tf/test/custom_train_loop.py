@@ -40,12 +40,13 @@ loss_fn = keras.losses.mean_squared_error
 mean_loss = keras.metrics.Mean()
 metrics = [keras.metrics.MeanAbsoluteError()]
 
+# 可以定义成函数，使用tf.function 使用静态图加速
 for epoch in range(1, n_epochs + 1):
     print("Epoch {}/{}".format(epoch, n_epochs))
     for step in range(1, n_steps + 1):
         X_batch, y_batch = random_batch(X_train_scaled, y_train)
         with tf.GradientTape() as tape:
-            # 注意这里这接调用了model
+            # 注意这里这接调用了model,返回的是tf张量而不是numpy数组
             y_pred = model(X_batch, training=True)
             main_loss = tf.reduce_mean(loss_fn(y_batch, y_pred))
             loss = tf.add_n([main_loss] + model.losses)

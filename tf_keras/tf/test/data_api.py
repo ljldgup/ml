@@ -86,3 +86,10 @@ dataset = dataset.map(lambda x: (x[:-1], x[-1]))
 dataset = dataset.batch(16)
 for x, y in dataset:
     print(x.shape, y.shape)
+
+
+dataset = tf.data.Dataset.from_tensor_slices(np.random.randn(100, 4))
+dataset = dataset.window(21, shift=1, drop_remainder=True)
+dataset = dataset.flat_map(lambda w: w.batch(21))
+# 嵌套元组，模仿多输入输出
+dataset = dataset.map(lambda x: ((x[1], x[2]), (x[3], x[4])))

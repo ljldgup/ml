@@ -1,9 +1,11 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import models, layers
-from tensorflow.python.keras.utils import to_categorical
+
 
 # pycharm不会将当前文件目录自动加入自己的sourse_path。右键make_directory as-->Sources Root将当前工作的文件夹加入source_path就可以了。
+from tensorflow.python.keras.utils.np_utils import to_categorical
+
 from tf_keras.keras import tools
 
 (train_data, train_labels), (test_data, test_labels) = tf.keras.datasets.reuters.load_data(

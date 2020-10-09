@@ -1,7 +1,10 @@
 import numpy as np
 import tensorflow as tf
 import tensorflow.keras.backend as K
-
+'''
+全连接权重本身就可以看成注意力，这没什么意义
+cnn是局部过滤器，也一样可以看成一种类似注意力的机制。
+'''
 if __name__ == '__main__':
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
     x_train, x_test = x_train / 255.0, x_test / 255.0
