@@ -128,6 +128,7 @@ if __name__ == '__main__':
     '''
     # transformer收敛效果很差，原因不明,可能是输出太小的缘故，导致decoder的通道太小，
     # 将decoder layer减小的到一层，损失明显下降。。单输出效果仍然一般，比之前好一点
+    # 减小输入序列，训练样本量，输出字符量后也有一定好转
     model = transformer_model()
     # model = lstm_model()
     history = model.fit(dataset, epochs=20, verbose=1)
