@@ -194,7 +194,6 @@ class Transformer(tf.keras.Model):
         self.encoder = Encoder(num_layers, d_model, num_heads, dff,
                                input_vocab_size, pe_input, rate)
 
-        #输出一个的情况下， 多层解码注意力没有太大意义，改成一层
         self.decoder = Decoder(1, d_model, num_heads, dff,
                                target_vocab_size, pe_target, rate)
 
@@ -204,6 +203,7 @@ class Transformer(tf.keras.Model):
              look_ahead_mask, dec_padding_mask):
         enc_output = self.encoder(inp, training, enc_padding_mask)  # (batch_size, inp_seq_len, d_model)
 
+        # 这里每次都是对编码器输入做attention
         # dec_output.shape == (batch_size, tar_seq_len, d_model)
         dec_output, attention_weights = self.decoder(
             tar, enc_output, training, look_ahead_mask, dec_padding_mask)
