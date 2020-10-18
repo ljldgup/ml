@@ -3,10 +3,12 @@ from pyspark import SparkContext, SparkConf
 from pyspark.ml.feature import StringIndexer, VectorIndexer
 from pyspark.ml.fpm import FPGrowth
 from pyspark.sql import SparkSession
-# col 会报错，但实际上是能生效的
 from pyspark.sql.functions import udf, array_contains, col
 from pyspark.sql.pandas.functions import pandas_udf, PandasUDFType
 from pyspark.sql.types import StructField, StringType, ArrayType, DateType, TimestampType
+from pyspark.ml.feature import Tokenizer, RegexTokenizer
+from pyspark.ml.clustering import KMeans
+from pyspark.ml.evaluation import ClusteringEvaluator
 
 import pandas as pd
 
@@ -50,6 +52,14 @@ df = spark.createDataFrame(
     info, "date_str string, thread_num int, operation int, level string, context string")
 
 
+#######################################################################
+def words_padding(x):
+    return x.strftime("%b %d %H")
+
+tokenizer = Tokenizer(inputCol="context", outputCol="context_words")
+# indexer = StringIndexer(inputCol="context_words", outputCol="context_words_label")
+# indexed = indexer.fit(df).transform(df)
+
 #####################################################################
 # 对日志内容进行编码，目前未使用，发现fp growth不用编码也可以使用
 def context_process(x):
@@ -83,7 +93,7 @@ date_2_min = udf(date_2_min, StringType())
 
 df = df.withColumn('date', str_2_date(df['date_str']))
 # 这里发现str_2_date 输入已经是datetime 可能spark 进行了处理
-df = df.withColumn('min_str', date_2_min(df['date_str']))
+df = df.withColumn('min_str', date_2_min(df['date']))
 
 # 每分钟新开资源统计
 df.filter(df['one_context'].startswith('Begin')).groupby(df['min_str']).count().show(10, False)
@@ -124,7 +134,7 @@ thread_process.createOrReplaceTempView('thread_process')
 
 """
 # spark联立没法用不等于，不知道怎么简洁的实现,估计只能用pandas,或者用udf映射
-sql 可以用limit 1
+mysql 可以用limit 1
 thread_crash_time = spark.sql('''
     select thread_num, c_context, start_time,
     (select date from crash_time where date > start_time limit 1) as c_time from thread_process
@@ -149,6 +159,8 @@ context_split = udf(context_split, ArrayType(StringType()))
 thread_process = thread_process.filter(~ thread_process['c_context'].endswith('Open,Contexts -> ')). \
     withColumn('l_context', context_split(col('c_context')))
 
+thread_process.groupby('c_context').count().head(10)
+
 # .withColumn('l_context', context_split(thread_process['c_context']))
 
 '''
@@ -169,3 +181,13 @@ model.freqItemsets.withColumn('last_item', get_last_item(col('items'))) \
 # csv 无法保存 arrayType
 # thread_process.write.mode('Overwrite').format('csv').save('fms')
 '''
+
+pd_df = df.toPandas()
+pd_df = pd_df.set_index('date')
+pd_df.resample('w').count()
+pd_df.resample('d').count()
+
+# 可以加数字表示几分钟
+pd_df.resample('5min').count()
+# 这里中间没有的时间也会算，所以很慢
+pd_df.resample('min').apply(lambda x: x[x['context'].str.contains('Begin')]['context'].count())
