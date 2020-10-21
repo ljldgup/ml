@@ -36,6 +36,8 @@ t.round(decimals=2)
 # prod返回乘积
 df.sum()
 df.A.sum()
+# 直接返回条件的个数
+(df > 10).sum()
 
 # 各列的相关系数corr函数，1为完全相关
 df.corr()
@@ -79,12 +81,21 @@ df['A'].value_counts()
 
 # 聚合
 df.groupby('A').sum()
+df.groupby('A').first()
+# ohlc 开盘 最高 最低 收盘
+df.groupby('A').ohlc()
 # 分位数
 df.quantile(0.9)
 
 # 数据转换map 对一列，applymap对所有
 df['A'] = df['A'].map(lambda x: x % 2)
 df['B'] = df['B'].map(lambda x: x % 3)
+# 使用np.vectorize通常比apply，map要快，但切片赋值，数组操作更快
+df['B'] = np.vectorize(lambda x: x % 2)(df['B'])
+
+# 使用np.where 代替apply，map
+df['C'] = np.where((df['C'] == 0) & (df['C'] == 1), 1, 0)
+
 formater = '{:.2f}'.format
 df = df.applymap(formater)
 # apply主要用于聚合运算,对列操作
