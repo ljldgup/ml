@@ -32,7 +32,7 @@ arr.reshape(3, 4)
 
 # 增加一维
 arr.reshape(-1, 1)
-arr[...,np.newaxis].shape
+arr[..., np.newaxis].shape
 
 # 索引
 arr[2, 1]

@@ -98,7 +98,7 @@ df['C'] = np.where((df['C'] == 0) & (df['C'] == 1), 1, 0)
 
 formater = '{:.2f}'.format
 df = df.applymap(formater)
-# apply主要用于聚合运算,对列操作
+# apply主要用于聚合运算,对列或dataframe操作
 df.apply(np.sum, axis=1)
 # 也可以对行直接操作，用于一些复杂映射
 df[['A', 'B']].apply(lambda col: (col[0] + col[1]) / 10, axis=1)

@@ -55,7 +55,7 @@ print("Counter value: ", counter)
 # 一些操作
 distFile.flatMap(lambda s:s.split(" ")).count()
 
-# 只读，所以机器之间不需要复制
+# 只读，所以机器之间不需要传输，改变后其他机器不能读到
 broadcastVar = sc.broadcast([1, 2, 3])
 broadcastVar.value
 

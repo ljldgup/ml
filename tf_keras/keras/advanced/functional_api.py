@@ -1,9 +1,10 @@
 from tensorflow.python.keras.models import Sequential, Model
 from tensorflow.python.keras import layers
 from tensorflow.python.keras import Input
-from tensorflow.python.keras.utils import to_categorical
+
 
 import numpy as np
+from tensorflow.python.keras.utils.np_utils import to_categorical
 
 
 def simple_seq_model():

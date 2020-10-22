@@ -103,3 +103,6 @@ t2 = np.random.randint(0, 5, size=10000)
 
 # 布尔值值可以直接sum，可以用于求预测正确率之类
 sum(t1 == t2) / len(t1)
+
+# np.vectorize 将函数操作矢量化，没有直接数组操作快
+np.vectorize(lambda x: int(x * 100))(arr)

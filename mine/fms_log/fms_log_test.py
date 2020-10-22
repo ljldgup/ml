@@ -1,4 +1,7 @@
+from collections import defaultdict
 from datetime import date, datetime
+from functools import reduce
+
 from pyspark import SparkContext, SparkConf
 from pyspark.ml.feature import StringIndexer, VectorIndexer
 from pyspark.ml.fpm import FPGrowth
@@ -7,10 +10,14 @@ from pyspark.sql.functions import udf, array_contains, col
 from pyspark.sql.pandas.functions import pandas_udf, PandasUDFType
 from pyspark.sql.types import StructField, StringType, ArrayType, DateType, TimestampType
 from pyspark.ml.feature import Tokenizer, RegexTokenizer
-from pyspark.ml.clustering import KMeans
 from pyspark.ml.evaluation import ClusteringEvaluator
 
 import pandas as pd
+import numpy as np
+from sklearn.cluster import KMeans
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import silhouette_score
+from sklearn.preprocessing import OrdinalEncoder
 
 '''
 处理e6 文件信息
@@ -56,7 +63,11 @@ df = spark.createDataFrame(
 def words_padding(x):
     return x.strftime("%b %d %H")
 
+
 tokenizer = Tokenizer(inputCol="context", outputCol="context_words")
+df = tokenizer.transform(df)
+
+
 # indexer = StringIndexer(inputCol="context_words", outputCol="context_words_label")
 # indexed = indexer.fit(df).transform(df)
 
@@ -127,6 +138,7 @@ thread_process = df.filter(df['thread_num'] > 0). \
 thread_process = thread_process.withColumnRenamed('collect_context(context)', 'c_context'). \
     withColumnRenamed('start_time(date_str)', 'start_time')
 
+thread_process.cache()
 ##############################################################
 crash_time = df.filter(df['context'].startswith('start'))
 crash_time.createOrReplaceTempView("crash_time")
@@ -191,3 +203,53 @@ pd_df.resample('d').count()
 pd_df.resample('5min').count()
 # 这里中间没有的时间也会算，所以很慢
 pd_df.resample('min').apply(lambda x: x[x['context'].str.contains('Begin')]['context'].count())
+
+'''
+k mean 对日志文本分类
+steps_logs = df.toPandas()
+word_freq = defaultdict(int)
+for words in steps_logs['context_words']:
+    for word in words:
+        word_freq[word] += 1
+
+# 这里应该过滤高频词汇，因为低频词汇在别的地方不一样
+high_freq_words = set(word for word in word_freq.keys() if word_freq[word] > 15)
+
+# 删除低频词汇
+for words in steps_logs['context_words']:
+    # 补集
+    deleted_words = set(words) - high_freq_words
+    for word in deleted_words:
+        words.remove(word)
+
+# 最长序列
+max_length = steps_logs['context_words'].map(len).max()
+
+
+# 补全
+def padding(x: list):
+    x.extend(['None'] * (max_length - len(x)))
+    return x
+
+
+steps_logs['context_words'].map(padding)
+
+oe = OrdinalEncoder()
+words_vector = np.array(steps_logs['context_words'].values.tolist())
+words_label_vector = oe.fit_transform(words_vector)
+
+
+
+scores = []
+for i in range(20, 60):
+    kmeans = KMeans(n_clusters=i)
+    y_pred = kmeans.fit_predict(words_label_vector)
+    scores.append(silhouette_score(words_label_vector, y_pred))
+pd.DataFrame(scores).plot.line()
+
+kmeans = KMeans(n_clusters=30)
+ans = kmeans.fit_predict(words_label_vector)
+for i in set(ans):
+    print(i)
+    print(words_vector[ans==i][:8])
+'''
