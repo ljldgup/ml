@@ -52,6 +52,8 @@ s2 = pd.Series([13, 24, 35, 46, 57], ['A', 6, 5, 'B', 'C'])
 df1 = pd.DataFrame(s1, index=['A', 'B', 'C', 'D'], columns=['s1'])
 # 及时index顺序内容不完全匹配也可以赋值
 df1['s2'] = s2
+# 将原来索引作为一列，重新生成索引
+df1.reset_index()
 
 pd.Series(10, range(10))
 
@@ -222,6 +224,8 @@ df2.unstack('Class')
 
 df2.swaplevel('Sex', 'Class')
 df2.sort_index(level=1)
+
+# 这里的axis=1指定了将行之间的值相加，默认是axis=0按列相加
 df2.sum(level='Language', axis=1)
 
 df = pd.DataFrame(np.random.randint(20, size=(6, 3)), columns=['A', 'B', 'C'])

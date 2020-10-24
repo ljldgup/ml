@@ -27,6 +27,9 @@ sdata.str.contain('A')
 sdata.str.findall('A')
 sdata.str.count('A')
 
+# 一列转多列
+pd.Series(['1,2', '2,3', '4,5', '5,6']).str.split(',',expand=True)
+
 # 保留两位小数
 t = (df / 7)
 t.round(decimals=2)
@@ -38,6 +41,11 @@ df.sum()
 df.A.sum()
 # 直接返回条件的个数
 (df > 10).sum()
+# 和上面效果一样，<10的变成na，count会忽略na
+df[df > 10].count()
+
+# 按行求和
+(df > 10).sum(axis=1)
 
 # 各列的相关系数corr函数，1为完全相关
 df.corr()
@@ -98,7 +106,7 @@ df['C'] = np.where((df['C'] == 0) & (df['C'] == 1), 1, 0)
 
 formater = '{:.2f}'.format
 df = df.applymap(formater)
-# apply主要用于聚合运算,对列或dataframe操作
+# apply主要用于聚合运算,对dataframe操作
 df.apply(np.sum, axis=1)
 # 也可以对行直接操作，用于一些复杂映射
 df[['A', 'B']].apply(lambda col: (col[0] + col[1]) / 10, axis=1)
@@ -240,6 +248,10 @@ df.groupby(['A', 'B']).apply(lambda x: x.applymap(float))
 
 # 这样使用了会保留A, B
 df.groupby(['A', 'B']).apply(lambda x: x.applymap(float).sum())
+
+# 第二种无论时速度快很多，能不用apply就不用apply
+df.groupby(['A']).apply(lambda x: x['B'].sum())
+df.groupby(['A'])['B'].sum()
 
 # 与apply类似， transform的函数会返回Series，但是结果必须与输⼊⼤⼩相同
 groups.transform(lambda x: x.mean())
