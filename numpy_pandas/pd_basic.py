@@ -11,6 +11,8 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 # 设置value的显示长度为100，默认为50
 pd.set_option('max_colwidth', 100)
+# 150，设置打印宽度
+pd.set_option('display.width', 180)
 
 # 读写
 df = pd.read_csv(r"../data/000513_d_bas.csv")

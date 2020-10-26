@@ -50,7 +50,7 @@ df[df > 10].count()
 # 各列的相关系数corr函数，1为完全相关
 df.corr()
 
-# 对行累加操作
+# 对行累加操作,默认跳过na，skipna=False填充na
 df.cumsum()
 df.cummax()
 df.cummin()
