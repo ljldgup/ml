@@ -109,7 +109,7 @@ def classifier_test(X, y):
     all_scores = []
     for classifier in classifiers:
         print(classifier)
-        score = cross_val_score(classifier, X, y, cv=3, scoring="accuracy")
+        score = cross_val_score(classifier, X, y, cv=3, scoring="f1")
         print(score)
         classifier.fit(X, y)
         print(classifier.score(X, y))

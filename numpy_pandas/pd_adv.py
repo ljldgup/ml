@@ -55,7 +55,7 @@ df.cumsum()
 df.cummax()
 df.cummin()
 
-# 通过拼接df的series得到结果，很适合按列统计,注意这里是nunique 不是unique
+# 通过拼接df的series得到结果，很适合按列统计,注意这里是nunique返回数量， 不是unique返回列
 pd.concat([df.dtypes, df.nunique(), df.sum()], axis=1, keys=['dtypes', 'types', 'sum'])
 # 完全不一样的index都能concat
 pd.concat([df.dtypes, df.nunique(), df.cummax()], axis=1, keys=['dtypes', 'types', 'cummax'])
