@@ -7,10 +7,13 @@ from sklearn.model_selection import GridSearchCV, cross_val_score
 
 """
 目前使用3个月预测目前来看效果最好
+使用了预测时间段leakage的特征后，效果提升了约20%。。。 非常夸张。。
+online的数据对于预测用处不大，提取少量重要特征即可
 """
 # used_interval consume_interval是用来统计的，7月份并不能取得这个数据
 drop_columns = ['Unnamed: 0', 'Date', 'Discount_rate', 'Merchant_id', 'used', 'received_date', 'date',
-                'used_days', 'filter_date', 'last_consume_date', 'last_use_date']
+                'used_days', 'filter_date', 'last_consume_date', 'last_use_date', 'last_received_date',
+                'coupon_last_received_date']
 # input_feature_0 = pd.read_csv('2m_samples_2016-03-01~2016-04-01.csv').drop(columns=drop_columns)
 input_feature_1 = pd.read_csv('3m_samples_2016-04-01~2016-05-01.csv').drop(columns=drop_columns)
 input_feature_2 = pd.read_csv('3m_samples_2016-05-01~2016-06-01.csv').drop(columns=drop_columns)
@@ -104,7 +107,7 @@ print(roc_auc_score(train_input['target'].values, ans[:, 1]))
 columns = predict_samples.drop(columns=['target', 'Coupon_id', 'User_id', 'Date_received']).columns
 print(columns[classifier.feature_importances_.argsort()[::-1]][:40])
 
-# joblib.dump(classifier, '3m_gdbt.model')
+joblib.dump(classifier, '3m_gdbt.model')
 
 '''
 # 模型融合，略微提高，0.6,0.3,0.1效果最佳

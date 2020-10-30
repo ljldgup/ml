@@ -115,6 +115,10 @@ s1[lambda x: x > 25]
 s1.index = range(5)
 s1['aa']
 
+# 第一种返回series，第二种dataframe
+type(s1['aa'])
+type(s1[['aa']])
+
 # 自定义索引
 df = pd.DataFrame([1, 2, 3, 4, 5], columns=['test'], index=['a', 'b', 'c', 'd', 'e'])
 df['test']['a']

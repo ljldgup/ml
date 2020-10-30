@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from pandas.tseries.offsets import MonthBegin
 
+""
 '''
 用户之间无关，但商户和优惠券时有关的
 用户的动作频率要考虑
@@ -202,8 +203,9 @@ def user_feature_gen(x):
 # filter_date优先使用Date_received，保证不会统计到预测的时间窗口造成
 # 参与统计的月份
 mouth_num = 3
-#  for start_date in (,):
+# for i in range(1):
 for i in range(7 - mouth_num):
+    print(pd.to_datetime('2016-01-01') + MonthBegin(i))
     # 这里如果把预测月份也统计进去就是leakage
     offline = offline_ori[
         (offline_ori['filter_date'] >= pd.to_datetime('2016-01-01') + MonthBegin(i)) &
@@ -225,7 +227,7 @@ for i in range(7 - mouth_num):
     offline_user['>=200_received_rate'] = coupon_200_received_count / offline_user['received_count']
     offline_user['>=200_used_rate'] = coupon_200_used_count / coupon_200_received_count
     offline_user['consume_with_coupon_rate'] = offline_user['used_count'] / offline_user['consume_count']
-    offline_user['consume_rate'] = offline_user['consume_count'] / offline_user['merchant_count']
+    offline_user['consume_rate'] = offline_user['consume_count'] / offline_user['action_count']
     offline_user['merchant_nunique'] = offline.groupby('User_id')['Merchant_id'].nunique()
     offline_user['each_merchant_used_count'] = offline_user['used_count'] / offline_user['merchant_nunique']
     offline_user['each_merchant_consume_count'] = offline_user['consume_count'] / offline_user['merchant_nunique']
@@ -314,7 +316,7 @@ for i in range(7 - mouth_num):
     offline_user_coupon['used_rate'] = offline_user_coupon['used_count'] / offline_user_coupon[
         'received_count']
     offline_user_coupon['used_interval'] = 30 * mouth_num / offline_user_coupon['used_count']
-    offline_user_coupon['coupon_received_interval'] = 30 * mouth_num / offline_user_coupon['received_count']
+    offline_user_coupon['received_interval'] = 30 * mouth_num / offline_user_coupon['received_count']
     ##########################################################
     # online 的数据作用不大
     # 这里有date代表是有操作，不一定消费，有可能是点击 receive后直接使用action为1
@@ -332,8 +334,8 @@ for i in range(7 - mouth_num):
     online_unconsume_count = online_user['action_count'] - online_user['consume_count']
     online_user['offline_not_consume_rate'] = offline_unconsume_count / (
             offline_unconsume_count + online_unconsume_count)
-    online_user['offline_received_rate'] = offline_user['receive_count'] / (
-            online_user['receive_count'] + offline_user['receive_count'])
+    online_user['offline_received_rate'] = offline_user['received_count'] / (
+            online_user['received_count'] + offline_user['received_count'])
     online_user['offline_used_rate'] = offline_user['used_count'] / (
             online_user['used_count'] + offline_user['used_count'])
 
@@ -354,13 +356,25 @@ for i in range(7 - mouth_num):
     input_feature['received_times'] = input_feature.sort_values('received_date').groupby('User_id')[
         'received'].transform(
         lambda x: x.cumsum(skipna=False).shift(1))
-
+    # 将累计次数逆转，主要用于表示之后收到了多少张优惠券
     input_feature['reversed_received_times'] = input_feature.sort_values('received_date').groupby('User_id')[
         'received_times'].transform(
         lambda x: x[::-1])
 
+    input_feature['coupon_last_received_date'] = \
+        input_feature.sort_values('received_date').groupby(['User_id', 'Coupon_id'])[
+            'received_date'].transform(lambda x: x.cummax(skipna=False).shift(1))
+    input_feature['coupon_received_times'] = \
+        input_feature.sort_values('received_date').groupby(['User_id', 'Coupon_id'])[
+            'received'].transform(lambda x: x.cumsum(skipna=False).shift(1))
+    input_feature['coupon_reversed_received_times'] = \
+        input_feature.sort_values('received_date').groupby(['User_id', 'Coupon_id'])[
+            'coupon_received_times'].transform(lambda x: x[::-1])
+
     input_feature['received_interval'] = (input_feature['received_date'] - input_feature['last_received_date']).dt.days
-    leakage_user = pd.DataFrame({'received_count': input_feature.groupby('User_id')[['Date_received']].count()})
+    input_feature['coupon_received_interval'] = (
+                input_feature['received_date'] - input_feature['last_received_date']).dt.days
+    leakage_user = pd.DataFrame({'received_count': input_feature.groupby('User_id')['Date_received'].count()})
     leakage_user['merchant_nunique'] = input_feature.groupby('User_id')['Merchant_id'].nunique()
     leakage_user['coupon_nunique'] = input_feature.groupby('User_id')['Merchant_id'].nunique()
 
@@ -459,12 +473,18 @@ for i in range(7 - mouth_num):
     input_feature.to_csv('{}m_samples_{}~{}.csv'.format(mouth_num, st_date, ed_date))
 
     '''
+    t = input_feature.groupby('User_id')['Coupon_id'].count()
+    t[(t < 20) & (t > 15)].head(1)
+    input_feature[input_feature['User_id']==1583968][['Coupon_id','received_date','Merchant_id']]
+    input_feature[input_feature['User_id']==1583968].iloc[0]['date']
+    
+    
     t = offline.groupby('User_id')['Coupon_id'].count()
     t[(t < 20) & (t > 15)].head(1)
-    offline[offline['User_id'] == 308925][['Merchant_id', 'Coupon_id', 'Date_received', 'Discount_rate', 'Date']]
-    offline_user.loc[7726]
-    offline[(offline['User_id'] == 7726) & (offline['Merchant_id'] == 1080)][
+    offline[offline['User_id'] == 38756][['Merchant_id', 'Coupon_id', 'Date_received', 'Discount_rate', 'Date']]
+    offline_user.loc[38756]
+    offline[(offline['User_id'] == 38756) & (offline['Merchant_id'] == 3381)][
         ['Merchant_id', 'Coupon_id', 'Date_received', 'Discount_rate', 'Date']]
-    offline_user_merchant.loc[(7726, 1080)]
-    offline_user_coupon.loc[(7726, 4275)]
+    offline_user_merchant.loc[(38756, 3381)]
+    offline_user_coupon.loc[(38756, 4594)]
     '''
