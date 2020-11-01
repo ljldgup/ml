@@ -2,7 +2,9 @@ import pandas as pd
 import numpy as np
 from pandas.tseries.offsets import MonthBegin
 
-""
+"""
+特征提取主要参考https://github.com/wepe/O2O-Coupon-Usage-Forecast
+"""
 '''
 用户之间无关，但商户和优惠券时有关的
 用户的动作频率要考虑
@@ -142,6 +144,9 @@ t = offline_ori['Date'][~offline_ori['Date'].isna()].astype(int).astype(str)
 offline_ori['date'] = pd.to_datetime(t.str[:4] + '-' + t.str[4:6] + '-' + t.str[6:])
 offline_ori['used_days'] = (offline_ori['date'] - offline_ori['received_date']).dt.days
 
+offline_ori['value_rank']=offline_ori[offline_ori['used']].groupby(['User_id'])['discount_value'].transform(lambda x:x.rank(method='min'))
+offline_ori['rate_rank']=offline_ori[offline_ori['used']].groupby(['User_id'])['rate'].transform(lambda x:x.rank(method='min'))
+
 online_ori['used'] = (~online_ori['Date_received'].isna()) & (~online_ori['Date'].isna())
 t = online_ori[~online_ori['Date_received'].isna()]['Date_received'].astype(int).astype(str)
 online_ori['received_date'] = pd.to_datetime(t.str[:4] + '-' + t.str[4:6] + '-' + t.str[6:])
@@ -202,7 +207,7 @@ def user_feature_gen(x):
 # 这里用于统计信息,这里是统计的区间，按filter_date统计，预测样本要按照received_date分
 # filter_date优先使用Date_received，保证不会统计到预测的时间窗口造成
 # 参与统计的月份
-mouth_num = 3
+mouth_num = 7
 # for i in range(1):
 for i in range(7 - mouth_num):
     print(pd.to_datetime('2016-01-01') + MonthBegin(i))
@@ -373,7 +378,7 @@ for i in range(7 - mouth_num):
 
     input_feature['received_interval'] = (input_feature['received_date'] - input_feature['last_received_date']).dt.days
     input_feature['coupon_received_interval'] = (
-                input_feature['received_date'] - input_feature['last_received_date']).dt.days
+            input_feature['received_date'] - input_feature['last_received_date']).dt.days
     leakage_user = pd.DataFrame({'received_count': input_feature.groupby('User_id')['Date_received'].count()})
     leakage_user['merchant_nunique'] = input_feature.groupby('User_id')['Merchant_id'].nunique()
     leakage_user['coupon_nunique'] = input_feature.groupby('User_id')['Merchant_id'].nunique()
@@ -447,6 +452,9 @@ for i in range(7 - mouth_num):
                                                          'offline_user_coupon_used_count'] / input_feature[
                                                          'offline_user_used_count']
 
+    input_feature['value_rank_pct'] = input_feature['value_rank'] / input_feature['offline_user_used_count']
+    input_feature['rate_rank_pct'] = input_feature['rate_rank'] / input_feature['offline_user_used_count']
+
     input_feature = pd.merge(input_feature, leakage_user.reset_index(), how='left', on=['User_id'])
     input_feature = pd.merge(input_feature, leakage_merchant.reset_index(), how='left', on=['Merchant_id'])
     input_feature = pd.merge(input_feature, leakage_user_merchant.reset_index(), how='left',
@@ -468,6 +476,7 @@ for i in range(7 - mouth_num):
     coupon_distance_columns = input_feature.columns[input_feature.columns.str.contains('distance_m')]
     for c in coupon_distance_columns:
         input_feature[c + '-distance'] = input_feature[c] - input_feature['Distance']
+
     st_date = (pd.to_datetime('2016-01-01') + MonthBegin(i + mouth_num)).strftime('%Y-%m-%d')
     ed_date = (pd.to_datetime('2016-01-01') + MonthBegin(i + mouth_num + 1)).strftime('%Y-%m-%d')
     input_feature.to_csv('{}m_samples_{}~{}.csv'.format(mouth_num, st_date, ed_date))
@@ -480,11 +489,15 @@ for i in range(7 - mouth_num):
     
     
     t = offline.groupby('User_id')['Coupon_id'].count()
-    t[(t < 20) & (t > 15)].head(1)
-    offline[offline['User_id'] == 38756][['Merchant_id', 'Coupon_id', 'Date_received', 'Discount_rate', 'Date']]
-    offline_user.loc[38756]
-    offline[(offline['User_id'] == 38756) & (offline['Merchant_id'] == 3381)][
+    user_id = t[(t < 20) & (t > 15)].index[0]
+    merchant_id = pd.value_counts(offline[offline['User_id'] == user_id]['Merchant_id']).index[0]
+    coupon_id = pd.value_counts(offline[offline['User_id'] == user_id]['Coupon_id']).index[0]
+    offline[offline['User_id'] == user_id][['Merchant_id', 'Coupon_id', 'Date_received', 'Discount_rate', 'Date']]
+    offline_user.loc[user_id]
+    offline[(offline['User_id'] == user_id) & (offline['Merchant_id'] == merchant_id)][
         ['Merchant_id', 'Coupon_id', 'Date_received', 'Discount_rate', 'Date']]
-    offline_user_merchant.loc[(38756, 3381)]
-    offline_user_coupon.loc[(38756, 4594)]
+    offline_user_merchant.loc[(user_id, merchant_id)]
+    offline_user_coupon.loc[(user_id, coupon_id)]
     '''
+
+    offline['rank1']=offline[offline['used']].groupby(['User_id','Coupon_id'])['discount_value'].transform(lambda x:x.rank(method='min'))
