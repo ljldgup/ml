@@ -1,3 +1,9 @@
+Python worker failed to connect back.
+
+win10增加系统环境变量：
+key: PYSPARK_PYTHON
+value: python
+-----------------------------------------------------------------------
 使用./bin/docker-image-tool.sh build 在windows下运行时，SPARK_HOME时windows下路径形式，没法用。可以设成.，然后在SPARK_HOME下运行。
 pyspark镜像 ./bin/docker-image-tool.sh -R ./kubernetes/dockerfiles/spark/bindings/R/Dockerfile build
 

@@ -34,6 +34,7 @@ def getSparkSessionInstance(sparkConf):
 
 
 def process(time, rdd):
+    print("fuck")
     print("========= %s =========" % str(time))
     try:
         # Get the singleton instance of SparkSession
@@ -51,6 +52,9 @@ def process(time, rdd):
         wordCountsDataFrame.show()
     except:
         pass
+
+sc.conf.set("spark.executor.processTreeMetrics", "false")
+
 
 words.foreachRDD(process)
 

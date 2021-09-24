@@ -1,4 +1,4 @@
-from pyspark import SparkContext, SparkConf
+from pyspark import SparkContext, SparkConf, StorageLevel
 
 # 本地集群
 appName = 'rdd_test'
@@ -34,7 +34,7 @@ lineLengths = lines.map(lambda s: len(s))
 totalLength = lineLengths.reduce(lambda a, b: a + b)
 
 # 保存中间结果到内存中,storageLevel=0,MEMORY_ONLY，这是最快的选项
-lineLengths.persist(storageLevel=0)
+lineLengths.persist(StorageLevel.MEMORY_ONLY)
 lineLengths.persist().is_cached
 lineLengths.cache()
 

@@ -9,7 +9,7 @@ spark = SparkSession \
     .getOrCreate()
 
 # spark is an existing SparkSession
-df = spark.read.json("../data/resources/people.json")
+df = spark.read.json("people.json")
 # Displays the content of the DataFrame to stdout
 df.show()
 df.printSchema()
@@ -27,7 +27,7 @@ from pyspark.sql.types import *
 sc = spark.sparkContext
 
 # Load a text file and convert each line to a Row.
-lines = sc.textFile("../data/resources/people.txt")
+lines = sc.textFile("people.txt")
 parts = lines.map(lambda l: l.split(","))
 people = parts.map(lambda p: (p[0], p[1].strip()))
 
