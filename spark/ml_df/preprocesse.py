@@ -29,6 +29,7 @@ output.select("features", "clicked").show(truncate=False)
 # IDF是逆向文件频率 由总文件数目除以包含该词语的文件的数目，再将得到的商取对数得到。
 # TF-IDF实际上是：TF * IDF 某一特定文件内的高词语频率，以及该词语在整个文件集合中的低文件频率，可以产生出高权重的TF-IDF。因此，TF-IDF倾向于过滤掉常见的词语，保留重要的词语。
 from pyspark.ml.feature import HashingTF, IDF, Tokenizer
+from pyspark.ml.feature import CountVectorizer
 
 sentenceData = spark.createDataFrame([
     (0.0, "Hi I heard about Spark"),
@@ -40,11 +41,19 @@ sentenceData = spark.createDataFrame([
 # regexTokenizer = RegexTokenizer(inputCol="sentence", outputCol="words", pattern="\\W")
 tokenizer = Tokenizer(inputCol="sentence", outputCol="words")
 wordsData = tokenizer.transform(sentenceData)
+
+#这里两个评率统计器返回的都是系数特征，位置+值，不是三列
 # HashingTF 根据hash原理来统计词频
 hashingTF = HashingTF(inputCol="words", outputCol="rawFeatures", numFeatures=20)
 featurizedData = hashingTF.transform(wordsData)
-# alternatively, CountVectorizer can also be used to get term frequency vectors
 
+# CountVectorizer 直接按词频统计生成特征
+countVectorizer = CountVectorizer(inputCol="words", outputCol="rawFeatures2")
+#这里要用fit返回的模型transform
+featurizedData2 = countVectorizer.fit(wordsData).transform(wordsData)
+
+# featurizedData.select("rawFeatures").show(truncate=False)
+# featurizedData2.select("rawFeatures2").show(truncate=False)
 idf = IDF(inputCol="rawFeatures", outputCol="features")
 idfModel = idf.fit(featurizedData)
 rescaledData = idfModel.transform(featurizedData)
