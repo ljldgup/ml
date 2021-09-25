@@ -1,7 +1,4 @@
 from pyspark.sql import SparkSession
-import os
-
-os.environ["hadoop.home.dir"] = r"D:\tools\spark-3.0.0-bin-hadoop2.7\winutils"
 
 spark = SparkSession \
     .builder \
@@ -21,7 +18,7 @@ def parsePoint(line):
 # 模型训练和预测
 # rdd使用train和predict
 # dataframe使用 fit 和 transform
-data = sc.textFile("../data/mllib/sample_svm_data.txt")
+data = sc.textFile("sample_svm_data.txt")
 # 注意这里要用LabeledPoint来生成feature列
 parsedData = data.map(parsePoint)
 
@@ -42,7 +39,7 @@ sameModel = LogisticRegressionModel.load(sc, "pythonLogisticRegressionWithLBFGSM
 from pyspark.mllib.tree import RandomForest, RandomForestModel
 from pyspark.mllib.util import MLUtils
 
-data = MLUtils.loadLibSVMFile(sc, '../data/mllib/sample_libsvm_data.txt')
+data = MLUtils.loadLibSVMFile(sc, 'sample_libsvm_data.txt')
 (trainingData, testData) = data.randomSplit([0.7, 0.3])
 
 #  Setting featureSubsetStrategy="auto" lets the algorithm choose.

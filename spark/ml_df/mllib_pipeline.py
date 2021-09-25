@@ -1,5 +1,6 @@
 from pyspark.ml.linalg import Vectors
-from pyspark.ml.classification import LogisticRegression, SparkSession
+from pyspark.ml.classification import LogisticRegression
+from pyspark.sql import SparkSession
 
 spark = SparkSession \
     .builder \

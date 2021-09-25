@@ -13,7 +13,7 @@ from pyspark.mllib.recommendation import ALS, MatrixFactorizationModel, Rating
 
 # r = Rating(1, 2, 5.0)
 # (r.user, r.product, r.rating)
-data = sc.textFile("../data/mllib/als/test.data")
+data = sc.textFile("test.data")
 ratings = data.map(lambda l: l.split(',')) \
     .map(lambda l: Rating(int(l[0]), int(l[1]), float(l[2])))
 
@@ -31,7 +31,7 @@ print("Mean Squared Error = " + str(MSE))
 
 #############################################################################
 # 协同过滤
-data = sc.textFile("../data/mllib/sample_fpgrowth.txt")
+data = sc.textFile("sample_fpgrowth.txt")
 transactions = data.map(lambda line: line.strip().split(' '))
 model = FPGrowth.train(transactions, minSupport=0.2, numPartitions=10)
 result = model.freqItemsets().collect()

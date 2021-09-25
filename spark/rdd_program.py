@@ -28,7 +28,7 @@ rdd = sc.newAPIHadoopRDD("org.elasticsearch.hadoop.mr.EsInputFormat",
 rdd.first()
 '''
 
-lines = sc.textFile("resources/data.txt")
+lines = sc.textFile("data.txt")
 lineLengths = lines.map(lambda s: len(s))
 # 由于缓求值上面的Transformations没有立即执行，在执行action型函数时才会执行
 totalLength = lineLengths.reduce(lambda a, b: a + b)

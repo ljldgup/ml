@@ -18,10 +18,10 @@ def parse(lp):
     return LabeledPoint(label, vec)
 
 
-trainingData = sc.textFile("../data/mllib/kmeans_data.txt") \
+trainingData = sc.textFile("kmeans_data.txt") \
     .map(lambda line: Vectors.dense([float(x) for x in line.strip().split(' ')]))
 
-testingData = sc.textFile("../data/mllib/streaming_kmeans_data_test.txt").map(parse)
+testingData = sc.textFile("streaming_kmeans_data_test.txt").map(parse)
 
 trainingQueue = [trainingData]
 testingQueue = [testingData]
@@ -40,23 +40,23 @@ result.pprint()
 ssc.start()
 ssc.stop(stopSparkContext=True, stopGraceFully=True)
 
-####################################################################
-# svd分解
-from pyspark.mllib.linalg import Vectors
-from pyspark.mllib.linalg.distributed import RowMatrix
-
-rows = sc.parallelize([
-    Vectors.sparse(5, {1: 1.0, 3: 7.0}),
-    Vectors.dense(2.0, 0.0, 3.0, 4.0, 5.0),
-    Vectors.dense(4.0, 0.0, 0.0, 6.0, 7.0)
-])
-
-mat = RowMatrix(rows)
-
-# Compute the top 5 singular values and corresponding singular vectors.
-svd = mat.computeSVD(5, computeU=True)
-U = svd.U  # The U factor is a RowMatrix.
-s = svd.s  # The singular values are stored in a local dense vector.
-V = svd.V  # The V factor is a local dense matrix.
+# ####################################################################
+# # svd分解
+# from pyspark.mllib.linalg import Vectors
+# from pyspark.mllib.linalg.distributed import RowMatrix
+#
+# rows = sc.parallelize([
+#     Vectors.sparse(5, {1: 1.0, 3: 7.0}),
+#     Vectors.dense(2.0, 0.0, 3.0, 4.0, 5.0),
+#     Vectors.dense(4.0, 0.0, 0.0, 6.0, 7.0)
+# ])
+#
+# mat = RowMatrix(rows)
+#
+# # Compute the top 5 singular values and corresponding singular vectors.
+# svd = mat.computeSVD(5, computeU=True)
+# U = svd.U  # The U factor is a RowMatrix.
+# s = svd.s  # The singular values are stored in a local dense vector.
+# V = svd.V  # The V factor is a local dense matrix.
 
 

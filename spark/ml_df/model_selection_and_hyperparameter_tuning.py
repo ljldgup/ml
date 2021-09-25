@@ -1,8 +1,9 @@
 from pyspark.ml import Pipeline
-from pyspark.ml.classification import LogisticRegression, SparkSession
+from pyspark.ml.classification import LogisticRegression
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.feature import HashingTF, Tokenizer
 from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
+from pyspark.sql import SparkSession
 
 spark = SparkSession \
     .builder \
@@ -68,7 +69,7 @@ from pyspark.ml.tuning import ParamGridBuilder, TrainValidationSplit
 
 # Prepare training and test data.
 data = spark.read.format("libsvm") \
-    .load("../data/mllib/sample_linear_regression_data.txt")
+    .load("sample_linear_regression_data.txt")
 train, test = data.randomSplit([0.9, 0.1], seed=12345)
 
 lr = LinearRegression(maxIter=10)
@@ -105,7 +106,7 @@ from pyspark.ml.tuning import ParamGridBuilder, TrainValidationSplit
 
 # Prepare training and test data.
 data = spark.read.format("libsvm") \
-    .load("../data/mllib/sample_linear_regression_data.txt")
+    .load("sample_linear_regression_data.txt")
 train, test = data.randomSplit([0.9, 0.1], seed=12345)
 
 lr = LinearRegression(maxIter=10)

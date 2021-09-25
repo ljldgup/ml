@@ -1,7 +1,9 @@
 from pyspark.ml import Pipeline
-from pyspark.ml.classification import RandomForestClassifier, SparkSession
+from pyspark.ml.classification import RandomForestClassifier
 from pyspark.ml.feature import IndexToString, StringIndexer, VectorIndexer
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+from pyspark.sql import SparkSession
+
 '''
 
     spark.mllib 包含基于RDD的原始算法API。
@@ -15,7 +17,7 @@ spark = SparkSession \
 sc = spark.sparkContext
 
 # Load and parse the data file, converting it to a DataFrame.
-data = spark.read.format("libsvm").load("../data/mllib/sample_libsvm_data.txt")
+data = spark.read.format("libsvm").load("sample_libsvm_data.txt")
 
 # Index labels, adding metadata to the label column.
 # Fit on whole dataset to include all labels in index.
@@ -61,7 +63,7 @@ print(rfModel)
 from pyspark.ml.clustering import LDA
 
 # Loads data.
-dataset = spark.read.format("libsvm").load("../data/mllib/sample_lda_libsvm_data.txt")
+dataset = spark.read.format("libsvm").load("sample_lda_libsvm_data.txt")
 
 # Trains a LDA model.
 lda = LDA(k=10, maxIter=10)
@@ -107,7 +109,7 @@ model.transform(training).show(truncate=False)
 # 分解机
 from pyspark.ml.classification import FMClassifier
 
-training = spark.read.format("libsvm").load("../data/mllib/sample_libsvm_data.txt")
+training = spark.read.format("libsvm").load("sample_libsvm_data.txt")
 cls = FMClassifier(maxIter=10, regParam=0.3, factorSize=16)
 
 fmModel = cls.fit(training)
