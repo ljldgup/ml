@@ -1,0 +1,1229 @@
+Wed May 29 05:34:53 2019/10913/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Wed May 29 05:34:53 2019/10913/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Wed May 29 05:34:53 2019/10913/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Wed May 29 05:34:53 2019/10913/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Wed May 29 05:34:53 2019/0/0/INFO : Used transfer size <204810>
+Wed May 29 05:34:53 2019/10913/128/DEBUG : Bug 29466526: SocketOpen
+Wed May 29 05:34:53 2019/0/0/DEBUG : [SIO] Create socket 948 in [fvClientSocket]
+Wed May 29 05:34:53 2019/0/0/DEBUG : [SIO] Port:53135 in [fvClientSocket]
+Wed May 29 05:34:54 2019/0/0/INFO : Send message to client (message = Status: Received 500 packets.)
+Wed May 29 05:34:54 2019/10913/128/DEBUG : Bug 29466526: readFileMessage E:\edb_fms\gam_inv_nat_000/gpa91559122.493
+Wed May 29 05:34:54 2019/10913/128/DEBUG : Bug 29466526: fvReadSocket socket:948
+Wed May 29 05:34:54 2019/0/0/INFO : Send message to client (message = Status: Received 100 packets.)
+Wed May 29 05:34:54 2019/0/0/INFO : Status: Read from socket [948] [221184 bytes] in 0.437528 seconds.
+Wed May 29 05:34:54 2019/10913/128/DEBUG : Bug 29466526:close stream descriptor
+Wed May 29 05:34:54 2019/0/0/DEBUG : Send control bytes: <221184>
+Wed May 29 05:34:54 2019/0/0/DEBUG : [SIO] Close socket 948 in [fvTransmitData]
+Wed May 29 05:34:54 2019/10913/128/DATA : transmitted 1 bytes of E:\edb_fms\gam_inv_nat_000/gpa91559122.493
+Wed May 29 05:34:54 2019/10913/0/DEBUG : Bug 28914323: leave fms_fms_FileIn
+Wed May 29 05:34:54 2019/10913/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckIn
+Wed May 29 05:34:54 2019/0/0/INFO : Send file data to client (new filename = E:\edb_fms\gam_inv_nat_000/gpa91559122.493)
+Wed May 29 05:34:54 2019/0/0/INFO : Send file data to client (file size = 221184)
+Wed May 29 05:34:54 2019/0/0/DEBUG : [SIO] Close socket 748 in [FmsSocket_sendFileMessage]
+Wed May 29 05:34:54 2019/10913/128/ENTRY : End CAP 128, External file transfer function (DFM)
+Wed May 29 05:34:54 2019/10913/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Wed May 29 05:34:54 2019/0/0/INFO : Status: Read from socket [876] [757760 bytes] in 1.383443 seconds.
+Wed May 29 05:34:54 2019/10911/128/DEBUG : Bug 29466526:close stream descriptor
+Wed May 29 05:34:54 2019/0/0/DEBUG : Send control bytes: <757760>
+Wed May 29 05:34:54 2019/0/0/DEBUG : [SIO] Close socket 876 in [fvTransmitData]
+Wed May 29 05:34:54 2019/10911/128/DATA : transmitted 1 bytes of E:\edb_fms\gam_inv_nat_000/sqc21559122.493
+Wed May 29 05:34:54 2019/10911/0/DEBUG : Bug 28914323: leave fms_fms_FileIn
+Wed May 29 05:34:54 2019/10911/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckIn
+Wed May 29 05:34:54 2019/0/0/INFO : Send file data to client (new filename = E:\edb_fms\gam_inv_nat_000/sqc21559122.493)
+Wed May 29 05:34:54 2019/0/0/INFO : Send file data to client (file size = 757760)
+Wed May 29 05:34:54 2019/0/0/DEBUG : [SIO] Close socket 708 in [FmsSocket_sendFileMessage]
+Wed May 29 05:34:54 2019/10911/128/ENTRY : End CAP 128, External file transfer function (DFM)
+Wed May 29 05:34:54 2019/10911/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Accept socket 856 in [rendezvous_request]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Accept Port:21368 in [rendezvous_request]
+Wed May 29 05:34:55 2019/0/0/INFO : Delete FMS context...
+Wed May 29 05:34:55 2019/10913/0/ENTRY : Open Contexts count: 1, Context: 10913 deleted
+Wed May 29 05:34:55 2019/0/0/INFO : Delete FMS context...
+Wed May 29 05:34:55 2019/10911/0/ENTRY : Open Contexts count: 0, Context: 10911 deleted
+Wed May 29 05:34:55 2019/10914/0/DEBUG : Bug 28914323: 0 thread before adding context
+Wed May 29 05:34:55 2019/0/0/INFO : Add FMS context...
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Open listen socket 588 in [fvCreateServerPort]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Listen Port:53432 in [fvCreateServerPort]
+Wed May 29 05:34:55 2019/0/0/INFO : SubTask created
+Wed May 29 05:34:55 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Wed May 29 05:34:55 2019/0/0/INFO : [RPC] 10.99.25.32:21368 / 125 / Wed May 29 05:34:55 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Accept socket 536 in [rendezvous_request]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Accept Port:21317 in [rendezvous_request]
+Wed May 29 05:34:55 2019/10915/0/DEBUG : Bug 28914323: 1 thread before adding context
+Wed May 29 05:34:55 2019/0/0/INFO : Add FMS context...
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Open listen socket 708 in [fvCreateServerPort]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Listen Port:53433 in [fvCreateServerPort]
+Wed May 29 05:34:55 2019/0/0/INFO : SubTask created
+Wed May 29 05:34:55 2019/0/0/INFO : [RPC] Statistics: [used:2]
+Wed May 29 05:34:55 2019/0/0/INFO : [RPC] 10.99.25.32:21317 / 125 / Wed May 29 05:34:55 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Wed May 29 05:34:55 2019/0/0/INFO : [RPC] 10.99.25.32:21368 / 125 / Wed May 29 05:34:55 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Close socket 856 in [svctcp_destroy]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Close RPC context for socket [856]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Close socket 536 in [svctcp_destroy]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Close RPC context for socket [536]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Accept socket 948 in [fvServerSocket]
+Wed May 29 05:34:55 2019/10914/125/ENTRY : Begin CAP 125, Delete file function
+Wed May 29 05:34:55 2019/10914/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Wed May 29 05:34:55 2019/10914/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Wed May 29 05:34:55 2019/10914/125/DATA : file E:\edb_fms\gam_inv_nat_000/mic41558954.587 deleted
+Wed May 29 05:34:55 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Close socket 948 in [FmsSocket_sendSuccessMessage]
+Wed May 29 05:34:55 2019/10914/125/ENTRY : End CAP 125, Delete file function
+Wed May 29 05:34:55 2019/10914/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Accept socket 748 in [fvServerSocket]
+Wed May 29 05:34:55 2019/10915/125/ENTRY : Begin CAP 125, Delete file function
+Wed May 29 05:34:55 2019/10915/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Wed May 29 05:34:55 2019/10915/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Wed May 29 05:34:55 2019/10915/125/DATA : file E:\edb_fms\gam_inv_nat_000/go861558956.724 deleted
+Wed May 29 05:34:55 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Close socket 748 in [FmsSocket_sendSuccessMessage]
+Wed May 29 05:34:55 2019/10915/125/ENTRY : End CAP 125, Delete file function
+Wed May 29 05:34:55 2019/10915/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Accept socket 536 in [rendezvous_request]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Accept Port:21370 in [rendezvous_request]
+Wed May 29 05:34:55 2019/0/0/INFO : Delete FMS context...
+Wed May 29 05:34:55 2019/10914/0/ENTRY : Open Contexts count: 1, Context: 10914 deleted
+Wed May 29 05:34:55 2019/0/0/INFO : Delete FMS context...
+Wed May 29 05:34:55 2019/10915/0/ENTRY : Open Contexts count: 0, Context: 10915 deleted
+Wed May 29 05:34:55 2019/10916/0/DEBUG : Bug 28914323: 0 thread before adding context
+Wed May 29 05:34:55 2019/0/0/INFO : Add FMS context...
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Open listen socket 856 in [fvCreateServerPort]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Listen Port:53434 in [fvCreateServerPort]
+Wed May 29 05:34:55 2019/0/0/INFO : SubTask created
+Wed May 29 05:34:55 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Wed May 29 05:34:55 2019/0/0/INFO : [RPC] 10.99.25.32:21370 / 128 / Wed May 29 05:34:55 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Accept socket 788 in [rendezvous_request]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Accept Port:21319 in [rendezvous_request]
+Wed May 29 05:34:55 2019/10917/0/DEBUG : Bug 28914323: 1 thread before adding context
+Wed May 29 05:34:55 2019/0/0/INFO : Add FMS context...
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Open listen socket 880 in [fvCreateServerPort]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Listen Port:53435 in [fvCreateServerPort]
+Wed May 29 05:34:55 2019/0/0/INFO : SubTask created
+Wed May 29 05:34:55 2019/0/0/INFO : [RPC] Statistics: [used:2]
+Wed May 29 05:34:55 2019/0/0/INFO : [RPC] 10.99.25.32:21370 / 128 / Wed May 29 05:34:55 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Wed May 29 05:34:55 2019/0/0/INFO : [RPC] 10.99.25.32:21319 / 128 / Wed May 29 05:34:55 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Close socket 536 in [svctcp_destroy]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Close RPC context for socket [536]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Close socket 788 in [svctcp_destroy]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Close RPC context for socket [788]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Accept socket 788 in [fvServerSocket]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Create socket 880 in [clntudp_bufcreate]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [SIO] Accept socket 748 in [fvServerSocket]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Create socket 856 in [clntudp_bufcreate]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Close socket 880 in [clntudp_destroy]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Close socket 856 in [clntudp_destroy]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Close socket 880 in [pmap_getport]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Close socket 856 in [pmap_getport]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Create socket 880 in [clnttcp_create]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Port:21475 in [clnttcp_create]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Create socket 856 in [clnttcp_create]
+Wed May 29 05:34:55 2019/0/0/DEBUG : [RPC] Port:21475 in [clnttcp_create]
+Wed May 29 05:34:56 2019/0/0/INFO : RPC socket closed
+Wed May 29 05:34:56 2019/0/0/INFO : RPC socket closed
+Wed May 29 05:34:56 2019/10916/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Wed May 29 05:34:56 2019/10916/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Wed May 29 05:34:56 2019/10916/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Wed May 29 05:34:56 2019/10916/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Wed May 29 05:34:56 2019/0/0/INFO : Used transfer size <204810>
+Wed May 29 05:34:56 2019/10916/128/DEBUG : Bug 29466526: SocketOpen
+Wed May 29 05:34:56 2019/0/0/DEBUG : [SIO] Create socket 780 in [fvClientSocket]
+Wed May 29 05:34:56 2019/0/0/DEBUG : [SIO] Port:53137 in [fvClientSocket]
+
+Wed May 29 06:17:22 2019 ----- starting on gaisr0136:804257546
+
+FileServer for Agile e6.2.1.0300
+Copyright (c) 1995, 2017, Oracle and/or its affiliates. All rights reserved.
+Version Agile e6.2.1.0300 assembled at Apr  9 2019 10:49:42
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+Tue Jun 04 17:08:58 2019/113202/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Tue Jun 04 17:08:58 2019/113202/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Tue Jun 04 17:08:58 2019/113202/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Tue Jun 04 17:08:58 2019/113202/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Tue Jun 04 17:08:58 2019/0/0/INFO : Used transfer size <204810>
+Tue Jun 04 17:08:58 2019/113202/128/DEBUG : Bug 29466526: SocketOpen
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [RPC] Accept socket 612 in [rendezvous_request]
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [RPC] Accept Port:21366 in [rendezvous_request]
+Tue Jun 04 17:08:58 2019/0/0/INFO : Delete FMS context...
+Tue Jun 04 17:08:58 2019/113203/0/ENTRY : Open Contexts count: 1, Context: 113203 deleted
+Tue Jun 04 17:08:58 2019/113204/0/DEBUG : Bug 28914323: 1 thread before adding context
+Tue Jun 04 17:08:58 2019/0/0/INFO : Add FMS context...
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [SIO] Open listen socket 652 in [fvCreateServerPort]
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [SIO] Listen Port:52722 in [fvCreateServerPort]
+Tue Jun 04 17:08:58 2019/0/0/INFO : SubTask created
+Tue Jun 04 17:08:58 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Tue Jun 04 17:08:58 2019/0/0/INFO : [RPC] 10.99.25.32:21366 / 128 / Tue Jun 04 17:08:58 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [SIO] Create socket 1004 in [fvClientSocket]
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [SIO] Port:53094 in [fvClientSocket]
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [RPC] Close socket 612 in [svctcp_destroy]
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [RPC] Close RPC context for socket [612]
+Tue Jun 04 17:08:58 2019/113202/128/DEBUG : Bug 29466526: readFileMessage E:\edb_fms\gam_inv_nat_000/wj361559682.538
+Tue Jun 04 17:08:58 2019/113202/128/DEBUG : Bug 29466526: fvReadSocket socket:1004
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [SIO] Accept socket 720 in [fvServerSocket]
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [RPC] Create socket 652 in [clntudp_bufcreate]
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [RPC] Close socket 652 in [clntudp_destroy]
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [RPC] Close socket 652 in [pmap_getport]
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [RPC] Create socket 652 in [clnttcp_create]
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Tue Jun 04 17:08:58 2019/0/0/INFO : Status: Read from socket [1004] [122368 bytes] in 0.343769 seconds.
+Tue Jun 04 17:08:58 2019/113202/128/DEBUG : Bug 29466526:close stream descriptor
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : Send control bytes: <122368>
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [SIO] Close socket 1004 in [fvTransmitData]
+Tue Jun 04 17:08:58 2019/113202/128/DATA : transmitted 1 bytes of E:\edb_fms\gam_inv_nat_000/wj361559682.538
+Tue Jun 04 17:08:58 2019/113202/0/DEBUG : Bug 28914323: leave fms_fms_FileIn
+Tue Jun 04 17:08:58 2019/113202/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckIn
+Tue Jun 04 17:08:58 2019/0/0/INFO : Send file data to client (new filename = E:\edb_fms\gam_inv_nat_000/wj361559682.538)
+Tue Jun 04 17:08:58 2019/0/0/INFO : Send file data to client (file size = 122368)
+Tue Jun 04 17:08:58 2019/0/0/DEBUG : [SIO] Close socket 508 in [FmsSocket_sendFileMessage]
+Tue Jun 04 17:08:58 2019/113202/128/ENTRY : End CAP 128, External file transfer function (DFM)
+Tue Jun 04 17:08:58 2019/113202/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Tue Jun 04 17:08:59 2019/0/0/DEBUG : [RPC] Accept socket 708 in [rendezvous_request]
+Tue Jun 04 17:08:59 2019/0/0/DEBUG : [RPC] Accept Port:21420 in [rendezvous_request]
+Tue Jun 04 17:08:59 2019/0/0/INFO : Delete FMS context...
+Tue Jun 04 17:08:59 2019/113202/0/ENTRY : Open Contexts count: 1, Context: 113202 deleted
+Tue Jun 04 17:08:59 2019/113205/0/DEBUG : Bug 28914323: 1 thread before adding context
+Tue Jun 04 17:08:59 2019/0/0/INFO : Add FMS context...
+Tue Jun 04 17:08:59 2019/0/0/DEBUG : [SIO] Open listen socket 536 in [fvCreateServerPort]
+Tue Jun 04 17:08:59 2019/0/0/DEBUG : [SIO] Listen Port:52723 in [fvCreateServerPort]
+Tue Jun 04 17:08:59 2019/0/0/INFO : SubTask created
+Tue Jun 04 17:08:59 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Tue Jun 04 17:08:59 2019/0/0/INFO : [RPC] 10.99.25.32:21420 / 125 / Tue Jun 04 17:08:59 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 04 17:08:59 2019/0/0/DEBUG : [RPC] Close socket 708 in [svctcp_destroy]
+Tue Jun 04 17:08:59 2019/0/0/DEBUG : [RPC] Close RPC context for socket [708]
+Tue Jun 04 17:08:59 2019/0/0/DEBUG : [SIO] Accept socket 724 in [fvServerSocket]
+Tue Jun 04 17:08:59 2019/113205/125/ENTRY : Begin CAP 125, Delete file function
+Tue Jun 04 17:08:59 2019/113205/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Tue Jun 04 17:08:59 2019/113205/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Tue Jun 04 17:08:59 2019/113205/125/DATA : file E:\edb_fms\gam_inv_nat_000/hr1e1559598.815 deleted
+Tue Jun 04 17:08:59 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Tue Jun 04 17:08:59 2019/0/0/DEBUG : [SIO] Close socket 724 in [FmsSocket_sendSuccessMessage]
+Tue Jun 04 17:08:59 2019/113205/125/ENTRY : End CAP 125, Delete file function
+Tue Jun 04 17:08:59 2019/113205/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Tue Jun 04 17:08:59 2019/0/0/DEBUG : [RPC] Accept socket 708 in [rendezvous_request]
+Tue Jun 04 17:08:59 2019/0/0/DEBUG : [RPC] Accept Port:21422 in [rendezvous_request]
+Tue Jun 04 17:08:59 2019/0/0/INFO : Delete FMS context...
+Tue Jun 04 17:08:59 2019/113205/0/ENTRY : Open Contexts count: 1, Context: 113205 deleted
+Tue Jun 04 17:08:59 2019/113206/0/DEBUG : Bug 28914323: 1 thread before adding context
+Tue Jun 04 17:08:59 2019/0/0/INFO : Add FMS context...
+Tue Jun 04 17:08:59 2019/0/0/DEBUG : [SIO] Open listen socket 1004 in [fvCreateServerPort]
+Tue Jun 04 17:08:59 2019/0/0/DEBUG : [SIO] Listen Port:52724 in [fvCreateServerPort]
+Tue Jun 04 17:08:59 2019/0/0/INFO : SubTask created
+Tue Jun 04 17:08:59 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Tue Jun 04 17:08:59 2019/0/0/INFO : [RPC] 10.99.25.32:21422 / 128 / Tue Jun 04 17:08:59 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 04 17:09:00 2019/0/0/DEBUG : [RPC] Close socket 708 in [svctcp_destroy]
+Tue Jun 04 17:09:00 2019/0/0/DEBUG : [RPC] Close RPC context for socket [708]
+Tue Jun 04 17:09:00 2019/0/0/DEBUG : [SIO] Accept socket 708 in [fvServerSocket]
+Tue Jun 04 17:09:00 2019/0/0/DEBUG : [RPC] Create socket 1004 in [clntudp_bufcreate]
+Tue Jun 04 17:09:00 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Tue Jun 04 17:09:00 2019/0/0/DEBUG : [RPC] Close socket 1004 in [clntudp_destroy]
+Tue Jun 04 17:09:00 2019/0/0/DEBUG : [RPC] Close socket 1004 in [pmap_getport]
+Tue Jun 04 17:09:00 2019/0/0/DEBUG : [RPC] Create socket 1004 in [clnttcp_create]
+Tue Jun 04 17:09:00 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Tue Jun 04 17:09:00 2019/0/0/INFO : RPC socket closed
+Tue Jun 04 17:09:00 2019/113206/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Tue Jun 04 17:09:00 2019/113206/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Tue Jun 04 17:09:00 2019/113206/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Tue Jun 04 17:09:00 2019/113206/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Tue Jun 04 17:09:00 2019/0/0/INFO : Used transfer size <204810>
+Tue Jun 04 17:09:00 2019/113206/128/DEBUG : Bug 29466526: SocketOpen
+Tue Jun 04 17:09:00 2019/0/0/DEBUG : [SIO] Create socket 1016 in [fvClientSocket]
+Tue Jun 04 17:09:00 2019/0/0/DEBUG : [SIO] Port:53097 in [fvClientSocket]
+Tue Jun 04 17:09:00 2019/113206/128/DEBUG : Bug 29466526: readFileMessage E:\edb_fms\gam_inv_nat_000/sc1e1559682.540
+Tue Jun 04 17:09:00 2019/113206/128/DEBUG : Bug 29466526: fvReadSocket socket:1016
+Tue Jun 04 17:09:02 2019/0/0/INFO : Status: Read from socket [1016] [2228736 bytes] in 2.268568 seconds.
+Tue Jun 04 17:09:02 2019/113206/128/DEBUG : Bug 29466526:close stream descriptor
+Tue Jun 04 17:09:02 2019/0/0/DEBUG : Send control bytes: <2228736>
+Tue Jun 04 17:09:02 2019/0/0/DEBUG : [SIO] Close socket 1016 in [fvTransmitData]
+Tue Jun 04 17:09:02 2019/113206/128/DATA : transmitted 1 bytes of E:\edb_fms\gam_inv_nat_000/sc1e1559682.540
+Tue Jun 04 17:09:02 2019/113206/0/DEBUG : Bug 28914323: leave fms_fms_FileIn
+Tue Jun 04 17:09:02 2019/113206/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckIn
+Tue Jun 04 17:09:02 2019/0/0/INFO : Send file data to client (new filename = E:\edb_fms\gam_inv_nat_000/sc1e1559682.540)
+Tue Jun 04 17:09:02 2019/0/0/INFO : Send file data to client (file size = 2228736)
+Tue Jun 04 17:09:02 2019/0/0/DEBUG : [SIO] Close socket 708 in [FmsSocket_sendFileMessage]
+Tue Jun 04 17:09:02 2019/113206/128/ENTRY : End CAP 128, External file transfer function (DFM)
+Tue Jun 04 17:09:02 2019/113206/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Tue Jun 04 17:09:03 2019/0/0/DEBUG : [RPC] Accept socket 596 in [rendezvous_request]
+Tue Jun 04 17:09:03 2019/0/0/DEBUG : [RPC] Accept Port:21424 in [rendezvous_request]
+Tue Jun 04 17:09:03 2019/0/0/INFO : Delete FMS context...
+Tue Jun 04 17:09:03 2019/113206/0/ENTRY : Open Contexts count: 1, Context: 113206 deleted
+Tue Jun 04 17:09:03 2019/113207/0/DEBUG : Bug 28914323: 1 thread before adding context
+Tue Jun 04 17:09:03 2019/0/0/INFO : Add FMS context...
+Tue Jun 04 17:09:03 2019/0/0/DEBUG : [SIO] Open listen socket 820 in [fvCreateServerPort]
+Tue Jun 04 17:09:03 2019/0/0/DEBUG : [SIO] Listen Port:52725 in [fvCreateServerPort]
+Tue Jun 04 17:09:03 2019/0/0/INFO : SubTask created
+Tue Jun 04 17:09:03 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Tue Jun 04 17:09:03 2019/0/0/INFO : [RPC] 10.99.25.32:21424 / 125 / Tue Jun 04 17:09:03 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 04 17:09:03 2019/0/0/DEBUG : [RPC] Close socket 596 in [svctcp_destroy]
+Tue Jun 04 17:09:03 2019/0/0/DEBUG : [RPC] Close RPC context for socket [596]
+Tue Jun 04 17:09:03 2019/0/0/DEBUG : [SIO] Accept socket 972 in [fvServerSocket]
+Tue Jun 04 17:09:03 2019/113207/125/ENTRY : Begin CAP 125, Delete file function
+Tue Jun 04 17:09:03 2019/113207/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Tue Jun 04 17:09:03 2019/113207/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Tue Jun 04 17:09:03 2019/113207/125/DATA : file E:\edb_fms\gam_inv_nat_000/lpd61559598.819 deleted
+Tue Jun 04 17:09:03 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Tue Jun 04 17:09:03 2019/0/0/DEBUG : [SIO] Close socket 972 in [FmsSocket_sendSuccessMessage]
+Tue Jun 04 17:09:03 2019/113207/125/ENTRY : End CAP 125, Delete file function
+Tue Jun 04 17:09:03 2019/113207/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Tue Jun 04 17:09:03 2019/0/0/DEBUG : [RPC] Accept socket 596 in [rendezvous_request]
+Tue Jun 04 17:09:03 2019/0/0/DEBUG : [RPC] Accept Port:21426 in [rendezvous_request]
+Tue Jun 04 17:09:03 2019/0/0/INFO : Delete FMS context...
+Tue Jun 04 17:09:03 2019/113207/0/ENTRY : Open Contexts count: 1, Context: 113207 deleted
+Tue Jun 04 17:09:03 2019/113208/0/DEBUG : Bug 28914323: 1 thread before adding context
+Tue Jun 04 17:09:03 2019/0/0/INFO : Add FMS context...
+Tue Jun 04 17:09:03 2019/0/0/DEBUG : [SIO] Open listen socket 836 in [fvCreateServerPort]
+Tue Jun 04 17:09:03 2019/0/0/DEBUG : [SIO] Listen Port:52726 in [fvCreateServerPort]
+Tue Jun 04 17:09:03 2019/0/0/INFO : SubTask created
+Tue Jun 04 17:09:03 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Tue Jun 04 17:09:03 2019/0/0/INFO : [RPC] 10.99.25.32:21426 / 128 / Tue Jun 04 17:09:03 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 04 17:09:04 2019/0/0/DEBUG : [RPC] Close socket 596 in [svctcp_destroy]
+Tue Jun 04 17:09:04 2019/0/0/DEBUG : [RPC] Close RPC context for socket [596]
+Tue Jun 04 17:09:04 2019/0/0/DEBUG : [SIO] Accept socket 964 in [fvServerSocket]
+Tue Jun 04 17:09:04 2019/0/0/DEBUG : [RPC] Create socket 836 in [clntudp_bufcreate]
+Tue Jun 04 17:09:04 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Tue Jun 04 17:09:04 2019/0/0/DEBUG : [RPC] Close socket 836 in [clntudp_destroy]
+Tue Jun 04 17:09:04 2019/0/0/DEBUG : [RPC] Close socket 836 in [pmap_getport]
+Tue Jun 04 17:09:04 2019/0/0/DEBUG : [RPC] Create socket 836 in [clnttcp_create]
+Tue Jun 04 17:09:04 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+
+Wed Jun 05 03:26:00 2019 ----- starting on gaisr0136:804257546
+
+FileServer for Agile e6.2.1.0300
+Copyright (c) 1995, 2017, Oracle and/or its affiliates. All rights reserved.
+Version Agile e6.2.1.0300 assembled at Apr  9 2019 10:49:42
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+Thu Jun 06 09:22:41 2019/76249/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Thu Jun 06 09:22:41 2019/76249/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 09:22:41 2019/76249/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 09:22:41 2019/76249/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Thu Jun 06 09:22:41 2019/0/0/INFO : Used transfer size <204810>
+Thu Jun 06 09:22:41 2019/76249/128/DEBUG : Bug 29466526: SocketOpen
+Thu Jun 06 09:22:41 2019/0/0/DEBUG : [SIO] Create socket 752 in [fvClientSocket]
+Thu Jun 06 09:22:41 2019/0/0/DEBUG : [SIO] Port:53343 in [fvClientSocket]
+Thu Jun 06 09:22:41 2019/0/0/INFO : RPC socket closed
+Thu Jun 06 09:22:41 2019/76250/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Thu Jun 06 09:22:41 2019/76250/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 09:22:41 2019/76250/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 09:22:41 2019/76250/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Thu Jun 06 09:22:41 2019/0/0/INFO : Used transfer size <204810>
+Thu Jun 06 09:22:41 2019/76250/128/DEBUG : Bug 29466526: SocketOpen
+Thu Jun 06 09:22:41 2019/0/0/DEBUG : [SIO] Create socket 528 in [fvClientSocket]
+Thu Jun 06 09:22:41 2019/0/0/DEBUG : [SIO] Port:53345 in [fvClientSocket]
+Thu Jun 06 09:22:41 2019/76249/128/DEBUG : Bug 29466526: readFileMessage E:\edb_fms\gam_inv_nat_000/sm021559827.361
+Thu Jun 06 09:22:41 2019/76249/128/DEBUG : Bug 29466526: fvReadSocket socket:752
+Thu Jun 06 09:22:41 2019/76250/128/DEBUG : Bug 29466526: readFileMessage E:\edb_fms\gam_inv_nat_000/bjd21559827.361
+Thu Jun 06 09:22:41 2019/76250/128/DEBUG : Bug 29466526: fvReadSocket socket:528
+Thu Jun 06 09:22:42 2019/0/0/INFO : Send message to client (message = Status: Received 100 packets.)
+Thu Jun 06 09:22:42 2019/0/0/INFO : Send message to client (message = Status: Received 200 packets.)
+Thu Jun 06 09:22:42 2019/0/0/INFO : Send message to client (message = Status: Received 100 packets.)
+Thu Jun 06 09:22:42 2019/0/0/INFO : Send message to client (message = Status: Received 200 packets.)
+Thu Jun 06 09:22:42 2019/0/0/INFO : Status: Read from socket [528] [339968 bytes] in 0.765613 seconds.
+Thu Jun 06 09:22:42 2019/76250/128/DEBUG : Bug 29466526:close stream descriptor
+Thu Jun 06 09:22:42 2019/0/0/DEBUG : Send control bytes: <339968>
+Thu Jun 06 09:22:42 2019/0/0/DEBUG : [SIO] Close socket 528 in [fvTransmitData]
+Thu Jun 06 09:22:42 2019/76250/128/DATA : transmitted 1 bytes of E:\edb_fms\gam_inv_nat_000/bjd21559827.361
+Thu Jun 06 09:22:42 2019/76250/0/DEBUG : Bug 28914323: leave fms_fms_FileIn
+Thu Jun 06 09:22:42 2019/76250/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckIn
+Thu Jun 06 09:22:42 2019/0/0/INFO : Send file data to client (new filename = E:\edb_fms\gam_inv_nat_000/bjd21559827.361)
+Thu Jun 06 09:22:42 2019/0/0/INFO : Send file data to client (file size = 339968)
+Thu Jun 06 09:22:42 2019/0/0/DEBUG : [SIO] Close socket 832 in [FmsSocket_sendFileMessage]
+Thu Jun 06 09:22:42 2019/76250/128/ENTRY : End CAP 128, External file transfer function (DFM)
+Thu Jun 06 09:22:42 2019/76250/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Thu Jun 06 09:22:42 2019/0/0/INFO : Send message to client (message = Status: Received 300 packets.)
+Thu Jun 06 09:22:42 2019/0/0/INFO : Send message to client (message = Status: Received 400 packets.)
+Thu Jun 06 09:22:43 2019/0/0/INFO : Status: Read from socket [752] [780288 bytes] in 1.234392 seconds.
+Thu Jun 06 09:22:43 2019/76249/128/DEBUG : Bug 29466526:close stream descriptor
+Thu Jun 06 09:22:43 2019/0/0/DEBUG : Send control bytes: <780288>
+Thu Jun 06 09:22:43 2019/0/0/DEBUG : [SIO] Close socket 752 in [fvTransmitData]
+Thu Jun 06 09:22:43 2019/76249/128/DATA : transmitted 1 bytes of E:\edb_fms\gam_inv_nat_000/sm021559827.361
+Thu Jun 06 09:22:43 2019/76249/0/DEBUG : Bug 28914323: leave fms_fms_FileIn
+Thu Jun 06 09:22:43 2019/76249/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckIn
+Thu Jun 06 09:22:43 2019/0/0/INFO : Send file data to client (new filename = E:\edb_fms\gam_inv_nat_000/sm021559827.361)
+Thu Jun 06 09:22:43 2019/0/0/INFO : Send file data to client (file size = 780288)
+Thu Jun 06 09:22:43 2019/0/0/DEBUG : [SIO] Close socket 840 in [FmsSocket_sendFileMessage]
+Thu Jun 06 09:22:43 2019/76249/128/ENTRY : End CAP 128, External file transfer function (DFM)
+Thu Jun 06 09:22:43 2019/76249/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Thu Jun 06 09:22:43 2019/0/0/DEBUG : [RPC] Accept socket 612 in [rendezvous_request]
+Thu Jun 06 09:22:58 2019/0/0/DEBUG : [RPC] Accept Port:21470 in [rendezvous_request]
+Thu Jun 06 09:22:58 2019/0/0/DEBUG : [RPC] Accept socket 852 in [rendezvous_request]
+Thu Jun 06 09:22:58 2019/0/0/DEBUG : [RPC] Accept Port:21434 in [rendezvous_request]
+Thu Jun 06 09:22:58 2019/0/0/INFO : Delete FMS context...
+Thu Jun 06 09:22:58 2019/76250/0/ENTRY : Open Contexts count: 2, Context: 76250 deleted
+Thu Jun 06 09:22:58 2019/0/0/INFO : Delete FMS context...
+Thu Jun 06 09:22:58 2019/76249/0/ENTRY : Open Contexts count: 1, Context: 76249 deleted
+Thu Jun 06 09:22:58 2019/76251/0/DEBUG : Bug 28914323: 1 thread before adding context
+Thu Jun 06 09:22:58 2019/0/0/INFO : Add FMS context...
+Thu Jun 06 09:22:58 2019/0/0/DEBUG : [SIO] Open listen socket 628 in [fvCreateServerPort]
+Thu Jun 06 09:22:58 2019/0/0/DEBUG : [SIO] Listen Port:52769 in [fvCreateServerPort]
+Thu Jun 06 09:22:58 2019/0/0/INFO : SubTask created
+Thu Jun 06 09:22:58 2019/0/0/INFO : [RPC] Statistics: [used:2]
+Thu Jun 06 09:22:58 2019/0/0/INFO : [RPC] 10.99.25.32:21470 / 125 / Thu Jun 06 09:22:58 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 09:22:58 2019/0/0/INFO : [RPC] 0.0.0.0:0 / 0 /  / Client version [unknown] /  /  
+Thu Jun 06 09:22:58 2019/76252/0/DEBUG : Bug 28914323: 2 thread before adding context
+Thu Jun 06 09:22:58 2019/0/0/INFO : Add FMS context...
+Thu Jun 06 09:22:58 2019/0/0/DEBUG : [SIO] Open listen socket 956 in [fvCreateServerPort]
+Thu Jun 06 09:22:58 2019/0/0/DEBUG : [SIO] Listen Port:52770 in [fvCreateServerPort]
+Thu Jun 06 09:22:58 2019/0/0/INFO : SubTask created
+Thu Jun 06 09:22:58 2019/0/0/INFO : [RPC] Statistics: [used:2]
+Thu Jun 06 09:22:58 2019/0/0/INFO : [RPC] 10.99.25.32:21470 / 125 / Thu Jun 06 09:22:58 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 09:22:58 2019/0/0/INFO : [RPC] 10.99.25.32:21434 / 125 / Thu Jun 06 09:22:58 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 09:22:58 2019/0/0/DEBUG : [RPC] Close socket 612 in [svctcp_destroy]
+Thu Jun 06 09:22:58 2019/0/0/DEBUG : [RPC] Close RPC context for socket [612]
+Thu Jun 06 09:22:58 2019/0/0/DEBUG : [RPC] Close socket 852 in [svctcp_destroy]
+Thu Jun 06 09:22:58 2019/0/0/DEBUG : [RPC] Close RPC context for socket [852]
+Thu Jun 06 09:22:59 2019/0/0/DEBUG : [SIO] Accept socket 932 in [fvServerSocket]
+Thu Jun 06 09:22:59 2019/76251/125/ENTRY : Begin CAP 125, Delete file function
+Thu Jun 06 09:22:59 2019/76251/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 09:22:59 2019/76251/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 09:22:59 2019/0/0/DEBUG : [SIO] Accept socket 852 in [fvServerSocket]
+Thu Jun 06 09:22:59 2019/76252/125/ENTRY : Begin CAP 125, Delete file function
+Thu Jun 06 09:22:59 2019/76252/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 09:22:59 2019/76252/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 09:23:07 2019/76251/125/DATA : file E:\edb_fms\gam_inv_nat_000/fb1e1559740.216 deleted
+Thu Jun 06 09:23:07 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Thu Jun 06 09:23:07 2019/0/0/DEBUG : [SIO] Close socket 932 in [FmsSocket_sendSuccessMessage]
+Thu Jun 06 09:23:07 2019/76251/125/ENTRY : End CAP 125, Delete file function
+Thu Jun 06 09:23:07 2019/76251/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Thu Jun 06 09:23:07 2019/76252/125/DATA : file E:\edb_fms\gam_inv_nat_000/mhb21559740.249 deleted
+Thu Jun 06 09:23:07 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Thu Jun 06 09:23:07 2019/0/0/DEBUG : [SIO] Close socket 852 in [FmsSocket_sendSuccessMessage]
+Thu Jun 06 09:23:07 2019/76252/125/ENTRY : End CAP 125, Delete file function
+Thu Jun 06 09:23:07 2019/76252/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Accept socket 752 in [rendezvous_request]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Accept Port:21472 in [rendezvous_request]
+Thu Jun 06 09:23:08 2019/0/0/INFO : Delete FMS context...
+Thu Jun 06 09:23:08 2019/76251/0/ENTRY : Open Contexts count: 2, Context: 76251 deleted
+Thu Jun 06 09:23:08 2019/0/0/INFO : Delete FMS context...
+Thu Jun 06 09:23:08 2019/76252/0/ENTRY : Open Contexts count: 1, Context: 76252 deleted
+Thu Jun 06 09:23:08 2019/76253/0/DEBUG : Bug 28914323: 1 thread before adding context
+Thu Jun 06 09:23:08 2019/0/0/INFO : Add FMS context...
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [SIO] Open listen socket 840 in [fvCreateServerPort]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [SIO] Listen Port:52771 in [fvCreateServerPort]
+Thu Jun 06 09:23:08 2019/0/0/INFO : SubTask created
+Thu Jun 06 09:23:08 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Thu Jun 06 09:23:08 2019/0/0/INFO : [RPC] 10.99.25.32:21472 / 128 / Thu Jun 06 09:23:08 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Accept socket 852 in [rendezvous_request]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Accept Port:21436 in [rendezvous_request]
+Thu Jun 06 09:23:08 2019/76254/0/DEBUG : Bug 28914323: 2 thread before adding context
+Thu Jun 06 09:23:08 2019/0/0/INFO : Add FMS context...
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [SIO] Open listen socket 956 in [fvCreateServerPort]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [SIO] Listen Port:52772 in [fvCreateServerPort]
+Thu Jun 06 09:23:08 2019/0/0/INFO : SubTask created
+Thu Jun 06 09:23:08 2019/0/0/INFO : [RPC] Statistics: [used:2]
+Thu Jun 06 09:23:08 2019/0/0/INFO : [RPC] 10.99.25.32:21472 / 128 / Thu Jun 06 09:23:08 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 09:23:08 2019/0/0/INFO : [RPC] 10.99.25.32:21436 / 128 / Thu Jun 06 09:23:08 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Close socket 752 in [svctcp_destroy]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Close RPC context for socket [752]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Close socket 852 in [svctcp_destroy]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Close RPC context for socket [852]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [SIO] Accept socket 760 in [fvServerSocket]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Create socket 840 in [clntudp_bufcreate]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [SIO] Accept socket 932 in [fvServerSocket]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Create socket 956 in [clntudp_bufcreate]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Close socket 840 in [clntudp_destroy]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Close socket 840 in [pmap_getport]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Create socket 840 in [clnttcp_create]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Close socket 956 in [clntudp_destroy]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Close socket 956 in [pmap_getport]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Create socket 956 in [clnttcp_create]
+Thu Jun 06 09:23:08 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Thu Jun 06 09:23:09 2019/0/0/INFO : RPC socket closed
+Thu Jun 06 09:23:09 2019/0/0/INFO : RPC socket closed
+Thu Jun 06 09:23:20 2019/76253/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Thu Jun 06 09:23:20 2019/76253/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 09:23:20 2019/76253/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 09:23:20 2019/76253/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Thu Jun 06 09:23:20 2019/0/0/INFO : Used transfer size <204810>
+Thu Jun 06 09:23:20 2019/76253/128/DEBUG : Bug 29466526: SocketOpen
+Thu Jun 06 09:23:20 2019/0/0/DEBUG : [SIO] Create socket 528 in [fvClientSocket]
+Thu Jun 06 09:23:20 2019/0/0/DEBUG : [SIO] Port:53439 in [fvClientSocket]
+Thu Jun 06 09:23:20 2019/76253/128/DEBUG : Bug 29466526: readFileMessage E:\edb_fms\gam_inv_nat_000/bv931559827.400
+Thu Jun 06 09:23:20 2019/76253/128/DEBUG : Bug 29466526: fvReadSocket socket:528
+
+Thu Jun 06 10:05:34 2019 ----- starting on gaisr0136:804257546
+
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+Thu Jun 06 10:52:29 2019/1870/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Thu Jun 06 10:52:29 2019/1870/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 10:52:29 2019/1870/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 10:52:29 2019/1870/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Thu Jun 06 10:52:29 2019/0/0/INFO : Used transfer size <204810>
+Thu Jun 06 10:52:29 2019/1870/128/DEBUG : Bug 29466526: SocketOpen
+Thu Jun 06 10:52:29 2019/0/0/DEBUG : [RPC] Close socket 944 in [clntudp_destroy]
+Thu Jun 06 10:52:29 2019/0/0/DEBUG : [RPC] Close socket 944 in [pmap_getport]
+Thu Jun 06 10:52:29 2019/0/0/DEBUG : [RPC] Create socket 944 in [clnttcp_create]
+Thu Jun 06 10:52:29 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Thu Jun 06 10:52:30 2019/0/0/DEBUG : [SIO] Create socket 1016 in [fvClientSocket]
+Thu Jun 06 10:52:30 2019/0/0/DEBUG : [SIO] Port:53037 in [fvClientSocket]
+Thu Jun 06 10:52:30 2019/1870/128/DEBUG : Bug 29466526: readFileMessage E:\edb_fms\gam_inv_nat_000/uh251559832.749
+Thu Jun 06 10:52:30 2019/1870/128/DEBUG : Bug 29466526: fvReadSocket socket:1016
+Thu Jun 06 10:52:30 2019/0/0/INFO : RPC socket closed
+Thu Jun 06 10:52:30 2019/1871/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Thu Jun 06 10:52:30 2019/1871/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 10:52:30 2019/1871/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 10:52:30 2019/1871/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Thu Jun 06 10:52:30 2019/0/0/INFO : Used transfer size <204810>
+Thu Jun 06 10:52:30 2019/1871/128/DEBUG : Bug 29466526: SocketOpen
+Thu Jun 06 10:52:30 2019/0/0/DEBUG : [SIO] Create socket 812 in [fvClientSocket]
+Thu Jun 06 10:52:30 2019/0/0/DEBUG : [SIO] Port:53040 in [fvClientSocket]
+Thu Jun 06 10:52:30 2019/1871/128/DEBUG : Bug 29466526: readFileMessage E:\edb_fms\gam_inv_nat_000/apa71559832.750
+Thu Jun 06 10:52:30 2019/1871/128/DEBUG : Bug 29466526: fvReadSocket socket:812
+Thu Jun 06 10:52:30 2019/0/0/INFO : Status: Read from socket [812] [152064 bytes] in 0.423075 seconds.
+Thu Jun 06 10:52:30 2019/1871/128/DEBUG : Bug 29466526:close stream descriptor
+Thu Jun 06 10:52:30 2019/0/0/DEBUG : Send control bytes: <152064>
+Thu Jun 06 10:52:30 2019/0/0/DEBUG : [SIO] Close socket 812 in [fvTransmitData]
+Thu Jun 06 10:52:30 2019/1871/128/DATA : transmitted 1 bytes of E:\edb_fms\gam_inv_nat_000/apa71559832.750
+Thu Jun 06 10:52:30 2019/1871/0/DEBUG : Bug 28914323: leave fms_fms_FileIn
+Thu Jun 06 10:52:30 2019/1871/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckIn
+Thu Jun 06 10:52:30 2019/0/0/INFO : Send file data to client (new filename = E:\edb_fms\gam_inv_nat_000/apa71559832.750)
+Thu Jun 06 10:52:30 2019/0/0/INFO : Send file data to client (file size = 152064)
+Thu Jun 06 10:52:30 2019/0/0/DEBUG : [SIO] Close socket 1020 in [FmsSocket_sendFileMessage]
+Thu Jun 06 10:52:30 2019/1871/128/ENTRY : End CAP 128, External file transfer function (DFM)
+Thu Jun 06 10:52:30 2019/1871/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Thu Jun 06 10:52:30 2019/0/0/INFO : Status: Read from socket [1016] [442368 bytes] in 0.688695 seconds.
+Thu Jun 06 10:52:30 2019/1870/128/DEBUG : Bug 29466526:close stream descriptor
+Thu Jun 06 10:52:30 2019/0/0/DEBUG : Send control bytes: <442368>
+Thu Jun 06 10:52:30 2019/0/0/DEBUG : [SIO] Close socket 1016 in [fvTransmitData]
+Thu Jun 06 10:52:30 2019/1870/128/DATA : transmitted 1 bytes of E:\edb_fms\gam_inv_nat_000/uh251559832.749
+Thu Jun 06 10:52:30 2019/1870/0/DEBUG : Bug 28914323: leave fms_fms_FileIn
+Thu Jun 06 10:52:30 2019/1870/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckIn
+Thu Jun 06 10:52:30 2019/0/0/INFO : Send file data to client (new filename = E:\edb_fms\gam_inv_nat_000/uh251559832.749)
+Thu Jun 06 10:52:30 2019/0/0/INFO : Send file data to client (file size = 442368)
+Thu Jun 06 10:52:30 2019/0/0/DEBUG : [SIO] Close socket 980 in [FmsSocket_sendFileMessage]
+Thu Jun 06 10:52:30 2019/1870/128/ENTRY : End CAP 128, External file transfer function (DFM)
+Thu Jun 06 10:52:30 2019/1870/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Accept socket 756 in [rendezvous_request]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Accept Port:21236 in [rendezvous_request]
+Thu Jun 06 10:52:31 2019/0/0/INFO : Delete FMS context...
+Thu Jun 06 10:52:31 2019/1871/0/ENTRY : Open Contexts count: 1, Context: 1871 deleted
+Thu Jun 06 10:52:31 2019/0/0/INFO : Delete FMS context...
+Thu Jun 06 10:52:31 2019/1870/0/ENTRY : Open Contexts count: 0, Context: 1870 deleted
+Thu Jun 06 10:52:31 2019/1872/0/DEBUG : Bug 28914323: 0 thread before adding context
+Thu Jun 06 10:52:31 2019/0/0/INFO : Add FMS context...
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [SIO] Open listen socket 844 in [fvCreateServerPort]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [SIO] Listen Port:53390 in [fvCreateServerPort]
+Thu Jun 06 10:52:31 2019/0/0/INFO : SubTask created
+Thu Jun 06 10:52:31 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Thu Jun 06 10:52:31 2019/0/0/INFO : [RPC] 10.99.25.32:21236 / 125 / Thu Jun 06 10:52:31 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Accept socket 812 in [rendezvous_request]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Accept Port:21033 in [rendezvous_request]
+Thu Jun 06 10:52:31 2019/1873/0/DEBUG : Bug 28914323: 1 thread before adding context
+Thu Jun 06 10:52:31 2019/0/0/INFO : Add FMS context...
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [SIO] Open listen socket 1020 in [fvCreateServerPort]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [SIO] Listen Port:53391 in [fvCreateServerPort]
+Thu Jun 06 10:52:31 2019/0/0/INFO : SubTask created
+Thu Jun 06 10:52:31 2019/0/0/INFO : [RPC] Statistics: [used:2]
+Thu Jun 06 10:52:31 2019/0/0/INFO : [RPC] 10.99.25.32:21236 / 125 / Thu Jun 06 10:52:31 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 10:52:31 2019/0/0/INFO : [RPC] 10.99.25.32:21033 / 125 / Thu Jun 06 10:52:31 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Close socket 756 in [svctcp_destroy]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Close RPC context for socket [756]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Close socket 812 in [svctcp_destroy]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Close RPC context for socket [812]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [SIO] Accept socket 644 in [fvServerSocket]
+Thu Jun 06 10:52:31 2019/1872/125/ENTRY : Begin CAP 125, Delete file function
+Thu Jun 06 10:52:31 2019/1872/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 10:52:31 2019/1872/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 10:52:31 2019/1872/125/DATA : file E:\edb_fms\gam_inv_nat_000/bu7c1559742.744 deleted
+Thu Jun 06 10:52:31 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [SIO] Close socket 644 in [FmsSocket_sendSuccessMessage]
+Thu Jun 06 10:52:31 2019/1872/125/ENTRY : End CAP 125, Delete file function
+Thu Jun 06 10:52:31 2019/1872/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [SIO] Accept socket 656 in [fvServerSocket]
+Thu Jun 06 10:52:31 2019/1873/125/ENTRY : Begin CAP 125, Delete file function
+Thu Jun 06 10:52:31 2019/1873/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 10:52:31 2019/1873/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 10:52:31 2019/1873/125/DATA : file E:\edb_fms\gam_inv_nat_000/bee21559740.259 deleted
+Thu Jun 06 10:52:31 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [SIO] Close socket 656 in [FmsSocket_sendSuccessMessage]
+Thu Jun 06 10:52:31 2019/1873/125/ENTRY : End CAP 125, Delete file function
+Thu Jun 06 10:52:31 2019/1873/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Accept socket 812 in [rendezvous_request]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Accept Port:21238 in [rendezvous_request]
+Thu Jun 06 10:52:31 2019/0/0/INFO : Delete FMS context...
+Thu Jun 06 10:52:31 2019/1872/0/ENTRY : Open Contexts count: 1, Context: 1872 deleted
+Thu Jun 06 10:52:31 2019/0/0/INFO : Delete FMS context...
+Thu Jun 06 10:52:31 2019/1873/0/ENTRY : Open Contexts count: 0, Context: 1873 deleted
+Thu Jun 06 10:52:31 2019/1874/0/DEBUG : Bug 28914323: 0 thread before adding context
+Thu Jun 06 10:52:31 2019/0/0/INFO : Add FMS context...
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [SIO] Open listen socket 756 in [fvCreateServerPort]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [SIO] Listen Port:53392 in [fvCreateServerPort]
+Thu Jun 06 10:52:31 2019/0/0/INFO : SubTask created
+Thu Jun 06 10:52:31 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Thu Jun 06 10:52:31 2019/0/0/INFO : [RPC] 10.99.25.32:21238 / 128 / Thu Jun 06 10:52:31 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Accept socket 1016 in [rendezvous_request]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Accept Port:21035 in [rendezvous_request]
+Thu Jun 06 10:52:31 2019/1875/0/DEBUG : Bug 28914323: 1 thread before adding context
+Thu Jun 06 10:52:31 2019/0/0/INFO : Add FMS context...
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [SIO] Open listen socket 980 in [fvCreateServerPort]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [SIO] Listen Port:53393 in [fvCreateServerPort]
+Thu Jun 06 10:52:31 2019/0/0/INFO : SubTask created
+Thu Jun 06 10:52:31 2019/0/0/INFO : [RPC] Statistics: [used:2]
+Thu Jun 06 10:52:31 2019/0/0/INFO : [RPC] 10.99.25.32:21238 / 128 / Thu Jun 06 10:52:31 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 10:52:31 2019/0/0/INFO : [RPC] 10.99.25.32:21035 / 128 / Thu Jun 06 10:52:31 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Close socket 812 in [svctcp_destroy]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Close RPC context for socket [812]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Close socket 1016 in [svctcp_destroy]
+Thu Jun 06 10:52:31 2019/0/0/DEBUG : [RPC] Close RPC context for socket [1016]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [SIO] Accept socket 1016 in [fvServerSocket]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [RPC] Create socket 756 in [clntudp_bufcreate]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [SIO] Accept socket 704 in [fvServerSocket]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [RPC] Create socket 980 in [clntudp_bufcreate]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [RPC] Close socket 756 in [clntudp_destroy]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [RPC] Close socket 756 in [pmap_getport]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [RPC] Create socket 756 in [clnttcp_create]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [RPC] Close socket 980 in [clntudp_destroy]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [RPC] Close socket 980 in [pmap_getport]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [RPC] Create socket 980 in [clnttcp_create]
+Thu Jun 06 10:52:32 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Thu Jun 06 10:52:32 2019/0/0/INFO : RPC socket closed
+Thu Jun 06 10:52:32 2019/0/0/INFO : RPC socket closed
+Thu Jun 06 10:52:32 2019/1874/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Thu Jun 06 10:52:32 2019/1874/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 10:52:32 2019/1874/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 10:52:32 2019/1874/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Thu Jun 06 10:52:32 2019/0/0/INFO : Used transfer size <204810>
+Thu Jun 06 10:52:32 2019/1874/128/DEBUG : Bug 29466526: SocketOpen
+
+Thu Jun 06 10:53:04 2019 ----- starting on gaisr0136:804257546
+
+FileServer for Agile e6.2.1.0300
+Copyright (c) 1995, 2017, Oracle and/or its affiliates. All rights reserved.
+Version Agile e6.2.1.0300 assembled at Apr  9 2019 10:49:42
+
+
+------------------------------------------------------------------------------------------------------------
+
+
+Thu Jun 06 11:11:16 2019/1329/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Thu Jun 06 11:11:16 2019/1329/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 11:11:16 2019/1329/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 11:11:16 2019/1329/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Thu Jun 06 11:11:16 2019/0/0/INFO : Used transfer size <204810>
+Thu Jun 06 11:11:16 2019/1329/128/DEBUG : Bug 29466526: SocketOpen
+Thu Jun 06 11:11:16 2019/0/0/DEBUG : [SIO] Create socket 724 in [fvClientSocket]
+Thu Jun 06 11:11:16 2019/0/0/DEBUG : [SIO] Port:53501 in [fvClientSocket]
+Thu Jun 06 11:11:16 2019/1329/128/DEBUG : Bug 29466526: readFileMessage E:\edb_fms\gam_inv_pdf_000/klc21559833.876
+Thu Jun 06 11:11:16 2019/1329/128/DEBUG : Bug 29466526: fvReadSocket socket:724
+Thu Jun 06 11:11:16 2019/0/0/INFO : Status: Read from socket [632] [717824 bytes] in 2.348782 seconds.
+Thu Jun 06 11:11:16 2019/1327/128/DEBUG : Bug 29466526:close stream descriptor
+Thu Jun 06 11:11:16 2019/0/0/DEBUG : Send control bytes: <717824>
+Thu Jun 06 11:11:16 2019/0/0/DEBUG : [SIO] Close socket 632 in [fvTransmitData]
+Thu Jun 06 11:11:16 2019/1327/128/DATA : transmitted 1 bytes of E:\edb_fms\gam_inv_nat_000/vo011559833.874
+Thu Jun 06 11:11:16 2019/1327/0/DEBUG : Bug 28914323: leave fms_fms_FileIn
+Thu Jun 06 11:11:16 2019/1327/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckIn
+Thu Jun 06 11:11:16 2019/0/0/INFO : Send file data to client (new filename = E:\edb_fms\gam_inv_nat_000/vo011559833.874)
+Thu Jun 06 11:11:16 2019/0/0/INFO : Send file data to client (file size = 717824)
+Thu Jun 06 11:11:16 2019/0/0/DEBUG : [SIO] Close socket 768 in [FmsSocket_sendFileMessage]
+Thu Jun 06 11:11:16 2019/1327/128/ENTRY : End CAP 128, External file transfer function (DFM)
+Thu Jun 06 11:11:16 2019/1327/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Thu Jun 06 11:11:16 2019/0/0/INFO : Status: Read from socket [724] [141717 bytes] in 0.359322 seconds.
+Thu Jun 06 11:11:16 2019/1329/128/DEBUG : Bug 29466526:close stream descriptor
+Thu Jun 06 11:11:16 2019/0/0/DEBUG : Send control bytes: <141717>
+Thu Jun 06 11:11:16 2019/0/0/DEBUG : [SIO] Close socket 724 in [fvTransmitData]
+Thu Jun 06 11:11:16 2019/1329/128/DATA : transmitted 1 bytes of E:\edb_fms\gam_inv_pdf_000/klc21559833.876
+Thu Jun 06 11:11:16 2019/1329/0/DEBUG : Bug 28914323: leave fms_fms_FileIn
+Thu Jun 06 11:11:16 2019/1329/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckIn
+Thu Jun 06 11:11:16 2019/0/0/INFO : Send file data to client (new filename = E:\edb_fms\gam_inv_pdf_000/klc21559833.876)
+Thu Jun 06 11:11:16 2019/0/0/INFO : Send file data to client (file size = 141717)
+Thu Jun 06 11:11:16 2019/0/0/DEBUG : [SIO] Close socket 772 in [FmsSocket_sendFileMessage]
+Thu Jun 06 11:11:16 2019/1329/128/ENTRY : End CAP 128, External file transfer function (DFM)
+Thu Jun 06 11:11:16 2019/1329/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Accept socket 792 in [rendezvous_request]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Accept Port:21282 in [rendezvous_request]
+Thu Jun 06 11:11:17 2019/0/0/INFO : Delete FMS context...
+Thu Jun 06 11:11:17 2019/1327/0/ENTRY : Open Contexts count: 1, Context: 1327 deleted
+Thu Jun 06 11:11:17 2019/0/0/INFO : Delete FMS context...
+Thu Jun 06 11:11:17 2019/1329/0/ENTRY : Open Contexts count: 0, Context: 1329 deleted
+Thu Jun 06 11:11:17 2019/1330/0/DEBUG : Bug 28914323: 0 thread before adding context
+Thu Jun 06 11:11:17 2019/0/0/INFO : Add FMS context...
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Open listen socket 548 in [fvCreateServerPort]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Listen Port:52848 in [fvCreateServerPort]
+Thu Jun 06 11:11:17 2019/0/0/INFO : SubTask created
+Thu Jun 06 11:11:17 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Thu Jun 06 11:11:17 2019/0/0/INFO : [RPC] 10.99.25.32:21282 / 125 / Thu Jun 06 11:11:17 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Accept socket 1020 in [rendezvous_request]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Accept Port:21106 in [rendezvous_request]
+Thu Jun 06 11:11:17 2019/1331/0/DEBUG : Bug 28914323: 1 thread before adding context
+Thu Jun 06 11:11:17 2019/0/0/INFO : Add FMS context...
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Open listen socket 540 in [fvCreateServerPort]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Listen Port:52849 in [fvCreateServerPort]
+Thu Jun 06 11:11:17 2019/0/0/INFO : SubTask created
+Thu Jun 06 11:11:17 2019/0/0/INFO : [RPC] Statistics: [used:2]
+Thu Jun 06 11:11:17 2019/0/0/INFO : [RPC] 10.99.25.32:21282 / 125 / Thu Jun 06 11:11:17 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 11:11:17 2019/0/0/INFO : [RPC] 10.99.25.32:21106 / 125 / Thu Jun 06 11:11:17 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Close socket 792 in [svctcp_destroy]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Close RPC context for socket [792]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Close socket 1020 in [svctcp_destroy]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Close RPC context for socket [1020]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Accept socket 1020 in [fvServerSocket]
+Thu Jun 06 11:11:17 2019/1330/125/ENTRY : Begin CAP 125, Delete file function
+Thu Jun 06 11:11:17 2019/1330/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 11:11:17 2019/1330/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 11:11:17 2019/1330/125/DATA : file E:\edb_fms\gam_inv_nat_000/gv391559740.279 deleted
+Thu Jun 06 11:11:17 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Close socket 1020 in [FmsSocket_sendSuccessMessage]
+Thu Jun 06 11:11:17 2019/1330/125/ENTRY : End CAP 125, Delete file function
+Thu Jun 06 11:11:17 2019/1330/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Accept socket 580 in [fvServerSocket]
+Thu Jun 06 11:11:17 2019/1331/125/ENTRY : Begin CAP 125, Delete file function
+Thu Jun 06 11:11:17 2019/1331/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 11:11:17 2019/1331/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 11:11:17 2019/1331/125/DATA : file E:\edb_fms\gam_inv_pdf_000/aga61559742.939 deleted
+Thu Jun 06 11:11:17 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Close socket 580 in [FmsSocket_sendSuccessMessage]
+Thu Jun 06 11:11:17 2019/1331/125/ENTRY : End CAP 125, Delete file function
+Thu Jun 06 11:11:17 2019/1331/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Accept socket 984 in [rendezvous_request]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Accept Port:21284 in [rendezvous_request]
+Thu Jun 06 11:11:17 2019/0/0/INFO : Delete FMS context...
+Thu Jun 06 11:11:17 2019/1330/0/ENTRY : Open Contexts count: 1, Context: 1330 deleted
+Thu Jun 06 11:11:17 2019/0/0/INFO : Delete FMS context...
+Thu Jun 06 11:11:17 2019/1331/0/ENTRY : Open Contexts count: 0, Context: 1331 deleted
+Thu Jun 06 11:11:17 2019/1332/0/DEBUG : Bug 28914323: 0 thread before adding context
+Thu Jun 06 11:11:17 2019/0/0/INFO : Add FMS context...
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Open listen socket 756 in [fvCreateServerPort]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Listen Port:52850 in [fvCreateServerPort]
+Thu Jun 06 11:11:17 2019/0/0/INFO : SubTask created
+Thu Jun 06 11:11:17 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Thu Jun 06 11:11:17 2019/0/0/INFO : [RPC] 10.99.25.32:21284 / 128 / Thu Jun 06 11:11:17 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Accept socket 1020 in [rendezvous_request]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Accept Port:21108 in [rendezvous_request]
+Thu Jun 06 11:11:17 2019/1333/0/DEBUG : Bug 28914323: 1 thread before adding context
+Thu Jun 06 11:11:17 2019/0/0/INFO : Add FMS context...
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Open listen socket 548 in [fvCreateServerPort]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Listen Port:52851 in [fvCreateServerPort]
+Thu Jun 06 11:11:17 2019/0/0/INFO : SubTask created
+Thu Jun 06 11:11:17 2019/0/0/INFO : [RPC] Statistics: [used:2]
+Thu Jun 06 11:11:17 2019/0/0/INFO : [RPC] 10.99.25.32:21284 / 128 / Thu Jun 06 11:11:17 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 11:11:17 2019/0/0/INFO : [RPC] 10.99.25.32:21108 / 128 / Thu Jun 06 11:11:17 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Close socket 984 in [svctcp_destroy]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Close RPC context for socket [984]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Close socket 1020 in [svctcp_destroy]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Close RPC context for socket [1020]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Accept socket 768 in [fvServerSocket]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Create socket 756 in [clntudp_bufcreate]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [SIO] Accept socket 360 in [fvServerSocket]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Create socket 548 in [clntudp_bufcreate]
+Thu Jun 06 11:11:17 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Thu Jun 06 11:11:18 2019/0/0/DEBUG : [RPC] Close socket 756 in [clntudp_destroy]
+Thu Jun 06 11:11:18 2019/0/0/DEBUG : [RPC] Close socket 756 in [pmap_getport]
+Thu Jun 06 11:11:18 2019/0/0/DEBUG : [RPC] Create socket 756 in [clnttcp_create]
+Thu Jun 06 11:11:18 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Thu Jun 06 11:11:18 2019/0/0/DEBUG : [RPC] Close socket 548 in [clntudp_destroy]
+Thu Jun 06 11:11:18 2019/0/0/DEBUG : [RPC] Close socket 548 in [pmap_getport]
+Thu Jun 06 11:11:18 2019/0/0/DEBUG : [RPC] Create socket 548 in [clnttcp_create]
+Thu Jun 06 11:11:18 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Thu Jun 06 11:11:18 2019/0/0/INFO : RPC socket closed
+Thu Jun 06 11:11:18 2019/0/0/INFO : RPC socket closed
+Thu Jun 06 11:11:18 2019/1332/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Thu Jun 06 11:11:18 2019/1332/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Thu Jun 06 11:11:18 2019/1332/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Thu Jun 06 11:11:18 2019/1332/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Thu Jun 06 11:11:18 2019/0/0/INFO : Used transfer size <204810>
+Thu Jun 06 11:11:18 2019/1332/128/DEBUG : Bug 29466526: SocketOpen
+Thu Jun 06 11:11:18 2019/0/0/DEBUG : [SIO] Create socket 524 in [fvClientSocket]
+Thu Jun 06 11:11:18 2019/0/0/DEBUG : [SIO] Port:53513 in [fvClientSocket]
+
+Thu Jun 06 11:12:04 2019 ----- starting on gaisr0136:804257546
+
+FileServer for Agile e6.2.1.0300
+Copyright (c) 1995, 2017, Oracle and/or its affiliates. All rights reserved.
+Version Agile e6.2.1.0300 assembled at Apr  9 2019 10:49:42
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+这个明显不一样是完整结束线程的
+Fri Jun 07 06:59:43 2019/420/124/ENTRY : Begin CAP 124, Check-Out file function
+Fri Jun 07 06:59:43 2019/420/124/DATA : Request from User: zzpmtplmcadim, Host: GAIPC0284
+Fri Jun 07 06:59:43 2019/420/124/DATA : PLM Info: <USER:FMS_BATCH> <USER-ID:1864> <GROUP:CONSTRUCTEURS> <GROUP-ID:1201>
+Fri Jun 07 06:59:43 2019/0/0/INFO : Used transfer size <10250>
+Fri Jun 07 06:59:43 2019/420/124/DEBUG : Bug 29466526: SocketOpen
+Fri Jun 07 06:59:43 2019/0/0/DEBUG : [SIO] Accept socket 908 in [fvServerSocket]
+Fri Jun 07 06:59:43 2019/0/0/DEBUG : Data transfered.
+Fri Jun 07 06:59:43 2019/0/0/INFO : Status: Write to socket [908] [16892 bytes] in 0.001002 seconds.
+Fri Jun 07 06:59:43 2019/420/124/DEBUG : Bug 29466526:close stream descriptor
+Fri Jun 07 06:59:43 2019/0/0/DEBUG : [SIO] Close socket 908 in [fvTransmitData]
+Fri Jun 07 06:59:43 2019/420/124/DATA : transmitted 16892 bytes of E:\edb_fms\gam_scan_pdf_025/fb011547242.628
+Fri Jun 07 06:59:43 2019/420/0/DEBUG : Bug 28914323: mark1 for fms_vault_FileTransmit
+Fri Jun 07 06:59:43 2019/420/0/DEBUG : Bug 28914323: leave fms_vault_FileTransmit
+Fri Jun 07 06:59:43 2019/420/0/DEBUG : Bug 28914323: leave fms_fms_FileOut
+Fri Jun 07 06:59:43 2019/420/0/DEBUG : Bug 28914323: mark1 for fms_vault_proc_CheckOut
+Fri Jun 07 06:59:43 2019/420/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckOut
+Fri Jun 07 06:59:43 2019/420/124/ENTRY : End CAP 124, Check-Out file function
+Fri Jun 07 06:59:43 2019/420/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Fri Jun 07 07:01:43 2019/0/0/DEBUG : [RPC] Accept socket 780 in [rendezvous_request]
+Fri Jun 07 07:01:43 2019/0/0/DEBUG : [RPC] Accept Port:21361 in [rendezvous_request]
+Fri Jun 07 07:01:43 2019/0/0/INFO : Delete FMS context...
+Fri Jun 07 07:01:43 2019/420/0/ENTRY : Open Contexts count: 18, Context: 420 deleted
+Fri Jun 07 07:01:43 2019/421/0/DEBUG : Bug 28914323: 18 thread before adding context
+Fri Jun 07 07:01:43 2019/0/0/INFO : Add FMS context...
+Fri Jun 07 07:01:43 2019/0/0/DEBUG : [SIO] Open listen socket 972 in [fvCreateServerPort]
+Fri Jun 07 07:01:43 2019/0/0/DEBUG : [SIO] Listen Port:52939 in [fvCreateServerPort]
+Fri Jun 07 07:01:43 2019/0/0/INFO : SubTask created
+Fri Jun 07 07:01:43 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Fri Jun 07 07:01:43 2019/0/0/INFO : [RPC] 10.32.108.79:21361 / 124 / Fri Jun 07 07:01:43 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:FMS_BATCH> <USER-ID:1864> <GROUP:CONSTRUCTEURS> <GROUP-ID:1201> 
+Fri Jun 07 07:01:43 2019/0/0/DEBUG : [RPC] Close socket 780 in [svctcp_destroy]
+Fri Jun 07 07:01:43 2019/0/0/DEBUG : [RPC] Close RPC context for socket [780]
+Fri Jun 07 07:01:44 2019/421/124/ENTRY : Begin CAP 124, Check-Out file function
+Fri Jun 07 07:01:44 2019/421/124/DATA : Request from User: zzpmtplmcadim, Host: GAIPC0284
+Fri Jun 07 07:01:44 2019/421/124/DATA : PLM Info: <USER:FMS_BATCH> <USER-ID:1864> <GROUP:CONSTRUCTEURS> <GROUP-ID:1201>
+Fri Jun 07 07:01:44 2019/0/0/INFO : Used transfer size <10250>
+Fri Jun 07 07:01:44 2019/421/124/DEBUG : Bug 29466526: SocketOpen
+Fri Jun 07 07:01:44 2019/0/0/DEBUG : [SIO] Accept socket 888 in [fvServerSocket]
+Fri Jun 07 07:01:44 2019/0/0/DEBUG : Data transfered.
+Fri Jun 07 07:01:44 2019/0/0/INFO : Status: Write to socket [888] [16892 bytes] in 0.001004 seconds.
+Fri Jun 07 07:01:44 2019/421/124/DEBUG : Bug 29466526:close stream descriptor
+Fri Jun 07 07:01:44 2019/0/0/DEBUG : [SIO] Close socket 888 in [fvTransmitData]
+Fri Jun 07 07:01:44 2019/421/124/DATA : transmitted 16892 bytes of E:\edb_fms\gam_scan_pdf_025/fb011547242.628
+Fri Jun 07 07:01:44 2019/421/0/DEBUG : Bug 28914323: mark1 for fms_vault_FileTransmit
+Fri Jun 07 07:01:44 2019/421/0/DEBUG : Bug 28914323: leave fms_vault_FileTransmit
+Fri Jun 07 07:01:44 2019/421/0/DEBUG : Bug 28914323: leave fms_fms_FileOut
+Fri Jun 07 07:01:44 2019/421/0/DEBUG : Bug 28914323: mark1 for fms_vault_proc_CheckOut
+Fri Jun 07 07:01:44 2019/421/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckOut
+Fri Jun 07 07:01:44 2019/421/124/ENTRY : End CAP 124, Check-Out file function
+Fri Jun 07 07:01:44 2019/421/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Fri Jun 07 07:03:43 2019/0/0/DEBUG : [RPC] Accept socket 996 in [rendezvous_request]
+Fri Jun 07 07:03:43 2019/0/0/DEBUG : [RPC] Accept Port:21358 in [rendezvous_request]
+Fri Jun 07 07:03:43 2019/0/0/INFO : Delete FMS context...
+Fri Jun 07 07:03:43 2019/421/0/ENTRY : Open Contexts count: 18, Context: 421 deleted
+Fri Jun 07 07:03:43 2019/422/0/DEBUG : Bug 28914323: 18 thread before adding context
+Fri Jun 07 07:03:43 2019/0/0/INFO : Add FMS context...
+Fri Jun 07 07:03:43 2019/0/0/DEBUG : [SIO] Open listen socket 876 in [fvCreateServerPort]
+Fri Jun 07 07:03:43 2019/0/0/DEBUG : [SIO] Listen Port:52940 in [fvCreateServerPort]
+Fri Jun 07 07:03:43 2019/0/0/INFO : SubTask created
+Fri Jun 07 07:03:43 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Fri Jun 07 07:03:43 2019/0/0/INFO : [RPC] 10.32.108.79:21358 / 124 / Fri Jun 07 07:03:43 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:FMS_BATCH> <USER-ID:1864> <GROUP:CONSTRUCTEURS> <GROUP-ID:1201> 
+Fri Jun 07 07:03:43 2019/0/0/DEBUG : [RPC] Close socket 996 in [svctcp_destroy]
+Fri Jun 07 07:03:43 2019/0/0/DEBUG : [RPC] Close RPC context for socket [996]
+Fri Jun 07 07:03:43 2019/422/124/ENTRY : Begin CAP 124, Check-Out file function
+Fri Jun 07 07:03:43 2019/422/124/DATA : Request from User: zzpmtplmcadim, Host: GAIPC0284
+Fri Jun 07 07:03:43 2019/422/124/DATA : PLM Info: <USER:FMS_BATCH> <USER-ID:1864> <GROUP:CONSTRUCTEURS> <GROUP-ID:1201>
+Fri Jun 07 07:03:43 2019/0/0/INFO : Used transfer size <10250>
+Fri Jun 07 07:03:43 2019/422/124/DEBUG : Bug 29466526: SocketOpen
+Fri Jun 07 07:03:43 2019/0/0/DEBUG : [SIO] Accept socket 1008 in [fvServerSocket]
+Fri Jun 07 07:03:43 2019/0/0/DEBUG : Data transfered.
+Fri Jun 07 07:03:43 2019/0/0/INFO : Status: Write to socket [1008] [16892 bytes] in 0.001000 seconds.
+Fri Jun 07 07:03:43 2019/422/124/DEBUG : Bug 29466526:close stream descriptor
+Fri Jun 07 07:03:43 2019/0/0/DEBUG : [SIO] Close socket 1008 in [fvTransmitData]
+Fri Jun 07 07:03:43 2019/422/124/DATA : transmitted 16892 bytes of E:\edb_fms\gam_scan_pdf_025/fb011547242.628
+Fri Jun 07 07:03:43 2019/422/0/DEBUG : Bug 28914323: mark1 for fms_vault_FileTransmit
+Fri Jun 07 07:03:43 2019/422/0/DEBUG : Bug 28914323: leave fms_vault_FileTransmit
+Fri Jun 07 07:03:43 2019/422/0/DEBUG : Bug 28914323: leave fms_fms_FileOut
+Fri Jun 07 07:03:43 2019/422/0/DEBUG : Bug 28914323: mark1 for fms_vault_proc_CheckOut
+Fri Jun 07 07:03:43 2019/422/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckOut
+Fri Jun 07 07:03:43 2019/422/124/ENTRY : End CAP 124, Check-Out file function
+Fri Jun 07 07:03:43 2019/422/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Fri Jun 07 07:04:41 2019/0/0/DEBUG : [RPC] Accept socket 996 in [rendezvous_request]
+Fri Jun 07 07:04:41 2019/0/0/DEBUG : [RPC] Accept Port:21023 in [rendezvous_request]
+Fri Jun 07 07:04:41 2019/0/0/INFO : Delete FMS context...
+Fri Jun 07 07:04:41 2019/422/0/ENTRY : Open Contexts count: 18, Context: 422 deleted
+Fri Jun 07 07:04:41 2019/423/0/DEBUG : Bug 28914323: 18 thread before adding context
+Fri Jun 07 07:04:41 2019/0/0/INFO : Add FMS context...
+Fri Jun 07 07:04:41 2019/0/0/DEBUG : [SIO] Open listen socket 888 in [fvCreateServerPort]
+Fri Jun 07 07:04:41 2019/0/0/DEBUG : [SIO] Listen Port:52941 in [fvCreateServerPort]
+Fri Jun 07 07:04:41 2019/0/0/INFO : SubTask created
+Fri Jun 07 07:04:41 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Fri Jun 07 07:04:41 2019/0/0/INFO : [RPC] 10.99.25.32:21023 / 125 / Fri Jun 07 07:04:41 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Fri Jun 07 07:04:41 2019/0/0/DEBUG : [RPC] Close socket 996 in [svctcp_destroy]
+Fri Jun 07 07:04:41 2019/0/0/DEBUG : [RPC] Close RPC context for socket [996]
+Fri Jun 07 07:04:42 2019/0/0/DEBUG : [SIO] Accept socket 932 in [fvServerSocket]
+Fri Jun 07 07:04:42 2019/423/125/ENTRY : Begin CAP 125, Delete file function
+Fri Jun 07 07:04:42 2019/423/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Fri Jun 07 07:04:42 2019/423/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Fri Jun 07 07:04:42 2019/423/125/DATA : file E:\edb_fms\gam_inv_pdf_000/dd241559744.582 deleted
+Fri Jun 07 07:04:42 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Fri Jun 07 07:04:42 2019/0/0/DEBUG : [SIO] Close socket 932 in [FmsSocket_sendSuccessMessage]
+Fri Jun 07 07:04:42 2019/423/125/ENTRY : End CAP 125, Delete file function
+Fri Jun 07 07:04:42 2019/423/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Fri Jun 07 07:04:42 2019/0/0/DEBUG : [RPC] Accept socket 996 in [rendezvous_request]
+Fri Jun 07 07:04:42 2019/0/0/DEBUG : [RPC] Accept Port:21025 in [rendezvous_request]
+Fri Jun 07 07:04:42 2019/0/0/INFO : Delete FMS context...
+Fri Jun 07 07:04:42 2019/423/0/ENTRY : Open Contexts count: 18, Context: 423 deleted
+Fri Jun 07 07:04:42 2019/424/0/DEBUG : Bug 28914323: 18 thread before adding context
+Fri Jun 07 07:04:42 2019/0/0/INFO : Add FMS context...
+Fri Jun 07 07:04:42 2019/0/0/DEBUG : [SIO] Open listen socket 780 in [fvCreateServerPort]
+Fri Jun 07 07:04:42 2019/0/0/DEBUG : [SIO] Listen Port:52942 in [fvCreateServerPort]
+Fri Jun 07 07:04:42 2019/0/0/INFO : SubTask created
+Fri Jun 07 07:04:42 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Fri Jun 07 07:04:42 2019/0/0/INFO : [RPC] 10.99.25.32:21025 / 128 / Fri Jun 07 07:04:42 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Fri Jun 07 07:04:42 2019/0/0/DEBUG : [RPC] Close socket 996 in [svctcp_destroy]
+Fri Jun 07 07:04:42 2019/0/0/DEBUG : [RPC] Close RPC context for socket [996]
+Fri Jun 07 07:04:43 2019/0/0/DEBUG : [SIO] Accept socket 984 in [fvServerSocket]
+Fri Jun 07 07:04:43 2019/0/0/DEBUG : [RPC] Create socket 780 in [clntudp_bufcreate]
+Fri Jun 07 07:04:43 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Fri Jun 07 07:04:43 2019/0/0/DEBUG : [RPC] Close socket 780 in [clntudp_destroy]
+Fri Jun 07 07:04:43 2019/0/0/DEBUG : [RPC] Close socket 780 in [pmap_getport]
+Fri Jun 07 07:04:43 2019/0/0/DEBUG : [RPC] Create socket 780 in [clnttcp_create]
+Fri Jun 07 07:04:43 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Fri Jun 07 07:04:43 2019/0/0/INFO : RPC socket closed
+Fri Jun 07 07:05:43 2019/0/0/DEBUG : [RPC] Accept socket 996 in [rendezvous_request]
+Fri Jun 07 07:05:43 2019/0/0/DEBUG : [RPC] Accept Port:21059 in [rendezvous_request]
+Fri Jun 07 07:05:43 2019/425/0/DEBUG : Bug 28914323: 19 thread before adding context
+Fri Jun 07 07:05:43 2019/0/0/INFO : Add FMS context...
+Fri Jun 07 07:05:43 2019/0/0/DEBUG : [SIO] Open listen socket 972 in [fvCreateServerPort]
+Fri Jun 07 07:05:43 2019/0/0/DEBUG : [SIO] Listen Port:52943 in [fvCreateServerPort]
+Fri Jun 07 07:05:43 2019/0/0/INFO : SubTask created
+Fri Jun 07 07:05:43 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Fri Jun 07 07:05:43 2019/0/0/INFO : [RPC] 10.32.108.79:21059 / 124 / Fri Jun 07 07:05:43 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:FMS_BATCH> <USER-ID:1864> <GROUP:CONSTRUCTEURS> <GROUP-ID:1201> 
+Fri Jun 07 07:05:43 2019/0/0/DEBUG : [RPC] Close socket 996 in [svctcp_destroy]
+Fri Jun 07 07:05:43 2019/0/0/DEBUG : [RPC] Close RPC context for socket [996]
+Fri Jun 07 07:05:44 2019/425/124/ENTRY : Begin CAP 124, Check-Out file function
+Fri Jun 07 07:05:44 2019/425/124/DATA : Request from User: zzpmtplmcadim, Host: GAIPC0284
+Fri Jun 07 07:05:44 2019/425/124/DATA : PLM Info: <USER:FMS_BATCH> <USER-ID:1864> <GROUP:CONSTRUCTEURS> <GROUP-ID:1201>
+Fri Jun 07 07:05:44 2019/0/0/INFO : Used transfer size <10250>
+Fri Jun 07 07:05:44 2019/425/124/DEBUG : Bug 29466526: SocketOpen
+Fri Jun 07 07:05:44 2019/0/0/DEBUG : [SIO] Accept socket 1008 in [fvServerSocket]
+Fri Jun 07 07:05:44 2019/0/0/DEBUG : Data transfered.
+Fri Jun 07 07:05:44 2019/0/0/INFO : Status: Write to socket [1008] [16892 bytes] in 0.001004 seconds.
+Fri Jun 07 07:05:44 2019/425/124/DEBUG : Bug 29466526:close stream descriptor
+Fri Jun 07 07:05:44 2019/0/0/DEBUG : [SIO] Close socket 1008 in [fvTransmitData]
+Fri Jun 07 07:05:44 2019/425/124/DATA : transmitted 16892 bytes of E:\edb_fms\gam_scan_pdf_025/fb011547242.628
+Fri Jun 07 07:05:44 2019/425/0/DEBUG : Bug 28914323: mark1 for fms_vault_FileTransmit
+Fri Jun 07 07:05:44 2019/425/0/DEBUG : Bug 28914323: leave fms_vault_FileTransmit
+Fri Jun 07 07:05:44 2019/425/0/DEBUG : Bug 28914323: leave fms_fms_FileOut
+Fri Jun 07 07:05:44 2019/425/0/DEBUG : Bug 28914323: mark1 for fms_vault_proc_CheckOut
+Fri Jun 07 07:05:44 2019/425/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckOut
+Fri Jun 07 07:05:44 2019/425/124/ENTRY : End CAP 124, Check-Out file function
+Fri Jun 07 07:05:44 2019/425/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+
+Fri Jun 07 07:07:23 2019 ----- starting on gaisr0136:804257546
+
+FileServer for Agile e6.2.1.0300
+Copyright (c) 1995, 2017, Oracle and/or its affiliates. All rights reserved.
+Version Agile e6.2.1.0300 assembled at Apr  9 2019 10:49:42
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+Tue Jun 11 13:08:59 2019/36673/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Tue Jun 11 13:08:59 2019/36673/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Tue Jun 11 13:08:59 2019/36673/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Tue Jun 11 13:08:59 2019/36673/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Tue Jun 11 13:08:59 2019/0/0/INFO : Used transfer size <204810>
+Tue Jun 11 13:08:59 2019/36673/128/DEBUG : Bug 29466526: SocketOpen
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [RPC] Accept socket 800 in [rendezvous_request]
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [RPC] Accept Port:21018 in [rendezvous_request]
+Tue Jun 11 13:08:59 2019/0/0/INFO : Delete FMS context...
+Tue Jun 11 13:08:59 2019/36671/0/ENTRY : Open Contexts count: 2, Context: 36671 deleted
+Tue Jun 11 13:08:59 2019/0/0/INFO : Delete FMS context...
+Tue Jun 11 13:08:59 2019/36670/0/ENTRY : Open Contexts count: 1, Context: 36670 deleted
+Tue Jun 11 13:08:59 2019/36674/0/DEBUG : Bug 28914323: 1 thread before adding context
+Tue Jun 11 13:08:59 2019/0/0/INFO : Add FMS context...
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [SIO] Open listen socket 708 in [fvCreateServerPort]
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [SIO] Listen Port:53192 in [fvCreateServerPort]
+Tue Jun 11 13:08:59 2019/0/0/INFO : SubTask created
+Tue Jun 11 13:08:59 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Tue Jun 11 13:08:59 2019/0/0/INFO : [RPC] 10.99.25.32:21018 / 125 / Tue Jun 11 13:08:59 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [RPC] Accept socket 796 in [rendezvous_request]
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [RPC] Accept Port:21281 in [rendezvous_request]
+Tue Jun 11 13:08:59 2019/36675/0/DEBUG : Bug 28914323: 2 thread before adding context
+Tue Jun 11 13:08:59 2019/0/0/INFO : Add FMS context...
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [SIO] Open listen socket 940 in [fvCreateServerPort]
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [SIO] Listen Port:53193 in [fvCreateServerPort]
+Tue Jun 11 13:08:59 2019/0/0/INFO : SubTask created
+Tue Jun 11 13:08:59 2019/0/0/INFO : [RPC] Statistics: [used:2]
+Tue Jun 11 13:08:59 2019/0/0/INFO : [RPC] 10.99.25.32:21281 / 125 / Tue Jun 11 13:08:59 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 13:08:59 2019/0/0/INFO : [RPC] 10.99.25.32:21018 / 125 / Tue Jun 11 13:08:59 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [SIO] Create socket 996 in [fvClientSocket]
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [SIO] Port:53435 in [fvClientSocket]
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [RPC] Close socket 800 in [svctcp_destroy]
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [RPC] Close RPC context for socket [800]
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [RPC] Close socket 796 in [svctcp_destroy]
+Tue Jun 11 13:08:59 2019/0/0/DEBUG : [RPC] Close RPC context for socket [796]
+Tue Jun 11 13:08:59 2019/36673/128/DEBUG : Bug 29466526: readFileMessage E:\edb_fms\gam_inv_nat_000/pnf41560272.939
+Tue Jun 11 13:08:59 2019/36673/128/DEBUG : Bug 29466526: fvReadSocket socket:996
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [SIO] Accept socket 684 in [fvServerSocket]
+Tue Jun 11 13:09:00 2019/36674/125/ENTRY : Begin CAP 125, Delete file function
+Tue Jun 11 13:09:00 2019/36674/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Tue Jun 11 13:09:00 2019/36674/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Tue Jun 11 13:09:00 2019/36674/125/DATA : file E:\edb_fms\gam_inv_nat_000/fd3a1560220.602 deleted
+Tue Jun 11 13:09:00 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [SIO] Close socket 684 in [FmsSocket_sendSuccessMessage]
+Tue Jun 11 13:09:00 2019/36674/125/ENTRY : End CAP 125, Delete file function
+Tue Jun 11 13:09:00 2019/36674/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [SIO] Accept socket 548 in [fvServerSocket]
+Tue Jun 11 13:09:00 2019/36675/125/ENTRY : Begin CAP 125, Delete file function
+Tue Jun 11 13:09:00 2019/36675/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Tue Jun 11 13:09:00 2019/36675/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Tue Jun 11 13:09:00 2019/36675/125/DATA : file E:\edb_fms\gam_inv_nat_000/sw081560220.749 deleted
+Tue Jun 11 13:09:00 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [SIO] Close socket 548 in [FmsSocket_sendSuccessMessage]
+Tue Jun 11 13:09:00 2019/36675/125/ENTRY : End CAP 125, Delete file function
+Tue Jun 11 13:09:00 2019/36675/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Accept socket 796 in [rendezvous_request]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Accept Port:21020 in [rendezvous_request]
+Tue Jun 11 13:09:00 2019/0/0/INFO : Delete FMS context...
+Tue Jun 11 13:09:00 2019/36674/0/ENTRY : Open Contexts count: 2, Context: 36674 deleted
+Tue Jun 11 13:09:00 2019/0/0/INFO : Delete FMS context...
+Tue Jun 11 13:09:00 2019/36675/0/ENTRY : Open Contexts count: 1, Context: 36675 deleted
+Tue Jun 11 13:09:00 2019/36676/0/DEBUG : Bug 28914323: 1 thread before adding context
+Tue Jun 11 13:09:00 2019/0/0/INFO : Add FMS context...
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [SIO] Open listen socket 800 in [fvCreateServerPort]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [SIO] Listen Port:53194 in [fvCreateServerPort]
+Tue Jun 11 13:09:00 2019/0/0/INFO : SubTask created
+Tue Jun 11 13:09:00 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Tue Jun 11 13:09:00 2019/0/0/INFO : [RPC] 10.99.25.32:21020 / 128 / Tue Jun 11 13:09:00 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Accept socket 688 in [rendezvous_request]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Accept Port:21283 in [rendezvous_request]
+Tue Jun 11 13:09:00 2019/36677/0/DEBUG : Bug 28914323: 2 thread before adding context
+Tue Jun 11 13:09:00 2019/0/0/INFO : Add FMS context...
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [SIO] Open listen socket 748 in [fvCreateServerPort]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [SIO] Listen Port:53195 in [fvCreateServerPort]
+Tue Jun 11 13:09:00 2019/0/0/INFO : SubTask created
+Tue Jun 11 13:09:00 2019/0/0/INFO : [RPC] Statistics: [used:2]
+Tue Jun 11 13:09:00 2019/0/0/INFO : [RPC] 10.99.25.32:21283 / 128 / Tue Jun 11 13:09:00 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 13:09:00 2019/0/0/INFO : [RPC] 10.99.25.32:21020 / 128 / Tue Jun 11 13:09:00 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Close socket 796 in [svctcp_destroy]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Close RPC context for socket [796]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Close socket 688 in [svctcp_destroy]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Close RPC context for socket [688]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [SIO] Accept socket 548 in [fvServerSocket]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Create socket 800 in [clntudp_bufcreate]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [SIO] Accept socket 720 in [fvServerSocket]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Create socket 748 in [clntudp_bufcreate]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Close socket 800 in [clntudp_destroy]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Close socket 800 in [pmap_getport]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Create socket 800 in [clnttcp_create]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Close socket 748 in [clntudp_destroy]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Close socket 748 in [pmap_getport]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Create socket 748 in [clnttcp_create]
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Tue Jun 11 13:09:00 2019/0/0/INFO : Status: Read from socket [996] [640512 bytes] in 0.851413 seconds.
+Tue Jun 11 13:09:00 2019/36673/128/DEBUG : Bug 29466526:close stream descriptor
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : Send control bytes: <640512>
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [SIO] Close socket 996 in [fvTransmitData]
+Tue Jun 11 13:09:00 2019/36673/128/DATA : transmitted 1 bytes of E:\edb_fms\gam_inv_nat_000/pnf41560272.939
+Tue Jun 11 13:09:00 2019/36673/0/DEBUG : Bug 28914323: leave fms_fms_FileIn
+Tue Jun 11 13:09:00 2019/36673/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckIn
+Tue Jun 11 13:09:00 2019/0/0/INFO : Send file data to client (new filename = E:\edb_fms\gam_inv_nat_000/pnf41560272.939)
+Tue Jun 11 13:09:00 2019/0/0/INFO : Send file data to client (file size = 640512)
+Tue Jun 11 13:09:00 2019/0/0/DEBUG : [SIO] Close socket 864 in [FmsSocket_sendFileMessage]
+Tue Jun 11 13:09:00 2019/36673/128/ENTRY : End CAP 128, External file transfer function (DFM)
+Tue Jun 11 13:09:00 2019/36673/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Tue Jun 11 13:09:00 2019/0/0/INFO : RPC socket closed
+Tue Jun 11 13:09:00 2019/0/0/INFO : RPC socket closed
+Tue Jun 11 13:09:00 2019/36676/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Tue Jun 11 13:09:00 2019/36676/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Tue Jun 11 13:09:00 2019/36676/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Tue Jun 11 13:09:00 2019/36676/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Tue Jun 11 13:09:00 2019/0/0/INFO : Used transfer size <204810>
+Tue Jun 11 13:09:00 2019/36676/128/DEBUG : Bug 29466526: SocketOpen
+Tue Jun 11 13:09:01 2019/0/0/DEBUG : [SIO] Create socket 680 in [fvClientSocket]
+Tue Jun 11 13:09:01 2019/0/0/DEBUG : [SIO] Port:53438 in [fvClientSocket]
+
+Tue Jun 11 13:09:49 2019 ----- starting on gaisr0136:804257546
+
+FileServer for Agile e6.2.1.0300
+Copyright (c) 1995, 2017, Oracle and/or its affiliates. All rights reserved.
+Version Agile e6.2.1.0300 assembled at Apr  9 2019 10:49:42
+
+---------------------------------------------------------------------------------------------------------------------------------------
+这个也不一样
+Tue Jun 11 13:10:03 2019/0/0/DEBUG : [RPC] Accept socket 508 in [rendezvous_request]
+Tue Jun 11 13:10:03 2019/0/0/DEBUG : [RPC] Accept Port:21137 in [rendezvous_request]
+Tue Jun 11 13:10:04 2019/1/0/DEBUG : Bug 28914323: 0 thread before adding context
+Tue Jun 11 13:10:04 2019/0/0/INFO : Add FMS context...
+Tue Jun 11 13:10:04 2019/0/0/DEBUG : [SIO] Open listen socket 512 in [fvCreateServerPort]
+Tue Jun 11 13:10:04 2019/0/0/DEBUG : [SIO] Listen Port:52519 in [fvCreateServerPort]
+Tue Jun 11 13:10:04 2019/0/0/INFO : SubTask created
+Tue Jun 11 13:10:04 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Tue Jun 11 13:10:04 2019/0/0/INFO : [RPC] 10.32.108.79:21137 / 124 / Tue Jun 11 13:10:04 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:FMS_BATCH> <USER-ID:1864> <GROUP:CONSTRUCTEURS> <GROUP-ID:1201> 
+Tue Jun 11 13:10:04 2019/1/124/ENTRY : Begin CAP 124, Check-Out file function
+Tue Jun 11 13:10:04 2019/1/124/DATA : Request from User: zzpmtplmcadim, Host: GAIPC0284
+Tue Jun 11 13:10:04 2019/1/124/DATA : PLM Info: <USER:FMS_BATCH> <USER-ID:1864> <GROUP:CONSTRUCTEURS> <GROUP-ID:1201>
+Tue Jun 11 13:10:04 2019/0/0/INFO : Used transfer size <10250>
+Tue Jun 11 13:10:04 2019/1/124/DEBUG : Bug 29466526: SocketOpen
+Tue Jun 11 13:10:04 2019/0/0/DEBUG : [RPC] Close socket 508 in [svctcp_destroy]
+Tue Jun 11 13:10:04 2019/0/0/DEBUG : [RPC] Close RPC context for socket [508]
+Tue Jun 11 13:10:04 2019/0/0/DEBUG : [SIO] Accept socket 532 in [fvServerSocket]
+Tue Jun 11 13:10:04 2019/0/0/DEBUG : Data transfered.
+Tue Jun 11 13:10:04 2019/0/0/INFO : Status: Write to socket [532] [16892 bytes] in 0.000000 seconds.
+Tue Jun 11 13:10:04 2019/1/124/DEBUG : Bug 29466526:close stream descriptor
+Tue Jun 11 13:10:04 2019/0/0/DEBUG : [SIO] Close socket 532 in [fvTransmitData]
+Tue Jun 11 13:10:04 2019/1/124/DATA : transmitted 16892 bytes of E:\edb_fms\gam_scan_pdf_025/fb011547242.628
+Tue Jun 11 13:10:04 2019/1/0/DEBUG : Bug 28914323: mark1 for fms_vault_FileTransmit
+Tue Jun 11 13:10:04 2019/1/0/DEBUG : Bug 28914323: leave fms_vault_FileTransmit
+Tue Jun 11 13:10:04 2019/1/0/DEBUG : Bug 28914323: leave fms_fms_FileOut
+Tue Jun 11 13:10:04 2019/1/0/DEBUG : Bug 28914323: mark1 for fms_vault_proc_CheckOut
+Tue Jun 11 13:10:04 2019/1/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckOut
+Tue Jun 11 13:10:04 2019/1/124/ENTRY : End CAP 124, Check-Out file function
+Tue Jun 11 13:10:04 2019/1/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Accept socket 536 in [rendezvous_request]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Accept Port:21186 in [rendezvous_request]
+Tue Jun 11 13:10:05 2019/0/0/INFO : Delete FMS context...
+Tue Jun 11 13:10:05 2019/1/0/ENTRY : Open Contexts count: 0, Context: 1 deleted
+Tue Jun 11 13:10:05 2019/2/0/DEBUG : Bug 28914323: 0 thread before adding context
+Tue Jun 11 13:10:05 2019/0/0/INFO : Add FMS context...
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [SIO] Open listen socket 540 in [fvCreateServerPort]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [SIO] Listen Port:52520 in [fvCreateServerPort]
+Tue Jun 11 13:10:05 2019/0/0/INFO : SubTask created
+Tue Jun 11 13:10:05 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Tue Jun 11 13:10:05 2019/0/0/INFO : [RPC] 10.99.25.32:21186 / 125 / Tue Jun 11 13:10:05 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Close socket 536 in [svctcp_destroy]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Close RPC context for socket [536]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Accept socket 508 in [rendezvous_request]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Accept Port:21028 in [rendezvous_request]
+Tue Jun 11 13:10:05 2019/3/0/DEBUG : Bug 28914323: 1 thread before adding context
+Tue Jun 11 13:10:05 2019/0/0/INFO : Add FMS context...
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [SIO] Open listen socket 516 in [fvCreateServerPort]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [SIO] Listen Port:52521 in [fvCreateServerPort]
+Tue Jun 11 13:10:05 2019/0/0/INFO : SubTask created
+Tue Jun 11 13:10:05 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Tue Jun 11 13:10:05 2019/0/0/INFO : [RPC] 10.99.25.32:21028 / 128 / Tue Jun 11 13:10:05 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Accept socket 524 in [rendezvous_request]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Accept Port:21291 in [rendezvous_request]
+Tue Jun 11 13:10:05 2019/4/0/DEBUG : Bug 28914323: 2 thread before adding context
+Tue Jun 11 13:10:05 2019/0/0/INFO : Add FMS context...
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [SIO] Open listen socket 528 in [fvCreateServerPort]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [SIO] Listen Port:52522 in [fvCreateServerPort]
+Tue Jun 11 13:10:05 2019/0/0/INFO : SubTask created
+Tue Jun 11 13:10:05 2019/0/0/INFO : [RPC] Statistics: [used:2]
+Tue Jun 11 13:10:05 2019/0/0/INFO : [RPC] 10.99.25.32:21028 / 128 / Tue Jun 11 13:10:05 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 13:10:05 2019/0/0/INFO : [RPC] 10.99.25.32:21291 / 128 / Tue Jun 11 13:10:05 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [SIO] Accept socket 564 in [fvServerSocket]
+Tue Jun 11 13:10:05 2019/2/125/ENTRY : Begin CAP 125, Delete file function
+Tue Jun 11 13:10:05 2019/2/125/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Tue Jun 11 13:10:05 2019/2/125/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Tue Jun 11 13:10:05 2019/2/125/DATA : file E:\edb_fms\gam_inv_nat_000/st281560220.274 deleted
+Tue Jun 11 13:10:05 2019/0/0/INFO : Send message to client (message = FMS_OK)
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [SIO] Close socket 564 in [FmsSocket_sendSuccessMessage]
+Tue Jun 11 13:10:05 2019/2/125/ENTRY : End CAP 125, Delete file function
+Tue Jun 11 13:10:05 2019/2/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Close socket 508 in [svctcp_destroy]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Close RPC context for socket [508]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Close socket 524 in [svctcp_destroy]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Close RPC context for socket [524]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [SIO] Accept socket 524 in [fvServerSocket]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Create socket 516 in [clntudp_bufcreate]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [SIO] Accept socket 532 in [fvServerSocket]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Create socket 528 in [clntudp_bufcreate]
+Tue Jun 11 13:10:05 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [RPC] Close socket 516 in [clntudp_destroy]
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [RPC] Close socket 516 in [pmap_getport]
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [RPC] Create socket 516 in [clnttcp_create]
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [RPC] Close socket 528 in [clntudp_destroy]
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [RPC] Close socket 528 in [pmap_getport]
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [RPC] Create socket 528 in [clnttcp_create]
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [RPC] Accept socket 520 in [rendezvous_request]
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [RPC] Accept Port:21188 in [rendezvous_request]
+Tue Jun 11 13:10:06 2019/0/0/INFO : Delete FMS context...
+Tue Jun 11 13:10:06 2019/2/0/ENTRY : Open Contexts count: 2, Context: 2 deleted
+Tue Jun 11 13:10:06 2019/5/0/DEBUG : Bug 28914323: 2 thread before adding context
+Tue Jun 11 13:10:06 2019/0/0/INFO : Add FMS context...
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [SIO] Open listen socket 512 in [fvCreateServerPort]
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [SIO] Listen Port:52523 in [fvCreateServerPort]
+Tue Jun 11 13:10:06 2019/0/0/INFO : SubTask created
+Tue Jun 11 13:10:06 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Tue Jun 11 13:10:06 2019/0/0/INFO : [RPC] 10.99.25.32:21188 / 128 / Tue Jun 11 13:10:06 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [RPC] Close socket 520 in [svctcp_destroy]
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [RPC] Close RPC context for socket [520]
+Tue Jun 11 13:10:06 2019/0/0/INFO : RPC socket closed
+Tue Jun 11 13:10:06 2019/0/0/INFO : RPC socket closed
+Tue Jun 11 13:10:06 2019/0/0/DEBUG : [SIO] Accept socket 548 in [fvServerSocket]
+
+Tue Jun 11 13:10:49 2019 ----- starting on gaisr0136:804257546
+
+FileServer for Agile e6.2.1.0300
+Copyright (c) 1995, 2017, Oracle and/or its affiliates. All rights reserved.
+Version Agile e6.2.1.0300 assembled at Apr  9 2019 10:49:42
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+Tue Jun 11 14:36:19 2019/7397/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Tue Jun 11 14:36:19 2019/7397/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Tue Jun 11 14:36:19 2019/7397/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Tue Jun 11 14:36:19 2019/7397/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Tue Jun 11 14:36:19 2019/0/0/INFO : Used transfer size <204810>
+Tue Jun 11 14:36:19 2019/7397/128/DEBUG : Bug 29466526: SocketOpen
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Accept socket 580 in [rendezvous_request]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Accept Port:21334 in [rendezvous_request]
+Tue Jun 11 14:36:19 2019/0/0/INFO : Delete FMS context...
+Tue Jun 11 14:36:19 2019/7398/0/ENTRY : Open Contexts count: 2, Context: 7398 deleted
+Tue Jun 11 14:36:19 2019/0/0/INFO : Delete FMS context...
+Tue Jun 11 14:36:19 2019/7399/0/ENTRY : Open Contexts count: 1, Context: 7399 deleted
+Tue Jun 11 14:36:19 2019/7400/0/DEBUG : Bug 28914323: 1 thread before adding context
+Tue Jun 11 14:36:19 2019/0/0/INFO : Add FMS context...
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [SIO] Open listen socket 744 in [fvCreateServerPort]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [SIO] Listen Port:52918 in [fvCreateServerPort]
+Tue Jun 11 14:36:19 2019/0/0/INFO : SubTask created
+Tue Jun 11 14:36:19 2019/0/0/INFO : [RPC] Statistics: [used:1]
+Tue Jun 11 14:36:19 2019/0/0/INFO : [RPC] 10.99.25.32:21334 / 128 / Tue Jun 11 14:36:19 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Accept socket 640 in [rendezvous_request]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Accept Port:21181 in [rendezvous_request]
+Tue Jun 11 14:36:19 2019/7401/0/DEBUG : Bug 28914323: 2 thread before adding context
+Tue Jun 11 14:36:19 2019/0/0/INFO : Add FMS context...
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [SIO] Open listen socket 1016 in [fvCreateServerPort]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [SIO] Listen Port:52919 in [fvCreateServerPort]
+Tue Jun 11 14:36:19 2019/0/0/INFO : SubTask created
+Tue Jun 11 14:36:19 2019/0/0/INFO : [RPC] Statistics: [used:2]
+Tue Jun 11 14:36:19 2019/0/0/INFO : [RPC] 10.99.25.32:21334 / 128 / Tue Jun 11 14:36:19 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 14:36:19 2019/0/0/INFO : [RPC] 10.99.25.32:21181 / 128 / Tue Jun 11 14:36:19 2019 / Client version [6.2.1.200] / zzpmtplmcadim / <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100> 
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [SIO] Create socket 928 in [fvClientSocket]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [SIO] Port:53161 in [fvClientSocket]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Close socket 580 in [svctcp_destroy]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Close RPC context for socket [580]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Close socket 640 in [svctcp_destroy]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Close RPC context for socket [640]
+Tue Jun 11 14:36:19 2019/7397/128/DEBUG : Bug 29466526: readFileMessage E:\edb_fms\gam_inv_pdf_000/cu7e1560278.179
+Tue Jun 11 14:36:19 2019/7397/128/DEBUG : Bug 29466526: fvReadSocket socket:928
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [SIO] Accept socket 564 in [fvServerSocket]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Create socket 744 in [clntudp_bufcreate]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [SIO] Accept socket 936 in [fvServerSocket]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Create socket 1016 in [clntudp_bufcreate]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Port:111 in [clntudp_bufcreate]
+Tue Jun 11 14:36:19 2019/0/0/INFO : Status: Read from socket [928] [14158 bytes] in 0.109380 seconds.
+Tue Jun 11 14:36:19 2019/7397/128/DEBUG : Bug 29466526:close stream descriptor
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : Send control bytes: <14158>
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [SIO] Close socket 928 in [fvTransmitData]
+Tue Jun 11 14:36:19 2019/7397/128/DATA : transmitted 1 bytes of E:\edb_fms\gam_inv_pdf_000/cu7e1560278.179
+Tue Jun 11 14:36:19 2019/7397/0/DEBUG : Bug 28914323: leave fms_fms_FileIn
+Tue Jun 11 14:36:19 2019/7397/0/DEBUG : Bug 28914323: leave fms_vault_proc_CheckIn
+Tue Jun 11 14:36:19 2019/0/0/INFO : Send file data to client (new filename = E:\edb_fms\gam_inv_pdf_000/cu7e1560278.179)
+Tue Jun 11 14:36:19 2019/0/0/INFO : Send file data to client (file size = 14158)
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [SIO] Close socket 776 in [FmsSocket_sendFileMessage]
+Tue Jun 11 14:36:19 2019/7397/128/ENTRY : End CAP 128, External file transfer function (DFM)
+Tue Jun 11 14:36:19 2019/7397/0/DEBUG : Bug 28914323: leave fms_main_win32_subTaskThread
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Close socket 744 in [clntudp_destroy]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Close socket 744 in [pmap_getport]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Create socket 744 in [clnttcp_create]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Close socket 1016 in [clntudp_destroy]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Close socket 1016 in [pmap_getport]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Create socket 1016 in [clnttcp_create]
+Tue Jun 11 14:36:19 2019/0/0/DEBUG : [RPC] Port:21359 in [clnttcp_create]
+Tue Jun 11 14:36:20 2019/0/0/INFO : RPC socket closed
+Tue Jun 11 14:36:20 2019/0/0/INFO : RPC socket closed
+Tue Jun 11 14:36:20 2019/7401/128/ENTRY : Begin CAP 128, External file transfer function (DFM)
+Tue Jun 11 14:36:20 2019/7401/128/DATA : Request from User: zzpmtplmcadim, Host: dc1sr3032
+Tue Jun 11 14:36:20 2019/7401/128/DATA : PLM Info: <USER:EDB_BATCH> <USER-ID:10041> <GROUP:EDB> <GROUP-ID:100>
+Tue Jun 11 14:36:20 2019/7401/0/DEBUG : Bug 29466526: before enter fvTransmitData in fms_vault_FileReceive(DFM Transfer)
+Tue Jun 11 14:36:20 2019/0/0/INFO : Used transfer size <204810>
+Tue Jun 11 14:36:20 2019/7401/128/DEBUG : Bug 29466526: SocketOpen
+
+Tue Jun 11 14:37:19 2019 ----- starting on gaisr0136:804257546
+
+FileServer for Agile e6.2.1.0300
+Copyright (c) 1995, 2017, Oracle and/or its affiliates. All rights reserved.
+Version Agile e6.2.1.0300 assembled at Apr  9 2019 10:49:42
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
