@@ -3,21 +3,22 @@ from datetime import date, datetime
 from functools import reduce
 
 from pyspark import SparkContext, SparkConf
-from pyspark.ml.feature import StringIndexer, VectorIndexer
+from pyspark.ml.clustering import KMeans
+from pyspark.ml.feature import StringIndexer, VectorIndexer, CountVectorizer
 from pyspark.ml.fpm import FPGrowth
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import udf, array_contains, col
+from pyspark.sql.functions import udf, array_contains, col, explode
 from pyspark.sql.pandas.functions import pandas_udf, PandasUDFType
 from pyspark.sql.types import StructField, StringType, ArrayType, DateType, TimestampType
 from pyspark.ml.feature import Tokenizer, RegexTokenizer
 from pyspark.ml.evaluation import ClusteringEvaluator
 
-import pandas as pd
-import numpy as np
-from sklearn.cluster import KMeans
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import silhouette_score
-from sklearn.preprocessing import OrdinalEncoder
+# import pandas as pd
+# import numpy as np
+# from sklearn.cluster import KMeans
+# from sklearn.feature_extraction.text import CountVectorizer
+# from sklearn.metrics import silhouette_score
+# from sklearn.preprocessing import OrdinalEncoder
 
 '''
 处理e6 文件信息
@@ -108,6 +109,30 @@ df = df.withColumn('min_str', date_2_min(df['date']))
 
 # 每分钟新开资源统计
 df.filter(df['one_context'].startswith('Begin')).groupby(df['min_str']).count().show(10, False)
+
+words = df.select('context_words').withColumn('words', explode(col('context_words')))
+words_count = words.groupby('words').count().filter(col('count') > 20).select('words')
+high_freq_words = set(map(lambda x: x.asDict()['words'], words_count.collect()))
+sc.brao
+
+def remove_low_freq_words(words):
+    # print(words)
+    rst = list(filter(lambda x: x in high_freq_words, words))
+    # print(rst)
+    return rst
+
+
+remove_low_freq_words = udf(remove_low_freq_words, ArrayType(StringType()))
+
+df = df.withColumn('high_freq_words', remove_low_freq_words(col('context_words')))
+cv = CountVectorizer(inputCol="high_freq_words", outputCol="words_features", vocabSize=len(high_freq_words))
+model = cv.fit(df)
+df = model.transform(df)
+
+kmeans = KMeans(featuresCol="words_features", predictionCol="kmeans_prediction").setK(100).setSeed(1)
+model = kmeans.fit(df)
+predictions = model.transform(df)
+predictions.select(['context_words', 'high_freq_words', 'kmeans_prediction']).show(100,truncate=False)
 
 
 #################################################################
