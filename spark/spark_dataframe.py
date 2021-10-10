@@ -39,6 +39,9 @@ schemaPeople = spark.createDataFrame(people, schema)
 
 schemaPeople.createOrReplaceTempView("people")
 results = spark.sql("SELECT name FROM people")
+
+spark.sql("SELECT name FROM people where age < 4").explain()
+
 results.show()
 
 import numpy as np
