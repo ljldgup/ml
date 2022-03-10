@@ -198,3 +198,7 @@ np.arange(5) * np.arange(9)
 
 t = np.array([[1, 2], [1, 2]])
 print(t * t == t.dot(t))
+
+# True，Flase python中可以当整数用，numpy里可以当索引用
+np.arange(10)[True:]
+np.arange(10) == True
