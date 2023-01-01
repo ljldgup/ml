@@ -32,6 +32,7 @@ np.arange(12).reshape(4, 3) + np.arange(4).reshape(4)
 np.arange(24).reshape(4, 3, 2) + np.arange(12).reshape(4, 3, 1)
 np.arange(12).reshape(4, 3) + np.arange(4).reshape(4, 1)
 
+
 # 计算元素累积乘积
 np.prod(np.arange(1, 7))
 np.prod(np.arange(1, 7).reshape(3, 2))

@@ -83,7 +83,7 @@ X = np.array([[1, 2, 3], [11, 22, 33]])
 np.unravel_index(X.argmax(), X.shape)
 # 直接这样取返回的是一维数组
 X = X[X > 5]
-# 先拿到索引，再取效果同上
+# 先拿到索引，再取效果同上,可以用于外部循环
 index = np.argwhere(X < 5)
 X[index]
 
@@ -202,3 +202,10 @@ print(t * t == t.dot(t))
 # True，Flase python中可以当整数用，numpy里可以当索引用
 np.arange(10)[True:]
 np.arange(10) == True
+
+
+# 广播可以用于索引,会将两边的索引自动广播成一样的,然后取
+np.arange(25).reshape(5, 5)[np.arange(5)[:, np.newaxis], np.arange(5)[np.newaxis:]]
+
+
+
